@@ -17,9 +17,11 @@ CREATE TABLE users (
 CREATE TABLE channels (
     id INT AUTO_INCREMENT PRIMARY KEY,
     uid VARCHAR(255) NOT NULL,
-    name VARCHAR(255) UNIQUE NOT NULL,
-    abstract VARCHAR(255),
-    FOREIGN KEY (uid) REFERENCES users(uid) ON DELETE CASCADE
+    bookroom_name NVARCHAR(50) NOT NULL,
+    bookroom_description NVARCHAR(1000),
+    is_public BOOLEAN,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 );
 
 CREATE TABLE messages (
