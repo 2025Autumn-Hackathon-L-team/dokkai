@@ -1,8 +1,11 @@
 from flask import Flask, request, redirect, render_template, url_for
 
 from models import Bookroom
+import os
 
 app = Flask(__name__)
+app.secret_key = os.getenv("SECRET_KEY", uuid.uuid4().hex)
+app.permanent_session_lifetime = timedelta(days=SESSION_DAYS)
 
 
 # ブックルームの一覧表示
