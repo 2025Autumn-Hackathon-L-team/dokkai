@@ -22,9 +22,7 @@ def public_channels_view():
 # @app.route('/public_bookrooms', methods=['POST'])
 # def create_bookroom():
 #    bookroom_name = request.form['bookroomname']
-
 #    db = get_db()
-
 #    if not book
 
 
