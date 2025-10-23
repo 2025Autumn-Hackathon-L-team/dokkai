@@ -1,8 +1,9 @@
 * {
   float: none;
   position: static;
-  font-family: "M PLUS 1", sans-serif;
-  font-family: "League Spartan", sans-serif;
+  font-family: "Kiwi Maru", serif;
+  font-weight: 500;
+  font-style: normal;
   font-size: 16px;
   box-sizing: border-box;
 }
@@ -69,14 +70,14 @@ button {
   transition: all 0.5s;
 }
 
-.pink,
-button.pink {
-  background-color: var(--salmon_pink);
+.wood,
+button.wood {
+  background-color: var(--wood);
 }
 
-.pink,
-button.pink:hover {
-  background-color: var(--middle_pink);
+.wood,
+button.wood:hover {
+  background-color: var(--brown);
 }
 
 .main-container {
