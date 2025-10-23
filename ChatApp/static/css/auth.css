@@ -11,16 +11,16 @@
   width: 95%;
   height: 95%;
   margin: auto;
-  border-radius: 10px;
+  border-radius: 20px;
   position: absolute;
   display: flex;
-  flex-direction: row-reverse;
-  gap: 2rem;
+  flex-direction: row;
+  gap: 3rem;
   background-color: var(--snow);
   border: 3% solid var(--brown);
 }
 .auth-form-wrapper {
-  width: 50%;
+  width: 60%;
   flex-grow: 1;
   padding: 1rem 0 1rem 2rem;
   position: relative;
@@ -33,7 +33,8 @@
 .auth-main-pic {
   height: 100%;
   width: 50%;
-  border-radius: 0 10px 10px 0 / 0 10px 10px 0;
+  border-radius: 20px 0px 0px 20px / 20px 0px 0px 20px;
+
 }
 
 .auth-mobile-pic {
@@ -71,7 +72,6 @@
   font-weight: 900;
   font-size: 48px;
   z-index: 100;
-  margin-bottom: 2rem;
 }
 .auth-form {
   display: flex;
@@ -89,7 +89,7 @@
 
 .auth-form > div {
   width: 100%;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 
 .auth-form input {
@@ -126,6 +126,7 @@
   font-size: 14px;
   border-bottom: solid 2px;
   padding: 0.5rem 2rem 0 2rem;
+
 }
 .switch-auth-mode:hover {
   color: var(--brown);
@@ -191,7 +192,7 @@
   }
   .auth-mobile-pic {
     display: block;
-    height: 50%;
+    height: 25%;
   }
 }
 @media screen and (min-width: 1360px) {

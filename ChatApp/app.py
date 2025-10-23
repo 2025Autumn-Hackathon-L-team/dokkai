@@ -8,7 +8,7 @@ app.secret_key = os.getenv('SECRET_KEY', uuid.uuid4().hex)
 @app.route('/')
 def test():
     flash('フラッシュメッセージです')
-    return render_template('auth/login.html')
+    return render_template('auth/signup.html')
 
 if __name__ == '__main__':
     # run()メソッドの引数に port=5001 を追加します

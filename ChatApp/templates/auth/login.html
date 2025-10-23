@@ -14,12 +14,13 @@
     <div class="auth-form-wrapper">
       <div class="auth-logo">
         <img
-          src="{{ url_for('static',filename='img/plaudern-logo.png') }}"
+          src="{{ url_for('static',filename='...') }}"
           alt="logo"
         />
       </div>
       <form class="auth-form" method="post">
-        <h1 class="auth-title">PLEASE LOGIN</h1>
+        <h1 class="auth-title">DOKKAI</h1>
+        <h3>読書会を探そう</h3>
         <div>
           <label for="email-input">Email</label>
           <input
@@ -33,7 +34,7 @@
           <label for="password-input">Password</label>
           <input
             type="password"
-            placeholder="パスワードを入力してください"
+            placeholder="パスワードを入力"
             name="password"
             id="password-input"
           />
@@ -48,7 +49,7 @@
           {% endif %} {% endwith %}
           <button class="auth-button wood">LOGIN</button>
           <a class="switch-auth-mode">
-            登録はこちら
+            Please signup!
           </a>
         </div>
       </form>
