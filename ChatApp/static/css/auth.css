@@ -81,6 +81,7 @@
   min-height: 60%;
   width: 70%;
   margin: auto;
+  flex-shrink: 1;
 }
 
 .auth-form.signup {
@@ -160,8 +161,8 @@
     display: none;
   }
   .auth-mobile-pic {
-    display: block;
-    height: 25%;
+    display: box;
+    height: 25%; 
   }
   .auth-button {
     margin-bottom: 0;

@@ -14,9 +14,9 @@
     <div class="auth-form-wrapper">
       <div class="auth-logo">
         <img
-          src="{{ url_for('static',filename='...') }}"
+          src="{{ url_for('static',filename='###') }}" 
           alt="logo"
-        />
+        /><!-- アイコン作ったら設置 -->
       </div>
       <form class="auth-form" method="post">
         <h1 class="auth-title">DOKKAI</h1>
@@ -42,13 +42,13 @@
         <div class="auth-button-container">
           {% with messages = get_flashed_messages() %} {% if messages %}
           <ul class="flashes">
-            {% for message in messages %}
+            {% for message in messages %}<!--フラッシュメッセージの取得(ログイン時エラー)-->
             <li>{{ message }}</li>
             {% endfor %}
           </ul>
           {% endif %} {% endwith %}
           <button class="auth-button wood">LOGIN</button>
-          <a class="switch-auth-mode">
+          <a class="switch-auth-mode"><!--- href="{{ url_for('サインイン（登録）画面の関数') }}"-->>
             Please signup!
           </a>
         </div>

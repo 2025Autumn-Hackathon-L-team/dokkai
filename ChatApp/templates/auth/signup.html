@@ -10,9 +10,9 @@
     <div class="auth-form-wrapper">
       <div class="auth-logo">
         <img
-          src="{{ url_for('static',filename='img/plaudern-logo.png') }}"
+          src="{{ url_for('static',filename='###') }}"
           alt="logo"
-        />
+        /><!-- アイコン作ったら設置 -->
       </div>
       <form class="auth-form signup" method="post">
         <h1 class="auth-title">DOKKAI</h1>
@@ -59,12 +59,12 @@
           {% with messages = get_flashed_messages() %} {% if messages %}
           <ul class="flashes">
             {% for message in messages %}
-            <li>{{ message }}</li>
+            <li>{{ message }}</li><!--フラッシュメッセージの取得(サインイン時エラー)-->
             {% endfor %}
           </ul>
           {% endif %} {% endwith %}
           <button class="auth-button wood">SIGN UP</button>
-          <a class="switch-auth-mode">
+          <a class="switch-auth-mode" ><!--- href="{{ url_for('ログイン画面の関数') }}"-->>
             LOGIN
           </a>
         </div>
