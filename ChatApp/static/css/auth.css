@@ -32,6 +32,7 @@
 
 .auth-main-pic {
   height: 100%;
+  width: 50%;
   border-radius: 0 10px 10px 0 / 0 10px 10px 0;
 }
 
@@ -190,7 +191,7 @@
   }
   .auth-mobile-pic {
     display: block;
-    height: 25%;
+    height: 50%;
   }
 }
 @media screen and (min-width: 1360px) {
