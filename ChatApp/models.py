@@ -18,6 +18,6 @@ class Bookroom:
                 return public_bookrooms
         except pymysql.Error as e:
             print(f"エラーが発生しています:{e}")
-            abort(5000)
+            abort(500)
         finally:
-            dp_pool.release(conn)
+            db_pool.release(conn)

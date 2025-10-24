@@ -14,7 +14,7 @@ def public_channels_view():
 
     # publicなブックルームのみ取得
     bookrooms = Bookroom.get_public_bookrooms()
-    return render_template("bookroom.html", bookrooms=bookrooms, is_public=True)
+    return render_template("test/bookroom.html", bookrooms=bookrooms, is_public=True)
 
 
 # ブックルームの作成
