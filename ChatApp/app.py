@@ -5,6 +5,10 @@ from models import Bookroom
 
 app = Flask(__name__)
 
+# 開発の確認のために使用
+app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.jinja_env.auto_reload = True
+app.jinja_env.cache = {} 
 
 # ブックルームの一覧表示
 @app.route("/public_bookrooms", methods=["GET"])
