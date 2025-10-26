@@ -8,11 +8,11 @@ db_pool = DB.init_db_pool()
 
 class User:
     @classmethod
-    def creat(cls,id,name,email,password):  
+    def create(cls,id,name,email,password):  
         conn = db_pool.get_conn()
         try:
-            with conn.corsor() as cur:
-                sql = "INSERT INTO users (id,name,email,password)" VALUES (%s,%s,%s,%s);"
+            with conn.cursor() as cur:
+                sql = "INSERT INTO users (id,name,email,password) VALUES (%s,%s,%s,%s);"
                 cur.execute(sql,(id,name,email,password,))
                 conn.commit()
         except pymysql.Error as e:
@@ -25,9 +25,10 @@ class User:
     def find_by_email(cls,email):
         conn = db_pool.get_conn()
         try:
-            with conn.corsor() as cur:
+            with conn.cursor() as cur:
                 sql = "SELECT email FROM users WHERE email=%s"
-                cur.execute(sql(email,))
+                cur.execute(sql,(email,))
+                user = cur.fetchone()
             return user
         except pymysql.Error as e:
             print(f'エラーが発生しています:{e}')
