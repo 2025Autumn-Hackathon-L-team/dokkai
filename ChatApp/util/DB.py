@@ -2,7 +2,6 @@ import os
 import pymysql
 from pymysqlpool.pool import Pool
 
-
 class DB:
     @classmethod
     def init_db_pool(cls):
