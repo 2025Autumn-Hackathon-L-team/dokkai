@@ -1,0 +1,75 @@
+{% extends 'auth/base.html' %} {% block title %}
+<title>signup</title>
+{% endblock %} {% block body %}
+<div class="auth-wrapper">
+  <div class="auth-container">
+    <img
+      src="{{ url_for('static',filename='img/dokkai.png') }}"
+      class="auth-main-pic"
+    />
+    <div class="auth-form-wrapper">
+      <div class="auth-logo">
+        <img
+          src="{{ url_for('static',filename='###') }}"
+          alt="logo"
+        /><!-- アイコン作ったら設置 -->
+      </div>
+      <form class="auth-form signup" method="post">
+        <h1 class="auth-title">DOKKAI</h1>
+        <h3>読書会を探そう</h3>
+        <div>
+          <label for="signup-name-input">Name</label>
+          <input
+            type="text"
+            placeholder="名前を入力"
+            name="name"
+            id="signup-name-input"
+          />
+        </div>
+        <div>
+          <label for="signup-email-input">Email</label>
+          <input
+            type="text"
+            placeholder="メールアドレスを入力"
+            name="email"
+            id="signup-email-input"
+          />
+        </div>
+        <div>
+          <label for="signup-password-input">Password</label>
+          <input
+            type="password"
+            placeholder="パスワードを入力"
+            name="password"
+            id="signup-password-input"
+          />
+        </div>
+        <div>
+          <label for="signup-password-confirmation-input">
+            Password Confirmation
+          </label>
+          <input
+            type="password"
+            placeholder="パスワードをもう一度入力"
+            name="password-confirmation"
+            id="signup-password-confirmation-input"
+          />
+        </div>
+        <div class="auth-button-container">
+          {% with messages = get_flashed_messages() %} {% if messages %}
+          <ul class="flashes">
+            {% for message in messages %}
+            <li>{{ message }}</li><!--フラッシュメッセージの取得(サインイン時エラー)-->
+            {% endfor %}
+          </ul>
+          {% endif %} {% endwith %}
+          <button class="auth-button wood">SIGN UP</button>
+            LOGIN
+          <a class="switch-auth-mode" >
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
