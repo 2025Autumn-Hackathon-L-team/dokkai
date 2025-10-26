@@ -10,9 +10,9 @@ class DB:
             host=os.getenv('DB_HOST'),
             user=os.getenv('DB_USER'),
             password=os.getenv('DB_PASSWORD'),
-            datebase=os.getenv('DB_DATABASE'),
+            database=os.getenv('DB_DATABASE'),
             max_size=5,
-            charaset="utf8mb4",
+            charset="utf8mb4",
             cursorclass=pymysql.cursors.DictCursor
         )
         pool.init()
