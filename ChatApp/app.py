@@ -41,5 +41,5 @@ def logout():
     return redirect(url_for('login_view'))
 
 
-if __name__=='__main__':
-    app.run()
+if __name__ == '__main__':
+    app.run(host="0.0.0.0", debug=True)
