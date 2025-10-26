@@ -1,7 +1,10 @@
 DROP DATABASE chatapp;
+DROP USER 'testuser';
 
+CREATE USER 'testuser' IDENTIFIED BY 'testuser';
 CREATE DATABASE IF NOT EXISTS chatapp;
 USE chatapp;
+GRANT ALL PRIVILEGES ON chatapp.* TO 'testuser';
 
 CREATE TABLE users (
     id VARCHAR(255) NOT NULL PRIMARY KEY,
