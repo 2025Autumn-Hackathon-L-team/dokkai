@@ -1,8 +1,4 @@
-/*
-サイドバーの制御
-*/
-
-const list = document.querySelectorAll(".list");
+const list = document.querySelectorAll(".navigation ul li");
 function activeLink() {
   list.forEach((item) => item.classList.remove("active"));
   this.classList.add("active");

@@ -9,7 +9,7 @@
   width: 50px;
   background-color: var(--snow);
   overflow-x: hidden;
-  box-shadow: 10px 0 0 var(--salmon_pink);
+  box-shadow: 10px 0 0 var(--brown);
   transition: all 0.5s;
 }
 
@@ -36,25 +36,25 @@
   padding-left: 0px;
 }
 
-.navigation ul li {
+.list {
   list-style: none;
   display: block;
   position: relative;
   width: 100%;
 }
 
-.navigation ul li:hover {
+.list:hover {
   background-color: #20272c5e;
 }
 
-.navigation ul li.active {
+.list.active {
   background-color: var(--brown);
 }
-.navigation ul li.active > a {
+.list.active > a {
   color: var(--snow);
 }
 
-.navigation ul li a {
+.list a {
   display: block;
   text-decoration: none;
   color: var(--brown);
@@ -71,7 +71,7 @@
   top: -30px;
   right: 0;
   border-radius: 50%;
-  box-shadow: 15px 15px 0 var(--salmon_pink);
+  box-shadow: 15px 15px 0 var(--brown);
 }
 .navigation ul li.active a::after {
   content: "";
@@ -81,7 +81,7 @@
   top: 60px;
   right: 0;
   border-radius: 50%;
-  box-shadow: 15px -15px 0 var(--salmon_pink);
+  box-shadow: 15px -15px 0 var(--brown);
 }
 
 .navigation ul li a .icon {
@@ -90,10 +90,6 @@
   height: 60px;
   line-height: 70px;
   text-align: center;
-}
-
-.navigation ul li a .icon ion-icon {
-  font-size: 1.5em;
 }
 
 .navigation ul li a .title {

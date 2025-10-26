@@ -7,6 +7,8 @@
 }
 body {
   font-family: "Poppins", sans-serif;
+  color: #0e2431;
+
 }
 
 
@@ -21,14 +23,6 @@ body {
   display: none;
 }
 
-/* ロゴの表示位置を調整（ナビゲーションバーの左上などに合わせる） */
-.logo {
-  position: static; /* absoluteを解除 */
-  display: block; /* ロゴを表示 */
-  font-size: 1.5rem; /* PCでのロゴサイズ */
-  line-height: 60px; /* nav-containerの高さに合わせる */
-  padding-left: 20px;
-}
 /* ========================================================== */
 /* デスクトップ用ナビゲーションの表示 (モバイルメニューの非表示) */
 /* ========================================================== */
@@ -53,11 +47,6 @@ body {
   display: none;
 }
 
-/* デスクトップでのロゴを通常のナビゲーション内に移動させる場合は調整が必要 */
-.logo {
-  position: static; /* absoluteを解除 */
-}
-
 /* ------------------------------------------------------------------ */
 /* アイコンとテキストのスタイル（共通） */
 
@@ -73,14 +62,14 @@ body {
   /* デスクトップのメニュー横並びをリセットし、モバイルメニューのロジックを適用 */
   .navbar .menu-items {
     padding-top: 120px;
-    box-shadow: inset 0 0 2000px rgba(255, 255, 255, .5);
+    box-shadow: inset 0 0 2000px var(--brown);
     height: 100vh;
     width: 100%;
     transform: translate(-150%); /* 画面外に非表示 */
     display: flex !important; /* スライドインのためにflexを維持 */
     flex-direction: column !important;
-    margin-left: -40px;
-    padding-left: 50px;
+    margin-left: 0px;
+    padding-left: 0px;
     transition: transform 0.5s ease-in-out;
     text-align: center;
   }
@@ -90,6 +79,7 @@ body {
     display: block;
     position: relative;
     height: 60px;
+    
   }
   
   /* ハンバーガーアイコンとチェックボックスを再表示 */
@@ -103,7 +93,7 @@ body {
     height: 32px;
     width: 32px;
     top: 20px;
-    left: 20px;
+    right: 20px;
     z-index: 5;
     opacity: 0;
     cursor: pointer;
@@ -115,7 +105,7 @@ body {
     width: 32px;
     position: absolute;
     top: 17px;
-    left: 20px;
+    right: 20px;
     z-index: 2;
     flex-direction: column;
     justify-content: space-between;
@@ -126,7 +116,7 @@ body {
     height: 4px;
     width: 100%;
     border-radius: 10px;
-    background: #0e2431;
+    background: var(--snow);
   }
   
   /* ハンバーガーのアニメーションスタイル */
@@ -148,34 +138,32 @@ body {
   .navbar .menu-items ul {
     list-style-type: none;
     padding: 0;
-    display: block; /* **修正: liを縦並びにするため block に戻す** */
+    display: block;
+    color: var(--snow);
+    width:auto;
+    margin:0;
   }
 
+.navbar .menu-items li.logo {
+    margin-bottom: 2.0rem;
+    font-size:3.0rem;
+  }
   /* モバイルのリストアイテム */
   .navbar .menu-items li {
-    margin-bottom: 1.2rem; /* **修正: li に margin-bottom を再適用** */
-    font-size: 1.5rem; /* **修正: li に font-size を再適用** */
+    margin-bottom: 0.3rem; 
+    font-size: 2.2rem;
   }
 
-  .navbar .menu-items li a {
-    /* リンクに適用されていた font-size と margin-bottom は li に移動 */
-    font-size: 1.2rem; /* 基本サイズに戻すか、モバイル用の 1.5rem を li から継承 */
+  .navbar .menu-items a,
+  .navbar .menu-items a span {
+   
+    font-size: 1.5rem; 
     display: inline-flex;
     align-items: center; 
     justify-content: center; 
     width: auto; 
-    margin: 0 auto; 
+    margin-bottom: 0.5rem; 
   }
-    
-  .logo {
-    /* モバイルではロゴを右上に絶対配置 */
-    position: absolute;
-    top: 5px;
-    right: 15px;
-    font-size: 1.2rem;
-    color: #0e2431;
-  }
-
   /* チェックが入った時のメニュー表示とアニメーション */
   .nav-container input[type="checkbox"]:checked ~ .menu-items {
     transform: translateX(0);
