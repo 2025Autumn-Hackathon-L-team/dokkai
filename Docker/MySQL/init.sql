@@ -44,3 +44,17 @@ VALUES
         '秘密の部屋について細かく話そう！',
         FALSE
     );
+INSERT INTO
+    bookrooms(
+        user_id,
+        name,
+        description,
+        is_public
+    )
+VALUES
+    (
+        '970af84c-dd40-47ff-af23-282b72b7cca8',
+        'ハリーポッターとアズカバンの囚人',
+        'アズカバンの囚人について細かく話そう！',
+        TRUE
+    );
