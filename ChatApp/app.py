@@ -5,11 +5,21 @@ import uuid
 import re
 import os
 
-from models import User
+from models import User, Bookroom
+
+# user idを仮で作成するためにランダムを作成 ここから
+TEST_USER_ID = "970af84c-dd40-47ff-af23-282b72b7cca8"
+# user idを仮で作成するためにランダムを作成 ここまで
+
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', uuid.uuid4().hex)
 #app.permanent_session_lifetime = timedelta(days=SESSION_DAYS)
+
+# 開発中の確認のために使用
+app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.jinja_env.auto_reload = True
+app.jinja_env.cache = {}
 
 #ルートページのリダイレクト
 @app.route('/')
@@ -57,5 +67,35 @@ def logout():
     return redirect(url_for('login_view'))
 
 
+############################ブックルーム関係（ここから）############################
+# ブックルームの一覧表示
+@app.route("/public_bookrooms", methods=["GET"])
+def public_channels_view():
+    # publicなブックルームのみ取得
+    bookrooms = Bookroom.get_public_bookrooms()
+    return render_template("test/bookroom.html", bookrooms=bookrooms, is_public=True)
+
+# ブックルームの作成
+@app.route('/public_bookrooms', methods=['POST'])
+def create_public_bookroom():
+    # user_idは仮の値を使用（init.sqlでこのユーザーは作成済み）
+    bookroom_name = request.form.get('bookroom_name')
+    bookroom = Bookroom.find_by_name(bookroom_name)
+    if bookroom == None:
+        bookroom_description = request.form.get('bookroom_description')
+        Bookroom.create(
+            user_id=TEST_USER_ID,
+            name=bookroom_name,
+            description=bookroom_description,
+            is_public=True
+        )
+        return redirect(url_for('public_channels_view'))
+    else:
+        error = '既に同じ名前のブックルームが存在しています。'
+        return render_template('test/error.html', error_message=error)
+
+############################ブックルーム関係（ここまで）############################
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True)
+
