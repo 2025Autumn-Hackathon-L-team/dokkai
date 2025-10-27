@@ -6,8 +6,10 @@
   color: var(--brown);
   min-height: 100vh;
   display: flex;
+  padding-left: 60px;
   justify-content: center;
-  align-items: flex-start; /* 上部に寄せる */
+  align-items: flex-start;
+  /* 上部に寄せる */
 }
 
 /* ================== ヘッダー部分 ================== */
@@ -18,7 +20,7 @@
 
 }
 
-.bookroom-title { /* メモアプリのヘッダーとして再利用 */
+.bookroom-title { /* ヘッダー */
   position: sticky; /* スクロールしてもヘッダーを固定 */
   top: 0;
   left: 0;
@@ -222,4 +224,12 @@
 
 .bookroom-box li:hover a {
   color: var(--header-bg);
+}
+/* ========================================================== */
+/* レスポンシブ */
+
+@media screen and (max-width: 768px) {
+  .main-container {
+    padding-left: 0;
+  }
 }
