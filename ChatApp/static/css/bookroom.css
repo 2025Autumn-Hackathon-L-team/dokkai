@@ -1,0 +1,264 @@
+/* ------------------------------------------- */
+/* MODERN MEMO APP STYLE */
+/* ------------------------------------------- */
+
+/* ベースカラーパレット */
+:root {
+  --app-bg: #e0f2f1; /* アプリ全体の背景色 (薄い緑青) */
+  --header-bg: #80cbc4; /* ヘッダーの背景色 (ターコイズ) */
+  --card-bg: #ffffff; /* メモカードの背景色 */
+  --card-border: #e0e0e0; /* カードのボーダー色 */
+  --text-dark: #37474f; /* 濃いテキスト色 */
+  --text-light: #78909c; /* 薄いテキスト色 */
+  --accent-green: #a7ffeb; /* カテゴリタグの緑 */
+  --accent-pink: #ff80ab; /* カテゴリタグのピンク */
+  --accent-blue: #82b1ff; /* カテゴリタグの青 */
+  --shadow-light: rgba(0, 0, 0, 0.08); /* 軽い影 */
+  --shadow-strong: rgba(0, 0, 0, 0.15); /* 強めの影 */
+}
+
+/* 全体設定 */
+body {
+  font-family: 'Noto Sans JP', sans-serif; /* 日本語対応のモダンフォント */
+  background-color: var(--app-bg);
+  margin: 0;
+  padding: 0;
+  color: var(--text-dark);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* 上部に寄せる */
+}
+
+/* ================== ヘッダー部分 ================== */
+
+.main-container{
+  display: flex;
+  flex-direction:column;
+
+}
+
+.bookroom-title { /* メモアプリのヘッダーとして再利用 */
+  position: sticky; /* スクロールしてもヘッダーを固定 */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 60px; /* 高さ固定 */
+  background-color: var(--header-bg);
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 15px;
+  box-shadow: 0 2px 5px var(--shadow-strong);
+  z-index: 20; /* 他の要素より手前に */
+}
+
+.bookroom-title h1 { /* "メモ" のタイトル */
+  font-size: 1.2rem;
+  margin: 0;
+  font-weight: 500;
+  letter-spacing: normal;
+}
+
+.bookroom-title button { /* カテゴリや設定ボタン */
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem; /* アイコンを大きく */
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+  box-shadow: none; /* 影は不要 */
+}
+
+.bookroom-title button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.bookroom-title-text { /* 不要なので非表示または削除 */
+  display: none;
+}
+
+/* ================== カテゴリ選択ドロップダウン ================== */
+.category-select-wrapper { /* 新しいセレクタとして追加 */
+  width: calc(100% - 30px);
+  margin: 15px auto;
+  position: relative;
+}
+
+.category-select-wrapper select {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  background-color: var(--card-bg);
+  font-size: 1rem;
+  color: var(--text-dark);
+  appearance: none; /* デフォルトの矢印を非表示 */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%2378909c" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* カスタム矢印 */
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  box-shadow: 0 2px 5px var(--shadow-light);
+}
+
+/* ================== メモリスト（旧 bookroom-list） ================== */
+
+#bookroom-list { /* メモリストのコンテナ */
+  padding-top: 0; /* ヘッダーがstickyになったため */
+  padding: 0 15px 80px; /* 下部にフローティングボタンのための余白 */
+  display: flex;
+  flex-direction: column; /* 縦並び */
+  align-items: center; /* 中央寄せ */
+  width: 100%;
+  box-sizing: border-box; /* paddingをwidthに含める */
+}
+
+/* リストヘッダー（「チャンネル名」「チャンネル説明」）は画像にないので非表示にするか削除を検討 */
+#bookroom-list .col, 
+#bookroom-list .col-10 {
+    display: none; 
+}
+
+/* 各メモカードのスタイル */
+.memo-item-card { /* bookroom in bookrooms の各要素に適用 */
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px var(--shadow-light);
+  width: 100%;
+  /* カードの最大幅 */
+  margin-bottom: 15px;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.2s ease-in-out;
+}
+
+.memo-item-card:hover {
+  transform: translateY(-3px); /* 軽く浮き上がるエフェクト */
+}
+
+.memo-content {
+  flex-grow: 1; /* 残りのスペースを占める */
+}
+
+.memo-title { /* メモのタイトル */
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 5px 0;
+  color: var(--text-dark);
+  white-space: nowrap; /* 1行で表示 */
+  overflow: hidden; /* はみ出した部分は隠す */
+  text-overflow: ellipsis; /* ...で省略 */
+}
+
+.memo-description { /* メモの簡単な説明文（ここでは日付） */
+  font-size: 0.8rem;
+  color: var(--text-light);
+  margin: 0;
+}
+
+.memo-meta { /* 日付とカテゴリのコンテナ */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.memo-date { /* 日付 */
+    font-size: 0.75rem;
+    color: var(--text-light);
+}
+
+.memo-category { /* カテゴリタグ */
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: var(--accent-green); /* デフォルトのカテゴリ色 */
+  padding: 4px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+/* カテゴリごとの色があれば追加 */
+.memo-category.idea { background-color: var(--accent-pink); }
+.memo-category.todo { background-color: var(--accent-blue); }
+.memo-category.shopping { background-color: var(--accent-green); }
+
+
+.memo-icon { /* キャラクターアイコン */
+  width: 50px;
+  height: 50px;
+  margin-left: 15px;
+  flex-shrink: 0; /* スペースが足りなくても縮まない */
+}
+
+.memo-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* アスペクト比を維持して表示 */
+}
+
+/* ================== フローティングアクションボタン (FAB) ================== */
+.fab-button { /* 新しいセレクタとして追加 */
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--header-bg); /* ヘッダーと同じ色 */
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.8rem; /* ペンアイコンのサイズ */
+  box-shadow: 0 4px 10px var(--shadow-strong);
+  cursor: pointer;
+  z-index: 30;
+  border: none;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.fab-button:hover {
+  background-color: #5d9a95; /* ホバーで少し暗く */
+  transform: translateY(-2px);
+}
+
+/* ================== Footer (不要なら削除) ================== */
+#footer {
+  display: none; /* 画像にないので非表示 */
+}
+
+/* bookroom-box (ul) がメモリストとは別のリストとして存在する場合 */
+.bookroom-box {
+  padding: 10px 15px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 15px; /* メモカードとの間にスペース */
+}
+
+.bookroom-box li {
+  list-style: none;
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  box-shadow: 0 2px 5px var(--shadow-light);
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.bookroom-box li a {
+  color: var(--text-dark);
+  text-decoration: none;
+}
+
+.bookroom-box li:hover a {
+  color: var(--header-bg);
+}
