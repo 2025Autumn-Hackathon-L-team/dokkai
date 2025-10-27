@@ -1,29 +1,9 @@
-/* ------------------------------------------- */
-/* MODERN MEMO APP STYLE */
-/* ------------------------------------------- */
-
-/* ベースカラーパレット */
-:root {
-  --app-bg: #e0f2f1; /* アプリ全体の背景色 (薄い緑青) */
-  --header-bg: #80cbc4; /* ヘッダーの背景色 (ターコイズ) */
-  --card-bg: #ffffff; /* メモカードの背景色 */
-  --card-border: #e0e0e0; /* カードのボーダー色 */
-  --text-dark: #37474f; /* 濃いテキスト色 */
-  --text-light: #78909c; /* 薄いテキスト色 */
-  --accent-green: #a7ffeb; /* カテゴリタグの緑 */
-  --accent-pink: #ff80ab; /* カテゴリタグのピンク */
-  --accent-blue: #82b1ff; /* カテゴリタグの青 */
-  --shadow-light: rgba(0, 0, 0, 0.08); /* 軽い影 */
-  --shadow-strong: rgba(0, 0, 0, 0.15); /* 強めの影 */
-}
-
 /* 全体設定 */
-body {
-  font-family: 'Noto Sans JP', sans-serif; /* 日本語対応のモダンフォント */
-  background-color: var(--app-bg);
+.main-container {
+  background-color: var(--snow);
   margin: 0;
   padding: 0;
-  color: var(--text-dark);
+  color: var(--brown);
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -43,38 +23,22 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  height: 60px; /* 高さ固定 */
-  background-color: var(--header-bg);
+  height: 100px; /* 高さ固定 */
+  background-color: var(--brown);
   color: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 15px;
   box-shadow: 0 2px 5px var(--shadow-strong);
-  z-index: 20; /* 他の要素より手前に */
+  z-index: 2; /* 他の要素より手前に */
 }
 
 .bookroom-title h1 { /* "メモ" のタイトル */
-  font-size: 1.2rem;
+  font-size: 2.0rem;
   margin: 0;
   font-weight: 500;
   letter-spacing: normal;
-}
-
-.bookroom-title button { /* カテゴリや設定ボタン */
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 1.5rem; /* アイコンを大きく */
-  cursor: pointer;
-  padding: 5px;
-  border-radius: 50%;
-  transition: background-color 0.2s;
-  box-shadow: none; /* 影は不要 */
-}
-
-.bookroom-title button:hover {
-  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .bookroom-title-text { /* 不要なので非表示または削除 */
@@ -91,11 +55,11 @@ body {
 .category-select-wrapper select {
   width: 100%;
   padding: 10px 15px;
-  border: 1px solid var(--card-border);
+  border: 1px solid var(--brown);
   border-radius: 8px;
-  background-color: var(--card-bg);
+  background-color: var(--snow);
   font-size: 1rem;
-  color: var(--text-dark);
+  color: var(--brown);
   appearance: none; /* デフォルトの矢印を非表示 */
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -105,7 +69,7 @@ body {
   box-shadow: 0 2px 5px var(--shadow-light);
 }
 
-/* ================== メモリスト（旧 bookroom-list） ================== */
+/* ================== bookroom-list） ================== */
 
 #bookroom-list { /* メモリストのコンテナ */
   padding-top: 0; /* ヘッダーがstickyになったため */
@@ -125,17 +89,19 @@ body {
 
 /* 各メモカードのスタイル */
 .memo-item-card { /* bookroom in bookrooms の各要素に適用 */
-  background-color: var(--card-bg);
+  background-color: var(--snow);
+  border: 1px solid var(--brown);
   border-radius: 12px;
-  box-shadow: 0 4px 10px var(--shadow-light);
   width: 100%;
   /* カードの最大幅 */
   margin-bottom: 15px;
   padding: 15px;
   display: flex;
+  flex-direction:row;
   justify-content: space-between;
   align-items: center;
   transition: transform 0.2s ease-in-out;
+
 }
 
 .memo-item-card:hover {
@@ -150,7 +116,7 @@ body {
   font-size: 1rem;
   font-weight: 600;
   margin: 0 0 5px 0;
-  color: var(--text-dark);
+  color: var(--brown);
   white-space: nowrap; /* 1行で表示 */
   overflow: hidden; /* はみ出した部分は隠す */
   text-overflow: ellipsis; /* ...で省略 */
@@ -158,7 +124,7 @@ body {
 
 .memo-description { /* メモの簡単な説明文（ここでは日付） */
   font-size: 0.8rem;
-  color: var(--text-light);
+  color: var(--brown);
   margin: 0;
 }
 
@@ -171,22 +137,22 @@ body {
 
 .memo-date { /* 日付 */
     font-size: 0.75rem;
-    color: var(--text-light);
+    color: var(--brown);
 }
 
 .memo-category { /* カテゴリタグ */
   font-size: 0.7rem;
   font-weight: 600;
   color: #fff;
-  background-color: var(--accent-green); /* デフォルトのカテゴリ色 */
+  background-color: var(--brown); /* デフォルトのカテゴリ色 */
   padding: 4px 8px;
   border-radius: 12px;
   white-space: nowrap;
 }
 /* カテゴリごとの色があれば追加 */
-.memo-category.idea { background-color: var(--accent-pink); }
-.memo-category.todo { background-color: var(--accent-blue); }
-.memo-category.shopping { background-color: var(--accent-green); }
+.memo-category.idea { background-color: var(--brown); }
+.memo-category.todo { background-color: var(--brown); }
+.memo-category.shopping { background-color: var(--brown); }
 
 
 .memo-icon { /* キャラクターアイコン */
@@ -209,28 +175,23 @@ body {
   right: 25px;
   width: 56px;
   height: 56px;
-  border-radius: 50%;
-  background-color: var(--header-bg); /* ヘッダーと同じ色 */
+  border-radius: 75%;
+  background-color: var(--brown); /* ヘッダーと同じ色 */
   color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.8rem; /* ペンアイコンのサイズ */
+  font-size: 1.0rem; /* ペンアイコンのサイズ */
   box-shadow: 0 4px 10px var(--shadow-strong);
   cursor: pointer;
-  z-index: 30;
+  z-index: 2;
   border: none;
   transition: background-color 0.2s, transform 0.2s;
 }
 
 .fab-button:hover {
-  background-color: #5d9a95; /* ホバーで少し暗く */
+  background-color: var(--wood); /* ホバーで少し暗く */
   transform: translateY(-2px);
-}
-
-/* ================== Footer (不要なら削除) ================== */
-#footer {
-  display: none; /* 画像にないので非表示 */
 }
 
 /* bookroom-box (ul) がメモリストとは別のリストとして存在する場合 */
