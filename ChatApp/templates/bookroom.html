@@ -21,9 +21,7 @@
     </select>
   </div>
 
-  <div id="bookroom-list"> {# This is the container for the memo list #}
-    {# CSS is set to hide existing "Channel name" and "Channel description" headers #}
-    
+  <div id="bookroom-list"> 
     {% for bookroom in bookrooms %}
     <div class="memo-item-card"> {# Card for each memo #}
       <div class="memo-content">
@@ -31,31 +29,26 @@
         <p class="memo-description">{{ bookroom.description }}</p>
       </div>
       <div class="memo-meta">
-        {# Date and category data will come from Python or be dummy data #}
-        <span class="memo-date">2018/09/12 10:55</span>
+        <span class="memo-date">2025/10/28</span>
         <span class="memo-category {{ bookroom.category_tag | default('uncategorized') }}">
           {{ bookroom.category | default('未分類') }}
         </span>
       </div>
       <div class="memo-icon">
-        <!-- Place character icon here (set the correct image path) --><img src="{{ url_for('static', filename='img/character_icon_pink.png') }}" alt="アイコン" />
+        <img src="{{ url_for('static', filename='img/character_icon_pink.png') }}" alt="アイコン" />
       </div>
     </div>
     {% endfor %}
 
-    {# ul.bookroom-box for pagination remains if needed #}
     <ul class="bookroom-box">
-      <!-- Pagination elements go here --></ul>
+      <!-- Pagination --></ul>
   </div>
 
   {# Floating Action Button #}
-  <button class="fab-button">
-    <ion-icon name="create-outline"></ion-icon> {# Pen icon #}
+  <button class="fab-button"label="作成">
+     MAKE
   </button>
   
-  <div id="footer">
-    <p id="footer-text">DOKKAI</p>
-  </div>
   {% include 'modal/create-bookroom.html' %} 
   {% include 'modal/delete-bookroom.html' %}
 </div>
@@ -64,11 +57,9 @@
 {% block script %}
 <script type="text/javascript">
   // prettier-ignore
-  // Ensure the variable name matches what's passed from Python (bookrooms)
-  // Added | default to prevent JSON serialization errors if data is missing.
-  const bookrooms = JSON.parse('{{ bookrooms|tojson | default("[]") }}'); 
+  const bookrooms = JSON.parse('{{ bookrooms|tojson}}'); 
   // prettier-ignore
-  const uid = JSON.parse('{{ uid|tojson | default("null") }}');
+  const uid = JSON.parse('{{ uid|tojson }}');
 </script>
 <script
   src="{{url_for('static',filename='js/bookroom/create-bookroom.js')}}"

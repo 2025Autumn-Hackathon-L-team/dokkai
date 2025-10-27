@@ -7,7 +7,6 @@
   min-height: 100vh;
   display: flex;
   padding-left: 60px;
-  justify-content: center;
   align-items: flex-start;
   /* 上部に寄せる */
 }
@@ -21,37 +20,35 @@
 }
 
 .bookroom-title { /* ヘッダー */
-  position: sticky; /* スクロールしてもヘッダーを固定 */
-  top: 0;
-  left: 0;
+  position: fixed; 
+  top: 0px;
+  left: 60px;
   width: 100%;
-  height: 100px; /* 高さ固定 */
+  height: 100px; 
   background-color: var(--brown);
   color: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 15px;
-  box-shadow: 0 2px 5px var(--shadow-strong);
   z-index: 2; /* 他の要素より手前に */
 }
 
-.bookroom-title h1 { /* "メモ" のタイトル */
-  font-size: 2.0rem;
+.bookroom-title h1 { /* タイトル */
+  font-size: 1.5rem;
   margin: 0;
   font-weight: 500;
   letter-spacing: normal;
 }
 
-.bookroom-title-text { /* 不要なので非表示または削除 */
-  display: none;
-}
-
 /* ================== カテゴリ選択ドロップダウン ================== */
-.category-select-wrapper { /* 新しいセレクタとして追加 */
-  width: calc(100% - 30px);
-  margin: 15px auto;
-  position: relative;
+.category-select-wrapper { 
+  width: calc(100% - 60px);
+  margin: 15px 0 0 0;
+  padding: 0 15px;
+  position: fixed;
+  top: 100px;
+  left: 60px;
 }
 
 .category-select-wrapper select {
@@ -71,11 +68,12 @@
   box-shadow: 0 2px 5px var(--shadow-light);
 }
 
-/* ================== bookroom-list） ================== */
+/* ================== bookroomのリスト ================== */
 
-#bookroom-list { /* メモリストのコンテナ */
-  padding-top: 0; /* ヘッダーがstickyになったため */
-  padding: 0 15px 80px; /* 下部にフローティングボタンのための余白 */
+#bookroom-list { /* リストのコンテナ */
+  margin-top: 150px;
+  padding-top: 0; 
+  padding: 15px 15px 80px; 
   display: flex;
   flex-direction: column; /* 縦並び */
   align-items: center; /* 中央寄せ */
@@ -83,13 +81,7 @@
   box-sizing: border-box; /* paddingをwidthに含める */
 }
 
-/* リストヘッダー（「チャンネル名」「チャンネル説明」）は画像にないので非表示にするか削除を検討 */
-#bookroom-list .col, 
-#bookroom-list .col-10 {
-    display: none; 
-}
-
-/* 各メモカードのスタイル */
+/* 各カードのスタイル */
 .memo-item-card { /* bookroom in bookrooms の各要素に適用 */
   background-color: var(--snow);
   border: 1px solid var(--brown);
@@ -124,13 +116,13 @@
   text-overflow: ellipsis; /* ...で省略 */
 }
 
-.memo-description { /* メモの簡単な説明文（ここでは日付） */
+.memo-description { /* メモの簡単な説明文 */
   font-size: 0.8rem;
   color: var(--brown);
   margin: 0;
 }
 
-.memo-meta { /* 日付とカテゴリのコンテナ */
+.memo-meta { /* 日付とカテゴリコンテナ */
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -146,7 +138,7 @@
   font-size: 0.7rem;
   font-weight: 600;
   color: #fff;
-  background-color: var(--brown); /* デフォルトのカテゴリ色 */
+  background-color: var(--brown); 
   padding: 4px 8px;
   border-radius: 12px;
   white-space: nowrap;
@@ -157,7 +149,7 @@
 .memo-category.shopping { background-color: var(--brown); }
 
 
-.memo-icon { /* キャラクターアイコン */
+.memo-icon { /* アイコン */
   width: 50px;
   height: 50px;
   margin-left: 15px;
@@ -183,7 +175,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.0rem; /* ペンアイコンのサイズ */
+  font-size: 1.0rem; /* アイコンのサイズ */
   box-shadow: 0 4px 10px var(--shadow-strong);
   cursor: pointer;
   z-index: 2;
@@ -196,40 +188,26 @@
   transform: translateY(-2px);
 }
 
-/* bookroom-box (ul) がメモリストとは別のリストとして存在する場合 */
-.bookroom-box {
-  padding: 10px 15px;
-  width: 100%;
-  box-sizing: border-box;
-  margin-top: 15px; /* メモカードとの間にスペース */
-}
-
-.bookroom-box li {
-  list-style: none;
-  background-color: var(--card-bg);
-  border-radius: 8px;
-  box-shadow: 0 2px 5px var(--shadow-light);
-  padding: 10px 15px;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.9rem;
-}
-
-.bookroom-box li a {
-  color: var(--text-dark);
-  text-decoration: none;
-}
-
-.bookroom-box li:hover a {
-  color: var(--header-bg);
-}
 /* ========================================================== */
 /* レスポンシブ */
 
 @media screen and (max-width: 768px) {
   .main-container {
-    padding-left: 0;
+    padding-left: 0px;
   }
+  .bookroom-title { 
+    position: fixed; 
+    left: 0px;
+}
+  .category-select-wrapper { 
+    position: fixed; 
+    left: 0px;
+    width:100%;
+}
+}
+@media screen and (max-height: 768px){
+    #bookroom-list { 
+    padding-top: 170px;
+    margin-top: 0px; 
+}
 }
