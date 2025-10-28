@@ -1,11 +1,11 @@
-from flask import Flask,render_template,redirect,url_for,session,request
+from flask import Flask,render_template,redirect,url_for,session,request,flash
 from datetime import timedelta
 import hashlib
 import uuid
 import re
 import os
 
-from models import User
+from models import User #, Bookroom
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', uuid.uuid4().hex)
@@ -14,15 +14,16 @@ app.secret_key = os.getenv('SECRET_KEY', uuid.uuid4().hex)
 #ルートページのリダイレクト
 @app.route('/')
 def index():
-    #if uid is None:
-    #    return redirect(url_for('login_view'))
-    #return redirect(url_for('channels_view'))
-    return 'Hello World'
+    id = session.get('id')
+    if id is None:
+        return redirect(url_for('login_view'))
+    return f'パブリックチャンネルの表示'
+    # TODO: ページができたら追加 redirect(url_for('public_channels_view'))
 
 #サインアップページの表示
 @app.route('/signup')
 def signup_view():
-    return 'signupの表示'
+    return render_template('auth/signup.html')
 
 #サインアップ処理
 @app.route('/signup', methods=['POST'])
@@ -37,7 +38,7 @@ def signup_process():
     User.create(id,name,email,password)
     UserId = str(id)
     session['id'] = UserId
-    return f'{name}作るの成功'#redirect(url_for('channels_view'))
+    return f'{name}作るの成功'#redirect(url_for('public_channels_view'))
 
 #ログインページの表示
 @app.route('/login')
@@ -49,7 +50,33 @@ def login_view():
 def login_process():
     email = request.form.get('email')
     password = request.form.get('password')
-    return f'{email}と{password}を表示'
+    if email=='' and password=='':
+        flash('ログインできませんでした')
+        flash('メールアドレスとパスワードを入力してください')
+    elif password=='':
+        flash('ログインできませんでした')
+        flash('パスワードを入力してください')
+    elif email=='':
+        flash('ログインできませんでした')
+        flash('メールアドレスを入力してください')
+    else:
+        user = User.find_by_email(email)
+        if user is None:
+            flash('ログインできませんでした')
+            flash('このユーザーは存在しません')
+        else:
+            # パスワードの一致チェック
+            hashPassword = hashlib.sha256(password.encode('utf-8')).hexdigest()
+            user = User.find_by_email(email)
+            if user is None:  #ログイン失敗
+                flash('ログインできませんでした')
+                flash('メールアドレスかパスワードが間違っています')
+            else:
+                user['password'] == hashPassword #trueならログイン
+                print(f'{user}でログインできました') #ログインできているかチェック、後ほど削除ß
+                redirect(url_for('public_channels_view'))
+    # TODO バリデーションエラーでauth/login.htmlnに戻る時、フォームに入力した値を残したい
+    return redirect(url_for('login_view'))#render_template('auth/login.html',email=email,password=password)   
 
 #ログアウト処理
 @app.route('/logout',methods = ['POST'])
