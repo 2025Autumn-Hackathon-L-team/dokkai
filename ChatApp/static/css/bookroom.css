@@ -39,6 +39,8 @@
   margin: 0;
   font-weight: 500;
   letter-spacing: normal;
+  text-align: center;
+  width: calc(100% - 50px);
 }
 
 /* ================== カテゴリ選択ドロップダウン ================== */
@@ -170,7 +172,7 @@
   width: 56px;
   height: 56px;
   border-radius: 75%;
-  background-color: var(--brown); /* ヘッダーと同じ色 */
+  background-color: var(--green); 
   color: #fff;
   display: flex;
   justify-content: center;
@@ -184,7 +186,7 @@
 }
 
 .fab-button:hover {
-  background-color: var(--wood); /* ホバーで少し暗く */
+  background-color: var(--green); /* ホバーで少し暗く */
   transform: translateY(-2px);
 }
 
