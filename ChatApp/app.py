@@ -46,7 +46,7 @@ def signup_process():
     registered_user = User.find_by_email(email)
     User.create(id,name,email,password)
     UserId = str(id)
-    session['user_id'] = UserId
+    session['id'] = UserId
     return f'{name}作るの成功'#redirect(url_for('channels_view'))
 
 #ログインページの表示
