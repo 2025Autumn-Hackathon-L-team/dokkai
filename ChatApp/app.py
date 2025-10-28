@@ -5,7 +5,7 @@ import uuid
 import re
 import os
 
-from models import User #, Bookroom
+from models import User Bookroom
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', uuid.uuid4().hex)
