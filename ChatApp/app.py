@@ -68,19 +68,25 @@ def logout():
 
 
 ############################ブックルーム関係（ここから）############################
-# ブックルームの一覧表示
+
+###########################
+#  パブリックブックルーム   #
+###########################
+
+# パブリックブックルームの一覧表示
+
 @app.route("/public_bookrooms", methods=["GET"])
 def public_channels_view():
     # publicなブックルームのみ取得
     bookrooms = Bookroom.get_public_bookrooms()
     return render_template("test/bookroom.html", bookrooms=bookrooms, is_public=True)
 
-# ブックルームの作成
+# パブリックブックルームの作成
 @app.route('/public_bookrooms', methods=['POST'])
 def create_public_bookroom():
     # user_idは仮の値を使用（init.sqlでこのユーザーは作成済み）
     bookroom_name = request.form.get('bookroom_name')
-    bookroom = Bookroom.find_by_name(bookroom_name)
+     bookroom = Bookroom.find_by_bookroom_id(bookroom_id)
     if bookroom == None:
         bookroom_description = request.form.get('bookroom_description')
         Bookroom.create(
@@ -93,6 +99,46 @@ def create_public_bookroom():
     else:
         error = '既に同じ名前のブックルームが存在しています。'
         return render_template('test/error.html', error_message=error)
+
+# パブリックブックルームの更新
+@app.route('/public_bookrooms/update/<bookroom_id>', methods=['POST'])
+def update_public_bookroom(bookroom_id):
+    user_id = session.get('user_id')
+    if user_id is None:
+        return redirect(url_for('login_view'))
+    
+    bookroom = Bookroom.find_by_bookroom_id(bookroom_id)
+    if bookroom['user_id'] != user_id:
+        flash('ブックルーム作成者のみ編集可能です')
+    
+    bookroom_name = request.form.get('bookroom_name')
+    bookroom_description = request.form.get('bookroom_description')
+    Bookroom.update(
+        name=bookroom_name,
+        description=bookroom_description
+    )
+    return redirect(f'/public_bookrooms/{bookroom_id}/messages')
+
+# パブリックブックルームの削除
+@app.route('/public_bookrooms/delete/<bookroom_id>', methods=['POST'])
+def delete_public_bookroom(bookroom_id):
+    user_id = session.get('user_id')
+    if user_id is None:
+        return redirect(url_for('login_view'))
+    
+    bookroom = Bookroom.find_by_name(bookroom_name)
+    
+    if bookroom['user_id'] != user_id:
+        flash('ブックルーム作成者のみ削除可能です')
+    else:
+        Bookroom.delete(user_id)
+    return redirect(url_for('public_channels_view'))
+
+###########################
+# プライベートブックルーム  #
+###########################
+
+
 
 ############################ブックルーム関係（ここまで）############################
 
