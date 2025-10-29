@@ -139,6 +139,7 @@ def create_public_bookroom():
             description=bookroom_description,
             is_public=True
         )
+
         return redirect(url_for('public_channels_view'))
     else:
         error = '既に同じ名前のブックルームが存在しています。'
