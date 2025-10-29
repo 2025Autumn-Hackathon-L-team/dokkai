@@ -44,3 +44,15 @@ VALUES ('970af84c-dd40-47ff-af23-282b72b7cca8', 'ハリーポッターとアズ�
 
 
 -- ############################ブックルーム関係（ここまで）############################
+
+CREATE TABLE messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id VARCHAR(255) NOT NULL,
+    bookroom_id INT NOT NULL,
+    content VARCHAR(255) NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (bookroom_id) REFERENCES bookrooms(id) ON DELETE CASCADE
+);
+-- ###########################メッセージ関係（ここまで）############################

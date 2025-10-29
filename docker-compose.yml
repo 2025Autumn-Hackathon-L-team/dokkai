@@ -1,4 +1,4 @@
-# db(MySQL),app(Flask)のコンテナを作成
+  # db(MySQL),app(Flask)のコンテナを作成
 services:
   db:
     # コンテナ名をmysqlに設定
