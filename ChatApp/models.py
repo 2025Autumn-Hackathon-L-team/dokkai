@@ -85,7 +85,7 @@ class Bookroom:
         finally:
             db_pool.release(conn)
     
-        def get_private_bookrooms(cls):
+    def get_private_bookrooms(cls):
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
@@ -129,7 +129,7 @@ class Bookroom:
     
     @classmethod
     def delete(cls, bookroom_id):
-        conn = db.pool.get_conn()
+        conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
                 sql = "DELETE FROM bookrooms WHERE id=%s;"

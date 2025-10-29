@@ -25,9 +25,7 @@
       crossorigin="anonymous"
     ></script>
 
-    <!--
-    ↓からチャンネル作成フォーム
-    -->
+    <!--↓からチャンネル作成フォーム-->
     <form method="POST">
       <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">チャンネル名</label>
@@ -40,20 +38,32 @@
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 
-    <!--
-    ↓からチャンネル表示部分
-    -->
+    <!--↓からチャンネル表示部分-->
     <div class="container text-center">
       <div class="row">
         <div class="col">チャンネル名</div>
-        <div class="col-10">チャンネル説明</div>
+        <div class="col">チャンネル説明</div>
+        <div class="col">チャンネルID</div>
+        <div class="col">削除</div>
+        <div class="col">編集</div>
       </div>
     </div>
     {% for bookroom in bookrooms %}
     <div class="container text-center">
       <div class="row">
         <div class="col">{{bookroom.name}}</div>
-        <div class="col-10">{{bookroom.description}}</div>
+        <div class="col">{{bookroom.description}}</div>
+        <div class="col">{{bookroom.id}}</div>
+        <div class="col">
+          <form action="{{ url_for('delete_public_bookroom', bookroom_id=bookroom.id) }}" method="post">
+            <button type="submit" class="btn">削除</button>
+          </form>
+        </div>
+        <div class="col">
+          <form action="{{ url_for('update_public_bookroom', bookroom_id=bookroom.id) }}" method="post">
+            <button type="submit" class="btn">編集</button>
+          </form>
+        </div>
       </div>
     </div>
     {% endfor %}
