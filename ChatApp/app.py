@@ -86,7 +86,7 @@ def public_channels_view():
 def create_public_bookroom():
     # user_idは仮の値を使用（init.sqlでこのユーザーは作成済み）
     bookroom_name = request.form.get('bookroom_name')
-     bookroom = Bookroom.find_by_bookroom_id(bookroom_id)
+     bookroom = Bookroom.find_by_bookroom_name(bookroom_name)
     if bookroom == None:
         bookroom_description = request.form.get('bookroom_description')
         Bookroom.create(
@@ -114,6 +114,7 @@ def update_public_bookroom(bookroom_id):
     bookroom_name = request.form.get('bookroom_name')
     bookroom_description = request.form.get('bookroom_description')
     Bookroom.update(
+        bookroom_id = bookroom_id
         name=bookroom_name,
         description=bookroom_description
     )

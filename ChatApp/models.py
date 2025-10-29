@@ -41,7 +41,7 @@ class User:
 # ブックルームクラス
 class Bookroom:
     @classmethod
-    def find_by_name(cls, bookroom_name):
+    def find_by_bookroom_name(cls, bookroom_name):
        conn = db_pool.get_conn()
        try:
            with conn.cursor() as cur:
@@ -76,6 +76,20 @@ class Bookroom:
         try:
             with conn.cursor() as cur:
                 sql = "SELECT * FROM bookrooms WHERE is_public=TRUE;"
+                cur.execute(sql)
+                public_bookrooms = cur.fetchall()
+                return public_bookrooms
+        except pymysql.Error as e:
+            print(f"エラーが発生しています:{e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
+    
+        def get_private_bookrooms(cls):
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                sql = "SELECT * FROM bookrooms WHERE is_public=FALSE;"
                 cur.execute(sql)
                 public_bookrooms = cur.fetchall()
                 return public_bookrooms
