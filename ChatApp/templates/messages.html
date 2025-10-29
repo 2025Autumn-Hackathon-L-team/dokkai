@@ -1,26 +1,31 @@
 {% extends 'base.html' %} {% block title %}
-<title>chatroom</title>
+<title>messages</title>
 {% endblock %} {% block body %}
 <div class="main-container">
-    <div id="chat-header">
-      <p class="channel-title-text detail-title">PLAUDERN</p>
+
+    <div id="bookroom-header">
       <!-- もしuidとチャンネル作成者が同じならタイトル、説明を編集可能にする -->
-      <p id="chatroom-name">ブックルームの名前</p>
+      <h1>PUBLIC</h1> 
+      <div id ="bookroom-contents">
+      <p id="bookroom-name">ブックルームの名前</p>
       {% if channel.abstract is not none %}
-      <p id="chatroom-description">ブックルームの詳細</p>
+      <p id="bookroom-description">ブックルームの詳細</p>
      {% endif %} {% if uid == channel.uid %}
-      <button id="channel-update-button">
+      <button id="bookroom-update-button">
         <ion-icon name="brush" style="color: #ffffff"></ion-icon>
       </button>
       {% include 'modal/update-bookroom.html' %} {% endif %}
     </div>
+    </div>  
     <div id="message-area">
       {% if messages|length > 0 %} {% for message in messages %} {% if
       message.uid == uid %}
       <div class="my-messages">
-        <p class="box box-right">メッセージを表示</p>
+        <p class="box box-right">メッセージを表示
+        <span class="timestamp timestamp-right">16:54</span>
+        </p>
         <form
-          action="/channels/{{ channel.id }}/messages/{{ message.id }}"
+          action="/bookroom/{{ bookroom.id }}/messages/{{ message.id }}"
           method="POST"
         >
           <button
@@ -39,6 +44,7 @@
       <div class="messages">
         <p class="user-name">メッセージテーブルのユーザーネーム</p>
         <p class="box box-left">メッセージテーブルのメッセージ
+          <span class="timestamp timestamp-left">16:54</span>
         </p>
       </div>
       {% endif %} {% endfor %} {% else %}

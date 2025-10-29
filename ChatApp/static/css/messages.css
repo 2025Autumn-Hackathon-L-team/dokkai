@@ -3,10 +3,10 @@
 
 /* ========================== ヘッダー部分 ============================= */
 
-#chat-header {
-  background-color: var(--navy_blue);
+#bookroom-header {
+  background-color: var(--brown);
   color: var(--snow);
-  height: 8vh;
+  height: auto;
   width: calc(100vw - 50px);
   position: fixed;
   top: 0;
@@ -14,22 +14,40 @@
   font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 2rem;
+  flex-direction: column;
+  gap:0rem;
   padding-left: 20px;
   z-index: 2;
 }
-
-#chatroom-name {
-  font-size: larger;
+#bookroom-header > h1 { /* タイトル */
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: normal;
+  text-align: center;
+}
+#bookroom-contents{
+  display: flex;
+  width:100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; 
+  gap: 0.8rem; /* 名前と説明の間の隙間 */
+  margin-left: 20px; /* 左側に少しスペースを開ける */
 }
 
-#chatroom-description {
+#bookroom-name {
+  margin:0;
+  font-size: 1.5rem;
+}
+
+#bookroom-description {
+  margin:0 5 0 0;
   font-size: 12px;
   font-weight: 200;
   letter-spacing: 0.15em;
 }
 
-#channel-update-button {
+#bookroom-update-button {
   margin: auto 0;
   padding: 0.2em 0.6em;
   background-color: var(--salmon_pink);
@@ -40,7 +58,7 @@
   box-shadow: 0 0 0 3px var(--salmon_pink);
 }
 
-#channel-update-button:hover {
+#bookroom-update-button:hover {
   background-color: var(--middle_pink);
   box-shadow: 0 0 0 3px var(--middle_pink);
   cursor: pointer;
@@ -51,7 +69,7 @@
 #message-area {
   min-height: 77vh;
   width: 100%;
-  padding-top: 10vh;
+  padding-top: 20vh;
   padding-right: 20px;
   padding-left: 20px;
   overflow-y: scroll;
@@ -74,7 +92,7 @@
 
 .user-name {
   font-size: 8px;
-  color: grey;
+  color: var(--brown);
   margin: 1px 0;
 }
 
@@ -97,25 +115,30 @@
   font-size: 1rem;
 }
 
+.message-date {
+  bottom: 8px;
+  right: 8px;
+}
 .box {
   position: relative;
-  width: 60%;
+  width: 80%;
   margin: 0;
   padding: 0.7em 0 0.4em 1em;
   font-size: 14px;
   line-height: 1.5;
   letter-spacing: 0.1em;
   white-space: pre-wrap;
+  border-radius:10px;
 }
 
 .box-left {
-  background-color: rgba(18, 37, 67, 0.2);
-  color: var(--navy_blue);
+  background-color: var(--lightgreen);
+  color: var(--brown);
 }
 
 .box-right {
-  background-color: rgba(18, 37, 67, 0.4);
-  color: var(--snow);
+  background-color:var(--lightgreen);
+  color: var(--brown);
   margin-left: auto;
 }
 
@@ -125,7 +148,8 @@
   left: 3px;
   width: 100%;
   height: 100%;
-  border: 1px solid grey;
+  border: var(--brown) 1px solid;
+  border-radius: 10px;
   content: "";
 }
 
@@ -135,14 +159,38 @@
   right: 3px;
   width: 100%;
   height: 100%;
-  border: 1px solid grey;
+  border: var(--brown) 1px solid;
+  border-radius: 10px;
   content: "";
 }
 
 #no-message {
   margin: auto;
 }
+.timestamp {
+  /* .box (position: relative) を基準に位置を決める */
+  position: absolute;
+  /* 文字を小さく、目立たない色に */
+  font-size: 0.7em;
+  color: var(--brown); /* メッセージ本文と区別できるように */
+  opacity: 0.7; /* 少し透明度を加えて目立たなくする */
+  /* テキストの折り返しを防ぐ */
+  white-space: nowrap;
+}
 
+/* 自分のメッセージ (右揃え) のタイムスタンプ位置 */
+.timestamp-right {
+  /* boxの右下、paddingを考慮して配置 */
+  bottom: 0.1em;
+  right: 0.5em; 
+}
+
+/* 相手のメッセージ (左揃え) のタイムスタンプ位置 */
+.timestamp-left {
+  /* boxの右下、paddingを考慮して配置 */
+  bottom: 0.1em;
+  right: 0.5em; 
+}
 /* ========================== メッセージ入力部分 ============================= */
 
 .typing-box-wrapper {
@@ -152,7 +200,7 @@
   height: 15vh;
   background-color: var(--snow);
   background-size: contain;
-  border-top: 3px solid lightgrey;
+  border-top: var(--wood)3px solid;
   display: flex;
   align-items: center;
   justify-content: start;
@@ -186,7 +234,7 @@
 }
 
 #add-message-button {
-  background-color: var(--navy_blue);
+  background-color: var(--brown);
   height: 100%;
   width: 40px;
   padding: 0;
@@ -200,21 +248,14 @@
 
 /* ========================== レスポンシブ ============================= */
 
-@media screen and (max-width: 550px) {
-  #chatroom-description {
-    display: none;
-  }
-}
-
 @media screen and (max-width: 639px) {
   .typing-box-wrapper,
-  #chat-header {
+  #bookroom-header {
     width: 100%;
   }
 }
-
 @media only screen and (min-width: 640px) {
   .box {
-    width: 40%;
+    width: 100%;
   }
 }

@@ -42,7 +42,6 @@
   text-align: center;
   width: calc(100% - 50px);
 }
-
 /* ================== カテゴリ選択ドロップダウン ================== */
 .category-select-wrapper { 
   width: calc(100% - 60px);
