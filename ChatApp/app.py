@@ -5,7 +5,7 @@ import uuid
 import re
 import os
 
-from models import User, Bookroom
+from models import User, Bookroom, Message
 
 # user idを仮で作成するためにランダムを作成 ここから
 TEST_USER_ID = "970af84c-dd40-47ff-af23-282b72b7cca8"
@@ -73,13 +73,29 @@ def logout():
 #  パブリックブックルーム   #
 ###########################
 
-# パブリックブックルームの一覧表示
+####################################################
+#  ブックルームの作成者をチェックする関数　　　
+#　ログインできていない場合は、ログインリダイレクトを返す
+#　作成者でなければFALSEを返す
+#　作成者であればTRUEを返す　　
+####################################################
 
+def is_bookroom_owner(user_id, bookroom_id):
+    bookroom = Bookroom.find_by_bookroom_id(bookroom_id)
+    if not bookroom:
+        flash('ブックルームが存在しません')
+        return False
+    if bookroom['user_id'] != user_id:
+        flash('ブックルーム作成者のみ操作可能です')
+        return False
+    return True
+
+# パブリックブックルームの一覧表示
 @app.route("/public_bookrooms", methods=["GET"])
 def public_channels_view():
     # publicなブックルームのみ取得
     bookrooms = Bookroom.get_public_bookrooms()
-    return render_template("test/bookroom.html", bookrooms=bookrooms, is_public=True)
+    return render_template("test/bookroom.html", bookrooms=bookrooms, uid=session.get('user_id',TEST_USER_ID), is_public=True)
 
 # パブリックブックルームの作成
 @app.route('/public_bookrooms', methods=['POST'])
@@ -102,27 +118,38 @@ def create_public_bookroom():
         error = '既に同じ名前のブックルームが存在しています。'
         return render_template('test/error.html', error_message=error)
 
-# パブリックブックルームの更新
-@app.route('/public_bookrooms/update/<bookroom_id>', methods=['POST'])
-def update_public_bookroom(bookroom_id):
-    # user_id = session.get('user_id')
-    # セッションが未実装なため、仮値を入れる
-    user_id = session.get('user_id', TEST_USER_ID)
 
+# ブックルーム編集ページ表示
+@app.route('/public_bookrooms/update/<bookroom_id>', methods=['GET'])
+def show_public_bookroom(bookroom_id):
+    user_id = session.get('user_id', TEST_USER_ID)
     if user_id is None:
         return redirect(url_for('login_view'))
     
-    bookroom = Bookroom.find_by_bookroom_id(bookroom_id)
-    if bookroom['user_id'] != user_id:
-        flash('ブックルーム作成者のみ編集可能です')
+    if not is_bookroom_owner(user_id, bookroom_id):
+        return redirect(url_for('public_channels_view'))
     
+    bookroom = Bookroom.find_by_bookroom_id(bookroom_id)
+    return render_template("test/update-bookroom.html", bookroom=bookroom)
+
+
+# ブックルームの編集作業
+@app.route('/public_bookrooms/update/<bookroom_id>', methods=['POST'])
+def update_public_bookroom(bookroom_id):
+    user_id = session.get('user_id', TEST_USER_ID)
+    if user_id is None:
+        return redirect(url_for('login_view'))
+    
+    if not is_bookroom_owner(user_id, bookroom_id):
+        return redirect(url_for('public_channels_view'))
+
     bookroom_name = request.form.get('bookroom_name')
     bookroom_description = request.form.get('bookroom_description')
     Bookroom.update(
         bookroom_id=bookroom_id,
         name=bookroom_name,
         description=bookroom_description
-    )
+        )
     return redirect(url_for("public_channels_view"))
 
 # パブリックブックルームの削除
@@ -134,12 +161,12 @@ def delete_public_bookroom(bookroom_id):
     if user_id is None:
         return redirect(url_for('login_view'))
     
-    bookroom = Bookroom.find_by_bookroom_id(bookroom_id)
-    if bookroom['user_id'] != user_id:
+    if not is_bookroom_owner(user_id, bookroom_id):
         flash('ブックルーム作成者のみ削除可能です')
     else:
         Bookroom.delete(bookroom_id)
-    return redirect(url_for('public_channels_view'))
+    return redirect(url_for("public_channels_view"))
+    
 
 ###########################
 # プライベートブックルーム  #
@@ -148,6 +175,57 @@ def delete_public_bookroom(bookroom_id):
 
 
 ############################ブックルーム関係（ここまで）############################
+
+
+# ブックルーム詳細ページの表示
+@app.route('/public-bookrooms/<bookroom_id>/messages', methods=['GET'])
+def detail(bookroom_id):
+    user_id = session.get('user_id')
+        
+    if user_id is None:
+        return redirect(url_for('login_view'))
+    
+    bookroom = Bookroom.find_by_bookroom_id(bookroom_id)
+    messages = Message.get_all(bookroom_id)
+
+    return render_template('messages.html', messages=messages, bookroom=bookroom, user_id=user_id)
+
+
+# メッセージの投稿
+@app.route('/public-bookrooms/<bookroom_id>/messages', methods=['POST'])
+def create_message(bookroom_id):
+    user_id = session.get('user_id')
+    if user_id is None:
+        return redirect(url_for('login_view'))
+
+    message = request.form.get('message')
+
+    if message:
+        Message.create(user_id, bookroom_id, message)
+
+    return redirect('/public-bookrooms/{bookroom_id}/messages'.format(bookroom_id = bookroom_id))
+
+
+# メッセージの削除
+@app.route('/public-bookrooms/<bookroom_id>/messages/<message_id>', methods=['POST'])
+def delete_message(bookroom_id, message_id):
+    user_id = session.get('user_id')
+    if user_id is None:
+        return redirect(url_for('login_view'))
+
+    if message_id:
+        Message.delete(message_id)
+    return redirect('/public-bookrooms/{bookroom_id}/messages'.format(bookroom_id = bookroom_id))
+
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('error/404.html'),404
+
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    return render_template('error/500.html'),500
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", debug=True)

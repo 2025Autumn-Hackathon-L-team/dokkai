@@ -60,7 +60,7 @@
           </form>
         </div>
         <div class="col">
-          <form action="{{ url_for('update_public_bookroom', bookroom_id=bookroom.id) }}" method="post">
+          <form action="{{ url_for('show_public_bookroom', bookroom_id=bookroom.id) }}" method="get">
             <button type="submit" class="btn">編集</button>
           </form>
         </div>
