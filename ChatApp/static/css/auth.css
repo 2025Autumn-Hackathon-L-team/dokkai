@@ -41,23 +41,6 @@
   display: none;
 }
 
-.auth-logo {
-  height: 80px;
-  position: absolute;
-  top: 0.5rem;
-  left: 2rem;
-}
-.auth-logo > img {
-  height: 100%;
-  width: auto;
-  border-left: solid 12px var(--brown);
-  padding-left: 10px;
-}
-
-.auth-logo > p {
-  display: contents;
-}
-
 .auth-button-container {
   width: 100%;
   display: flex;
