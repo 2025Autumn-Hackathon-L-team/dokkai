@@ -38,6 +38,8 @@
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 
+    <p>session.user_id = <code>{{ session.get('user_id') }}</code></p>
+
     <!--↓からチャンネル表示部分-->
     <div class="container text-center">
       <div class="row">
@@ -48,6 +50,7 @@
         <div class="col">更新日時</div>
         <div class="col">削除</div>
         <div class="col">編集</div>
+        <div class="col">チャンネルを作成したuser_id</div>
       </div>
     </div>
     {% for bookroom in bookrooms %}
@@ -60,14 +63,19 @@
         <div class="col">{{bookroom.updated_at}}</div>
         <div class="col">
           <form action="{{ url_for('delete_public_bookroom', bookroom_id=bookroom.id) }}" method="post">
-            <button type="submit" class="btn">削除</button>
+          {% if session.get('user_id') == bookroom.user_id %}
+              <button type="submit" class="btn">削除</button>
+          {% endif %}
           </form>
         </div>
         <div class="col">
-          <form action="{{ url_for('show_public_bookroom', bookroom_id=bookroom.id) }}" method="get">
-            <button type="submit" class="btn">編集</button>
-          </form>
+        {% if session.get('user_id') == bookroom.user_id %}
+            <form action="{{ url_for('show_public_bookroom', bookroom_id=bookroom.id) }}" method="get">
+              <button type="submit" class="btn">編集</button>
+            </form>
+        {% endif %}
         </div>
+        <div class="col">{{bookroom.user_id}}</div>
       </div>
     </div>
     {% endfor %}
