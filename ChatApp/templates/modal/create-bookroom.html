@@ -1,0 +1,30 @@
+
+<div id="create-bookroom-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5>Add bookroom -PUBLIC-</h5>
+      <span class="modalClose" id="add-page-close-button">×</span>
+    </div>
+    <form
+      name="createBookroomForm"
+      class="modal-body"
+      action="/bookroom"
+      method="POST"
+    >
+      <input
+        type="text"
+        placeholder="ブックルームの名前を入力"
+        class="bookroom-form-input"
+        name="bookroomTitle"
+        required
+      />
+      <input
+        type="text"
+        placeholder="このルームの説明を入力"
+        class="bookroom-form-input-wide"
+        name="bookroomDescription"
+      />
+      <button>MAKE</button>
+    </form>
+  </div>
+</div>
