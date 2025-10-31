@@ -11,10 +11,12 @@ from models import User, Bookroom, Message
 TEST_USER_ID = "970af84c-dd40-47ff-af23-282b72b7cca8"
 # user idを仮で作成するためにランダムを作成 ここまで
 
+EMAIL_PATTERN = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+SESSION_DAYS = 30
 
 app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY", uuid.uuid4().hex)
-# app.permanent_session_lifetime = timedelta(days=SESSION_DAYS)
+app.secret_key = os.getenv('SECRET_KEY', uuid.uuid4().hex)
+app.permanent_session_lifetime = timedelta(days=SESSION_DAYS)
 
 # 開発中の確認のために使用
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -27,9 +29,8 @@ app.jinja_env.cache = {}
 def index():
     id = session.get("id")
     if id is None:
-        return redirect(url_for("login_view"))
-    return f"パブリックチャンネルの表示"
-    # TODO: ページができたら追加 redirect(url_for('public_channels_view'))
+        return redirect(url_for('login_view'))
+    return redirect(url_for('public_channels_view'))
 
 
 # サインアップページの表示
@@ -41,17 +42,29 @@ def signup_view():
 # サインアップ処理
 @app.route("/signup", methods=["POST"])
 def signup_process():
-    name = request.form.get("name")
-    email = request.form.get("email")
-    password = request.form.get("password")
-    passwordConfirmation = request.form.get("password-confirmation")
-    id = uuid.uuid4()
-    password = hashlib.sha256(password.encode("utf-8")).hexdigest()
-    registered_user = User.find_by_email(email)
-    User.create(id, name, email, password)
-    UserId = str(id)
-    session["id"] = UserId
-    return f"{name}作るの成功"  # redirect(url_for('public_channels_view'))
+    name = request.form.get('name')
+    email = request.form.get('email')
+    password = request.form.get('password')
+    passwordConfirmation = request.form.get('password-confirmation')
+    if name == '' or email == '' or password == '' or passwordConfirmation == '':
+        flash('入力されていないフォームがあります')
+    elif password != passwordConfirmation:
+        flash('パスワードが一致していません')
+    elif re.fullmatch(EMAIL_PATTERN, email) is None:
+        flash('有効なメールアドレスの形式ではありません')
+    else:
+        id = uuid.uuid4()
+        password = hashlib.sha256(password.encode('utf-8')).hexdigest()
+        registered_user = User.find_by_email(email) 
+        if registered_user != None:
+            flash('すでに登録済みです')
+        else:
+            User.create(id,name,email,password)
+            UserId = str(id)
+            session['id'] = UserId
+            redirect(url_for('public_channels_view'))
+    # TODO バリデーションエラーでsignup_processに戻る時、フォームに入力した値を残したい
+    return redirect(url_for('signup_process'))
 
 
 # ログインページの表示
@@ -87,11 +100,9 @@ def login_process():
                 flash("ログインできませんでした")
                 flash("メールアドレスかパスワードが間違っています")
             else:
-                user["password"] == hashPassword  # trueならログイン
-                print(
-                    f"{user}でログインできました"
-                )  # ログインできているかチェック、後ほど削除ß
-                redirect(url_for("public_channels_view"))
+                user['password'] == hashPassword #trueならログイン
+                print(f'{user}でログインできました') #ログインできているかチェック、後ほど削除
+                return redirect(url_for('public_channels_view'))
     # TODO バリデーションエラーでauth/login.htmlnに戻る時、フォームに入力した値を残したい
     return redirect(
         url_for("login_view")
@@ -101,7 +112,8 @@ def login_process():
 # ログアウト処理
 @app.route("/logout", methods=["POST"])
 def logout():
-    return redirect(url_for("login_view"))
+    session.clear()
+    return redirect(url_for('login_view'))
 
 
 ############################ブックルーム関係（ここから）############################
