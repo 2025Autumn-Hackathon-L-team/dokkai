@@ -97,6 +97,7 @@
 .bookroom-form-input-wide::placeholder {
   color: var(--brown);
   font-size: 10px; 
+  overflow-wrap: anywhere;
 }
 .bookroom-form-input:focus::placeholder {
   color: var(--snow); /* フォーカス時のプレースホルダーの文字色を雪色（白）にする */
