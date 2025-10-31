@@ -99,13 +99,11 @@
   font-size: 10px; 
 }
 .bookroom-form-input:focus::placeholder {
-  color: var(--snow); /* 👈 フォーカス時のプレースホルダーの文字色を雪色（白）にする */
+  color: var(--snow); /* フォーカス時のプレースホルダーの文字色を雪色（白）にする */
 }
-.bookroom-form-input:hover {
-  background-color: var(--green);
-  color: var(--snow);
+.bookroom-form-input-wide:focus::placeholder {
+  color: var(--snow); 
 }
-
 .bookroom-form-input:focus {
   background-color: var(--green);
   color: var(--snow);
@@ -114,8 +112,13 @@
   background-color: var(--green);
   color: var(--snow);
 }
-.bookroom-form-input-wide:focus::placeholder {
-  color: var(--snow); 
+.bookroom-form-input:hover {
+  background-color: var(--green);
+  color: var(--snow);
+}
+.bookroom-form-input-wide:hover {
+  background-color: var(--green);
+  color: var(--snow);
 }
 .modal-gif {
   position: absolute;

@@ -56,9 +56,9 @@
 {% block script %}
 <script type="text/javascript">
   // prettier-ignore
-  const bookrooms = JSON.parse('{{ bookrooms|tojson}}'); 
+  const bookrooms = JSON.parse('{{ bookrooms|tojson|d("null") }}'); 
   // prettier-ignore
-  const uid = JSON.parse('{{ uid|tojson }}');
+  const uid = JSON.parse('{{ uid|tojson|d("null") }}');
 </script>
 <script
   src="{{url_for('static',filename='js/bookroom/create-bookroom.js')}}"

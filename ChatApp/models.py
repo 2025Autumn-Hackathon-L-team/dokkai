@@ -45,7 +45,7 @@ class Bookroom:
         try:
             with conn.cursor() as cur:
                 sql = "SELECT * FROM bookrooms WHERE name=%s;"
-                cur.execute(sql, (bookroom_name,))
+                cur.execute(sql, (bookroom_name))
                 channel = cur.fetchone()
                 return channel
         except pymysql.Error as e:
