@@ -28,6 +28,7 @@ app.jinja_env.cache = {}
 @app.route("/")
 def index():
     id = session.get("id")
+    print (f'sessionは{id}です')
     if id is None:
         return redirect(url_for('login_view'))
     return redirect(url_for('public_channels_view'))
@@ -42,29 +43,29 @@ def signup_view():
 # サインアップ処理
 @app.route("/signup", methods=["POST"])
 def signup_process():
-    name = request.form.get('name')
-    email = request.form.get('email')
-    password = request.form.get('password')
-    passwordConfirmation = request.form.get('password-confirmation')
-    if name == '' or email == '' or password == '' or passwordConfirmation == '':
-        flash('入力されていないフォームがあります')
+    name = request.form.get("name")
+    email = request.form.get("email")
+    password = request.form.get("password")
+    passwordConfirmation = request.form.get("password-confirmation")
+    if name == "" or email == "" or password == "" or passwordConfirmation == "":
+        flash("入力されていないフォームがあります")
     elif password != passwordConfirmation:
-        flash('パスワードが一致していません')
+        flash("パスワードが一致していません")
     elif re.fullmatch(EMAIL_PATTERN, email) is None:
-        flash('有効なメールアドレスの形式ではありません')
+        flash("有効なメールアドレスの形式ではありません")
     else:
         id = uuid.uuid4()
-        password = hashlib.sha256(password.encode('utf-8')).hexdigest()
+        password = hashlib.sha256(password.encode("utf-8")).hexdigest()
         registered_user = User.find_by_email(email) 
         if registered_user != None:
-            flash('すでに登録済みです')
+            flash("すでに登録済みです")
         else:
             User.create(id,name,email,password)
             UserId = str(id)
             session['id'] = UserId
-            redirect(url_for('public_channels_view'))
-    # TODO バリデーションエラーでsignup_processに戻る時、フォームに入力した値を残したい
-    return redirect(url_for('signup_process'))
+            return redirect(url_for("public_channels_view"))
+    # バリデーションエラーでsignup_processに戻る時、フォームに入力した値をauth/signup.htmlに返す
+    return render_template("auth/signup.html",name=name,email=email,password=password)
 
 
 # ログインページの表示
@@ -96,24 +97,22 @@ def login_process():
             # パスワードの一致チェック
             hashPassword = hashlib.sha256(password.encode("utf-8")).hexdigest()
             user = User.find_by_email(email)
-            if user is None:  # ログイン失敗
+            # ログイン失敗、セキュリティのため、mailとpasswordのどちらかが間違っているようなメッセージを表示。
+            if user["password"] != hashPassword:  
                 flash("ログインできませんでした")
                 flash("メールアドレスかパスワードが間違っています")
             else:
-                user['password'] == hashPassword #trueならログイン
-                print(f'{user}でログインできました') #ログインできているかチェック、後ほど削除
-                return redirect(url_for('public_channels_view'))
-    # TODO バリデーションエラーでauth/login.htmlnに戻る時、フォームに入力した値を残したい
-    return redirect(
-        url_for("login_view")
-    )  # render_template('auth/login.html',email=email,password=password)
+                print(f"{user}でログインできました") #ログインできているかチェック、後ほど削除
+                return redirect(url_for("public_channels_view"))
+    # バリデーションエラーでauth/login.htmlnに戻る時、フォームに入力した値をauth/login.htmlに返す
+    return render_template("auth/login.html",email=email,password=password)
 
 
 # ログアウト処理
 @app.route("/logout", methods=["POST"])
 def logout():
     session.clear()
-    return redirect(url_for('login_view'))
+    return redirect(url_for("login_view'"))
 
 
 ############################ブックルーム関係（ここから）############################
@@ -148,13 +147,9 @@ def public_bookrooms_view():
 
     # publicなブックルームのみ取得
     bookrooms = Bookroom.get_public_bookrooms()
-    current_uid = session.get("user_id", TEST_USER_ID),
-    return render_template("bookroom.html",
-        bookrooms=bookrooms,
-        uid=current_uid,
-        is_public=True,
-    )
-
+    #u_idをブックルームに渡す
+    current_uid = session.get("user_id", TEST_USER_ID)
+    return render_template("bookroom.html", bookrooms=bookrooms, is_public=True, uid=current_uid)
 
 # パブリックブックルームの作成
 @app.route("/public_bookrooms", methods=["POST"])
