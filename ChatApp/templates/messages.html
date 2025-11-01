@@ -62,7 +62,7 @@
     <div class="typing-box-wrapper">
       <form class="typing-box" method="POST" name="newMessageForm">
         <textarea name="message" id="message" autofocus></textarea>
-        <input type="hidden" name="#" value="#" />
+        <input type="hidden" name="bookroom_id" value="{{bookroom.id}}" />
         <button type="submit" id="add-message-button">
           <img src="{{ url_for('static', filename='img/pen.png') }}" alt="アイコン" />
         </button>

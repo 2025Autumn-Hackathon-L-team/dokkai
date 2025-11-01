@@ -46,7 +46,7 @@ def signup_process():
     name = request.form.get("name")
     email = request.form.get("email")
     password = request.form.get("password")
-    passwordConfirmation = request.form.get("password-confirmation")
+    passwordConfirmation = request.form.get("password_confirmation")
     if name == "" or email == "" or password == "" or passwordConfirmation == "":
         flash("入力されていないフォームがあります")
     elif password != passwordConfirmation:
@@ -198,8 +198,8 @@ def update_public_bookroom(bookroom_id):
     if not is_bookroom_owner(user_id, bookroom_id):
         return redirect(url_for("public_bookrooms_view"))
 
-    name = request.form.get("bookroom_Name")
-    description = request.form.get("bookroom_Description")
+    name = request.form.get("bookroom_name")
+    description = request.form.get("bookroom_description")
     Bookroom.update(
         bookroom_id=bookroom_id,name=name, description=description
     )
@@ -247,7 +247,7 @@ def detail(bookroom_id):
 
 
 # メッセージの投稿
-@app.route("/public-bookrooms/<bookroom_id>/messages", methods=["POST"])
+@app.route("/public_bookrooms/<bookroom_id>/messages", methods=["POST"])
 def create_message(bookroom_id):
     user_id = session.get("user_id")
     if user_id is None:
@@ -259,7 +259,7 @@ def create_message(bookroom_id):
         Message.create(user_id, bookroom_id, message)
 
     return redirect(
-        "/public-bookrooms/{bookroom_id}/messages".format(bookroom_id=bookroom_id)
+        "/public_bookrooms/{bookroom_id}/messages".format(bookroom_id=bookroom_id)
     )
 
 
@@ -273,7 +273,7 @@ def delete_message(bookroom_id, message_id):
     if message_id:
         Message.delete(message_id)
     return redirect(
-        "/public-bookrooms/{bookroom_id}/messages".format(bookroom_id=bookroom_id)
+        "/public_bookrooms/{bookroom_id}/messages".format(bookroom_id=bookroom_id)
     )
 
 
