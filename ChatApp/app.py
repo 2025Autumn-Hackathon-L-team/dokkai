@@ -148,10 +148,10 @@ def public_bookrooms_view():
 
     # publicなブックルームのみ取得
     bookrooms = Bookroom.get_public_bookrooms()
-    return render_template(
-        "test/bookroom.html",
+    current_uid = session.get("user_id", TEST_USER_ID),
+    return render_template("bookroom.html",
         bookrooms=bookrooms,
-        uid=session.get("user_id", TEST_USER_ID),
+        uid=current_uid,
         is_public=True,
     )
 
