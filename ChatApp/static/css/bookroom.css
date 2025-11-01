@@ -164,7 +164,7 @@
 }
 
 /* ================== フローティングアクションボタン (FAB) ================== */
-.fab-button { /* 新しいセレクタとして追加 */
+.create-bookroom-button { /* 新しいセレクタとして追加 */
   position: fixed;
   bottom: 25px;
   right: 25px;
@@ -184,7 +184,7 @@
   transition: background-color 0.2s, transform 0.2s;
 }
 
-.fab-button:hover {
+.create-bookroom-button:hover {
   background-color: var(--green); /* ホバーで少し暗く */
   transform: translateY(-2px);
 }

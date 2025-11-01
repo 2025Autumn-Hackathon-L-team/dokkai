@@ -148,13 +148,9 @@ def public_channels_view():
 
     # publicなブックルームのみ取得
     bookrooms = Bookroom.get_public_bookrooms()
-    return render_template(
-        "test/bookroom.html",
-        bookrooms=bookrooms,
-        uid=session.get("user_id", TEST_USER_ID),
-        is_public=True,
-    )
-
+    #u_idをブックルームに渡す
+    current_uid = session.get("user_id", TEST_USER_ID)
+    return render_template("bookroom.html", bookrooms=bookrooms, is_public=True, uid=current_uid)
 
 # パブリックブックルームの作成
 @app.route("/public_bookrooms", methods=["POST"])
