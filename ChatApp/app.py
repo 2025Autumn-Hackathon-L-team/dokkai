@@ -144,7 +144,7 @@ def is_bookroom_owner(user_id, bookroom_id):
 def public_bookrooms_view():
     # publicなブックルームのみ取得
     bookrooms = Bookroom.get_public_bookrooms()
-    #u_idをブックルームに渡す
+    #表示チェックのためデフォルト値を設定
     user_id = session.get("id", TEST_USER_ID)
     return render_template("bookroom.html", bookrooms=bookrooms, is_public=True, uid=user_id)
 
@@ -229,7 +229,8 @@ def delete_public_bookroom(bookroom_id):
 # ブックルーム詳細ページの表示
 @app.route("/public_bookrooms/<bookroom_id>/messages", methods=["GET"])
 def detail(bookroom_id):
-    user_id = session.get("id")
+    #表示チェックのためデフォルトユーザを設定
+    user_id = session.get("id",TEST_USER_ID)
 
     if user_id is None:
         return redirect(url_for("login_view"))
