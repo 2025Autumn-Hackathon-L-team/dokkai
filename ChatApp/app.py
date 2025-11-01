@@ -142,7 +142,7 @@ def is_bookroom_owner(user_id, bookroom_id):
 
 # パブリックブックルームの一覧表示
 @app.route("/public_bookrooms", methods=["GET"])
-def public_channels_view():
+def public_bookrooms_view():
     # 仮のユーザを設定
     session["user_id"] = TEST_USER_ID
 
@@ -173,7 +173,7 @@ def create_public_bookroom():
             is_public=True,
         )
 
-        return redirect(url_for("public_channels_view"))
+        return redirect(url_for("public_bookrooms_view"))
     else:
         error = "既に同じ名前のブックルームが存在しています。"
         return render_template("test/error.html", error_message=error)
@@ -187,7 +187,7 @@ def show_public_bookroom(bookroom_id):
         return redirect(url_for("login_view"))
 
     if not is_bookroom_owner(user_id, bookroom_id):
-        return redirect(url_for("public_channels_view"))
+        return redirect(url_for("public_bookrooms_view"))
 
     bookroom = Bookroom.find_by_bookroom_id(bookroom_id)
     return render_template("test/update-bookroom.html", bookroom=bookroom)
@@ -201,14 +201,14 @@ def update_public_bookroom(bookroom_id):
         return redirect(url_for("login_view"))
 
     if not is_bookroom_owner(user_id, bookroom_id):
-        return redirect(url_for("public_channels_view"))
+        return redirect(url_for("public_bookrooms_view"))
 
     bookroom_name = request.form.get("bookroom_name")
     bookroom_description = request.form.get("bookroom_description")
     Bookroom.update(
         bookroom_id=bookroom_id, name=bookroom_name, description=bookroom_description
     )
-    return redirect(url_for("public_channels_view"))
+    return redirect(url_for("public_bookrooms_view"))
 
 
 # パブリックブックルームの削除
@@ -224,7 +224,7 @@ def delete_public_bookroom(bookroom_id):
         flash("ブックルーム作成者のみ削除可能です")
     else:
         Bookroom.delete(bookroom_id)
-    return redirect(url_for("public_channels_view"))
+    return redirect(url_for("public_bookrooms_view"))
 
 
 ###########################
