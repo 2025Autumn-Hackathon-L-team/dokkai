@@ -31,7 +31,7 @@ def index():
     print (f'sessionは{id}です')
     if id is None:
         return redirect(url_for('login_view'))
-    return redirect(url_for('public_channels_view'))
+    return redirect(url_for('public_bookrooms_view'))
 
 
 # サインアップページの表示
@@ -63,7 +63,7 @@ def signup_process():
             User.create(id,name,email,password)
             UserId = str(id)
             session['id'] = UserId
-            return redirect(url_for("public_channels_view"))
+            return redirect(url_for("public_bookrooms_view"))
     # バリデーションエラーでsignup_processに戻る時、フォームに入力した値をauth/signup.htmlに返す
     return render_template("auth/signup.html",name=name,email=email,password=password)
 
@@ -103,7 +103,7 @@ def login_process():
                 flash("メールアドレスかパスワードが間違っています")
             else:
                 print(f"{user}でログインできました") #ログインできているかチェック、後ほど削除
-                return redirect(url_for("public_channels_view"))
+                return redirect(url_for("public_bookrooms_view"))
     # バリデーションエラーでauth/login.htmlnに戻る時、フォームに入力した値をauth/login.htmlに返す
     return render_template("auth/login.html",email=email,password=password)
 
