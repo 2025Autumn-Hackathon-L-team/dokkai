@@ -4,12 +4,11 @@
 <div class="main-container">
 
     <div id="bookroom-header">
-      <!-- もしuidとチャンネル作成者が同じならタイトル、説明を編集可能にする -->
       <h1>PUBLIC</h1> 
       <div class="message-meta">
       <div id ="bookroom-contents">
-      <p id="bookroom-name">ブックルームの名前</p>
-        <p id="bookroom-description">ブックルームの詳細</p>
+      <p id="bookroom-name">{{ bookroom.name | default("ブックルームの名前") }}</p>
+        <p id="bookroom-description">{{bookroom.descripton | default("ブックルームの詳細") }}</p>
       </div>
       {% if bookroom.description is not none %}
       <span class="memo-category">
