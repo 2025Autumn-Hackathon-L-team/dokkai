@@ -109,10 +109,10 @@ def login_process():
 
 
 # ログアウト処理
-@app.route("/logout", methods=["POST"])
+@app.route("/logout", methods=["GET","POST"])
 def logout():
     session.clear()
-    return redirect(url_for("login_view'"))
+    return redirect(url_for("login_view"))
 
 
 ############################ブックルーム関係（ここから）############################
