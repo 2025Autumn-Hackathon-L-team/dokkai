@@ -149,7 +149,7 @@ def public_bookrooms_view():
     return render_template("bookroom.html", bookrooms=bookrooms, is_public=True, uid=user_id)
 
 # パブリックブックルームの作成
-@app.route("/public_bookrooms", methods=["POST"])
+@app.route("/public_bookrooms/create", methods=["POST"])
 def create_public_bookroom():
     # user_idは仮の値を使用（init.sqlでこのユーザーは作成済み）
     bookroom_name = request.form.get("bookroom_name")
@@ -246,7 +246,7 @@ def detail(bookroom_id):
 # メッセージの投稿
 @app.route("/public_bookrooms/<bookroom_id>/messages", methods=["POST"])
 def create_message(bookroom_id):
-    user_id = session.get("id")
+    user_id = session.get("id",TEST_USER_ID)
     if user_id is None:
         return redirect(url_for("login_view"))
 
