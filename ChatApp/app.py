@@ -198,10 +198,10 @@ def update_public_bookroom(bookroom_id):
     if not is_bookroom_owner(user_id, bookroom_id):
         return redirect(url_for("public_bookrooms_view"))
 
-    bookroom_name = request.form.get("bookroom_name")
-    bookroom_description = request.form.get("bookroom_description")
+    name = request.form.get("bookroom_Name")
+    description = request.form.get("bookroom_Description")
     Bookroom.update(
-        bookroom_id=bookroom_id, name=bookroom_name, description=bookroom_description
+        bookroom_id=bookroom_id,name=name, description=description
     )
     return redirect(url_for("public_bookrooms_view"))
 
@@ -231,7 +231,7 @@ def delete_public_bookroom(bookroom_id):
 
 
 # ブックルーム詳細ページの表示
-@app.route("/public-bookrooms/<bookroom_id>/messages", methods=["GET"])
+@app.route("/public_bookrooms/<bookroom_id>/messages", methods=["GET"])
 def detail(bookroom_id):
     user_id = session.get("user_id")
 
@@ -264,7 +264,7 @@ def create_message(bookroom_id):
 
 
 # メッセージの削除
-@app.route("/public-bookrooms/<bookroom_id>/messages/<message_id>", methods=["POST"])
+@app.route("/public_bookrooms/<bookroom_id>/messages/<message_id>", methods=["POST"])
 def delete_message(bookroom_id, message_id):
     user_id = session.get("user_id")
     if user_id is None:

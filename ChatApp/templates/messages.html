@@ -11,16 +11,16 @@
       <p id="bookroom-name">ブックルームの名前</p>
         <p id="bookroom-description">ブックルームの詳細</p>
       </div>
-      {% if channel.abstract is not none %}
+      {% if bookroom.description is not none %}
       <span class="memo-category">
           仮タグ
         </span>
       
-     {% endif %} <!--{% if uid == channel.uid %}-->
+     {% endif %} {% if uid == bookroom.uid %}
       <button id="bookroom-update-button">
         <img src="{{ url_for('static', filename='img/pen.png') }}" alt="アイコン" >
       </button>
-     <!--{% include 'modal/update-bookroom.html' %} {% endif %}-->
+     {% include 'modal/update-bookroom.html' %} {% endif %}
       </div>
     </div>  
     <div id="message-area">

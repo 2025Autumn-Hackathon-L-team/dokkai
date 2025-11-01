@@ -1,27 +1,27 @@
-div id="update-channel-modal" class="modal">
+div id="update-bookroom-modal" class="modal">
   <div class="modal-content">
     <div class="modal-header">
       <h5>Edit Channel</h5>
       <span class="modalClose" id="update-page-close-button">×</span>
     </div>
     <form
-      name="updateChannelForm"
+      name="updateBookroomForm"
       class="modal-body"
-      action="/channels/update/{{ channel.id }}"
+      action="/public_bookrooms/update/{{ bookroom.id }}"
       method="POST"
     >
       <input
         type="text"
-        placeholder="Channel name"
-        class="channel-form-input"
-        name="channelTitle"
+        placeholder="Bookroom name"
+        class="bookroom-form-input"
+        name="bookroom_Name"
         required
       />
       <input
         type="text"
-        placeholder="Channel description"
-        class="channel-form-input"
-        name="channelDescription"
+        placeholder="Bookroom description"
+        class="bookroom-form-input"
+        name="bookroom_Description"
       />
       <button>EDIT</button>
     </form>
