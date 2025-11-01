@@ -18,6 +18,7 @@
             placeholder="名前を入力"
             name="name"
             id="signup-name-input"
+            value="{{name or ''}}"
           />
         </div>
         <div>
@@ -27,6 +28,7 @@
             placeholder="メールアドレスを入力"
             name="email"
             id="signup-email-input"
+            value="{{email or ''}}"
           />
         </div>
         <div>
@@ -36,7 +38,7 @@
             placeholder="パスワードを入力"
             name="password"
             id="signup-password-input"
-          />
+            value="{{password or ''}}"/>
         </div>
         <div>
           <label for="signup-password-confirmation-input">
