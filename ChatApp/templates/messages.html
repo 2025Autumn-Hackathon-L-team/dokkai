@@ -15,7 +15,7 @@
           仮タグ
         </span>
       
-     {% endif %} {% if uid == bookroom.uid %}
+     {% endif %} {% if uid == bookroom.user_id %}
       <button id="bookroom-update-button">
         <img src="{{ url_for('static', filename='img/pen.png') }}" alt="アイコン" >
       </button>
@@ -24,14 +24,14 @@
     </div>  
     <div id="message-area">
       {% if messages|length > 0 %} {% for message in messages %} {% if
-      message.uid == uid %}
+      message.user_id == uid %}
       <div class="my-messages">
          <div class="message-and-reaction-right">
         <p class="box box-right">{{ message.message }}
         <span class="timestamp timestamp-right">2025/10/28 16:54</span>
         </p>
         <form
-          action="/public_bookrooms/{{ bookroom.id }}/messages/{{ message.id }}"
+          action="/public_bookrooms/{{ bookroom.id }}/messages"
           method="POST"
         >
         <div class="reaction-icon-wrapper reaction-icon-left">
@@ -44,9 +44,9 @@
       </div>
       {% else %}
       <div class="messages">
-        <p class="user-name">{{message.user_name | default("メッセージテーブルのユーザーネーム")}}</p>
+        <p class="user-name">{{messages.user_name | default("メッセージテーブルのユーザーネーム")}}</p>
         <div class="message-and-reaction-left">
-        <p class="box box-left">{{message.message| default("メッセージテーブルの内容")}}
+        <p class="box box-left">{{messages.message| default("メッセージテーブルの内容")}}
         <span class="timestamp timestamp-left">2025/10/28 16:54</span>
         </p>
         <div class="reaction-icon-wrapper reaction-icon-right">

@@ -47,22 +47,16 @@
   letter-spacing: 0.15em;
 }
 
-#bookroom-update-button img{
-  margin: auto 0;
-  padding: 0.2em 0.6em;
-  background-color: var(--salmon_pink);
-  font-size: 12px;
-  border: solid 6px var(--navy_blue);
-  border-radius: 50%;
-  z-index: 10;
-  box-shadow: 0 0 0 3px var(--salmon_pink);
-  width: 30px;
-  height: 30px;
+#bookroom-update-button {
+    background-color: var(--lightgreen);
+    border-radius: 50%;
+    height: 100%;
+    width: 100px;
+    padding: 0.2em 0.6em;
+    margin: 0;
 }
-
 #bookroom-update-button:hover {
-  background-color: var(--middle_pink);
-  box-shadow: 0 0 0 3px var(--middle_pink);
+  background-color: var(--green);
   cursor: pointer;
 }
 .message-meta { 
@@ -82,6 +76,7 @@
   white-space: nowrap;
   margin-top:10px;
   margin-left: 20px;
+  margin-right:20px;
 }
 
 /* ========================== メッセージ表示エリア ============================= */
