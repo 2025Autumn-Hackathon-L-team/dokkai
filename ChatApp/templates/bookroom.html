@@ -29,13 +29,15 @@
         <p class="memo-description">{{ bookroom.description }}</p>
       </div>
       <div class="memo-meta">
-        <span class="memo-date">2025/10/28</span>
+        <span class="memo-date">{{bookroom.created_at}}</span>
         <span class="memo-category {{ bookroom.category_tag | default('uncategorized') }}">
           {{ bookroom.category | default('未分類') }}
         </span>
       </div>
       <div class="memo-icon">
+        {% if session.get('user_id') == bookroom.user_id %}
        <img src="{{ url_for('static', filename='img/trash-can.png') }}" alt="アイコン" />
+        {% endif %}
       </div>
     </div>
     {% endfor %}
