@@ -152,7 +152,7 @@ def public_channels_view():
     return render_template("bookroom.html", bookrooms=bookrooms, is_public=True, uid=current_uid)
 
 # パブリックブックルームの作成
-@app.route("/public_bookrooms", methods=["POST"])
+@app.route("/bookroom", methods=["POST"])
 def create_public_bookroom():
     # user_idは仮の値を使用（init.sqlでこのユーザーは作成済み）
     bookroom_name = request.form.get("bookroom_name")
