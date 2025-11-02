@@ -142,7 +142,7 @@ def is_bookroom_owner(user_id, bookroom_id):
     if not bookroom:
         flash("ブックルームが存在しません")
         return False
-    if bookroom["id"] != user_id:
+    if bookroom["user_id"] != user_id:
         flash("ブックルーム作成者のみ操作可能です")
         return False
     return True
