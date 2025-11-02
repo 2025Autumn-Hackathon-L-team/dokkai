@@ -1,4 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, session, request, flash
+from flask_paginate import Pagination, get_page_parameter
 from datetime import timedelta
 import hashlib
 import uuid
@@ -13,6 +14,8 @@ TEST_USER_ID = "970af84c-dd40-47ff-af23-282b72b7cca8"
 
 EMAIL_PATTERN = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 SESSION_DAYS = 30
+
+PER_PAGE = 5 #1ページに表示するブックルームの数
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', uuid.uuid4().hex)
@@ -149,7 +152,22 @@ def public_channels_view():
     bookrooms = Bookroom.get_public_bookrooms()
     #u_idをブックルームに渡す
     current_uid = session.get("user_id", TEST_USER_ID)
-    return render_template("bookroom.html", bookrooms=bookrooms, is_public=True, uid=current_uid)
+
+    # ページネーション
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    paginated_bookrooms = bookrooms[(page - 1)*PER_PAGE: page*PER_PAGE]
+    pagination = Pagination(
+        page=page,
+        total=len(bookrooms),
+        per_page=PER_PAGE,
+        css_framework='bootstrap5',
+        prev_label='前へ',
+        next_label='次へ',
+        display_pages=True,
+        record_name='ブックルーム'
+        )
+
+    return render_template("bookroom.html",is_public=True, uid=current_uid, paginated_bookrooms=paginated_bookrooms, pagination=pagination)
 
 # パブリックブックルームの作成
 @app.route("/bookroom", methods=["POST"])

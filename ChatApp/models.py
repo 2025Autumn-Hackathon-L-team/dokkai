@@ -1,5 +1,6 @@
 from flask import abort
 import pymysql
+from flask_paginate import Pagination, get_page_parameter
 from util.DB import DB
 
 db_pool = DB.init_db_pool()

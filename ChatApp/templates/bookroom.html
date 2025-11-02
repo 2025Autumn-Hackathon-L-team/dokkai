@@ -22,7 +22,7 @@
   </div>
 
   <div id="bookroom-list"> 
-    {% for bookroom in bookrooms %}
+    {% for bookroom in paginated_bookrooms %}
     <div class="memo-item-card"> {# Card for each memo #}
       <div class="memo-content">
         <h3 class="memo-title">{{ bookroom.name }}</h3>
@@ -42,8 +42,10 @@
     </div>
     {% endfor %}
 
-    <ul class="bookroom-box">
-      <!-- Pagination --></ul>
+    <div class="bookroom-box">
+      {{ pagination.info }}
+      {{ pagination.links }}
+    </div>
   </div>
 
   {# Floating Action Button #}
@@ -58,7 +60,7 @@
 {% block script %}
 <script type="text/javascript">
   // prettier-ignore
-  const bookrooms = JSON.parse('{{ bookrooms|tojson }}'); 
+  const bookrooms = JSON.parse('{{ paginated_bookrooms|tojson }}'); 
   // prettier-ignore
   const uid = JSON.parse('{{ uid|tojson }}');
 </script>
