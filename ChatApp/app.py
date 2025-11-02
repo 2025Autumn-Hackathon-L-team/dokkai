@@ -152,12 +152,14 @@ def is_bookroom_owner(user_id, bookroom_id):
 @app.route("/public_bookrooms", methods=["GET"])
 def public_channels_view():
     # 仮のユーザを設定
-    session["user_id"] = TEST_USER_ID
+    #session["user_id"] = TEST_USER_ID
 
     # publicなブックルームのみ取得
     bookrooms = Bookroom.get_public_bookrooms()
     #u_idをブックルームに渡す
-    current_uid = session.get("user_id", TEST_USER_ID)
+    current_uid = session.get("user_id")
+    # ログイン中のユーザーの確認
+    print(f'{current_uid}は現在セッションを持っているユーザーです')
     return render_template("bookroom.html", bookrooms=bookrooms, is_public=True, uid=current_uid)
 
 # パブリックブックルームの作成
