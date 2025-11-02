@@ -114,11 +114,17 @@
 
 .my-messages {
   display: flex;
+  flex-direction: column; 
   position: relative;
 }
 
+.my-messages form {
+    display: flex; 
+    align-items: flex-end;
+}
+
 .delete-message-button {
-  background-color: var(--brown);
+  background-color: var(--snow);
   height: 40px;
   width: 40px;
   line-height: 47px;
@@ -151,14 +157,13 @@
 }
 
 .box-left {
-  background-color: var(--lightgreen);
+  background-color: var(--lightgray);
   color: var(--brown);
 }
 
 .box-right {
-  background-color:var(--lightblue);
+  background-color: var(--lightgreen);
   color: var(--brown);
-  margin-left: auto;
 }
 
 .box-left:before {
@@ -212,12 +217,11 @@
 }
 
 .message-and-reaction-right {
-  display: flex; /* 横並びにする */
-  align-items: flex-end; /* 下端を揃える */
-  gap: 5px; /* 吹き出しとアイコンの隙間 */
-  width: 100%; /* 親要素の幅を使う */
+  display: flex;
+  align-items: flex-end; 
+  gap: 5px; 
+  width: 100%; 
 }
-
 .message-and-reaction-left {
   display: flex; /* 横並びにする */
   align-items: flex-end; /* 下端を揃える */
@@ -313,6 +317,6 @@
 }
 @media only screen and (min-width: 640px) {
   .box {
-    width: 80%;
+    width: 100%;
   }
 }
