@@ -34,11 +34,11 @@
           {{ bookroom.category | default('未分類') }}
         </span>
       </div>
-      {% if session.get('user_id') == bookroom.user_id %}
       <div class="memo-icon">
+        {% if session.get('user_id') == bookroom.user_id %}
        <img src="{{ url_for('static', filename='img/trash-can.png') }}" alt="アイコン" />
+        {% endif %}
       </div>
-      {% endif %}
     </div>
     {% endfor %}
 
