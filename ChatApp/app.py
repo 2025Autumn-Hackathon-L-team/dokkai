@@ -158,14 +158,14 @@ def public_bookrooms_view():
     return render_template("bookroom.html", bookrooms=bookrooms, is_public=True, uid=user_id)
 
 # パブリックブックルームの作成
-@app.route("/public_bookrooms/create", methods=["POST"])
+@app.route("/public_bookrooms", methods=["POST"])
 def create_public_bookroom():
     # user_idは仮の値を使用（init.sqlでこのユーザーは作成済み）
     bookroom_name = request.form.get("bookroom_name")
     bookroom = Bookroom.find_by_bookroom_name(bookroom_name)
     if bookroom == None:
         bookroom_description = request.form.get("bookroom_description")
-        user_id = session.get("id", None)
+        user_id = session.get("id", TEST_USER_ID)
         Bookroom.create(
             user_id=user_id,
             name=bookroom_name,
