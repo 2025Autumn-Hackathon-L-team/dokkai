@@ -36,6 +36,21 @@ class User:
         finally:
             db_pool.release(conn)
 
+    @classmethod
+    def find_by_name(cls,name):
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                sql = "SELECT * FROM users WHERE name=%s"
+                cur.execute(sql,(name,))
+                user = cur.fetchone()
+            return user
+        except pymysql.Error as e:
+            print(f'エラーが発生しています:{e}')
+            abort(500)
+        finally:
+            db_pool.release(conn)
+
 
 ############################ブックルーム関係（ここから）############################
 # ブックルームクラス

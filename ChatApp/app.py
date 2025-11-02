@@ -49,7 +49,7 @@ def signup_process():
     name = request.form.get("name")
     email = request.form.get("email")
     password = request.form.get("password")
-    passwordConfirmation = request.form.get("password-confirmation")
+    passwordConfirmation = request.form.get("password_confirmation")
     if name == "" or email == "" or password == "" or passwordConfirmation == "":
         flash("入力されていないフォームがあります")
     elif password != passwordConfirmation:
@@ -57,18 +57,25 @@ def signup_process():
     elif re.fullmatch(EMAIL_PATTERN, email) is None:
         flash("有効なメールアドレスの形式ではありません")
     else:
-        id = uuid.uuid4()
-        password = hashlib.sha256(password.encode("utf-8")).hexdigest()
-        registered_user = User.find_by_email(email) 
-        if registered_user != None:
-            flash("すでに登録済みです")
+        registered_email_user= User.find_by_email(email) 
+        registered_name_user=User.find_by_name(name)
+        if registered_email_user != None:
+            flash("入力されたメールアドレスは使用されています。")
+            flash("違うメールアドレスを入力してください。")
+        elif registered_name_user != None:
+            flash("入力された名前は使用されています。")
+            flash("違う名前を入力してください。")
         else:
+            id = uuid.uuid4()
+            password = hashlib.sha256(password.encode("utf-8")).hexdigest()
             User.create(id,name,email,password)
             UserId = str(id)
             session['id'] = UserId
             return redirect(url_for("public_channels_view"))
     # バリデーションエラーでsignup_processに戻る時、フォームに入力した値をauth/signup.htmlに返す
-    return render_template("auth/signup.html",name=name,email=email,password=password)
+    print(f"{password}がpassword")
+    print(f"{passwordConfirmation}がpassword_confirmation")
+    return render_template("auth/signup.html",name=name,email=email,password=password,password_confirmation=passwordConfirmation)
 
 
 # ログインページの表示
@@ -83,28 +90,30 @@ def login_process():
     email = request.form.get("email")
     password = request.form.get("password")
     if email == "" and password == "":
-        flash("ログインできませんでした")
-        flash("メールアドレスとパスワードを入力してください")
+        flash("ログインできませんでした。")
+        flash("メールアドレスとパスワードを入力してください。")
     elif password == "":
-        flash("ログインできませんでした")
-        flash("パスワードを入力してください")
+        flash("ログインできませんでした。")
+        flash("パスワードを入力してください。")
     elif email == "":
-        flash("ログインできませんでした")
-        flash("メールアドレスを入力してください")
+        flash("ログインできませんでした。")
+        flash("メールアドレスを入力してください。")
     else:
         user = User.find_by_email(email)
+        # ログイン失敗、セキュリティのため、mailとpasswordのどちらかが間違っているようなメッセージを表示。
         if user is None:
-            flash("ログインできませんでした")
-            flash("このユーザーは存在しません")
+            flash("ログインできませんでした。")
+            flash("メールアドレスかパスワードが間違っています。")
         else:
             # パスワードの一致チェック
             hashPassword = hashlib.sha256(password.encode("utf-8")).hexdigest()
             user = User.find_by_email(email)
             # ログイン失敗、セキュリティのため、mailとpasswordのどちらかが間違っているようなメッセージを表示。
             if user["password"] != hashPassword:  
-                flash("ログインできませんでした")
-                flash("メールアドレスかパスワードが間違っています")
+                flash("ログインできませんでした。")
+                flash("メールアドレスかパスワードが間違っています。")
             else:
+                session["user_id"]=user["id"]
                 print(f"{user}でログインできました") #ログインできているかチェック、後ほど削除
                 return redirect(url_for("public_channels_view"))
     # バリデーションエラーでauth/login.htmlnに戻る時、フォームに入力した値をauth/login.htmlに返す
@@ -170,7 +179,7 @@ def public_channels_view():
     return render_template("bookroom.html",is_public=True, uid=current_uid, paginated_bookrooms=paginated_bookrooms, pagination=pagination)
 
 # パブリックブックルームの作成
-@app.route("/bookroom", methods=["POST"])
+@app.route("/public_bookrooms", methods=["POST"])
 def create_public_bookroom():
     # user_idは仮の値を使用（init.sqlでこのユーザーは作成済み）
     bookroom_name = request.form.get("bookroom_name")
