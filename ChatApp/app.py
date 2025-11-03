@@ -70,8 +70,15 @@ def signup_process():
             password = hashlib.sha256(password.encode("utf-8")).hexdigest()
             User.create(id,name,email,password)
             UserId = str(id)
+            UserName = str(name)
+            UserEmail = str(email)
+            print(f'{UserId}はUserIdです') #代入された値の確認用
+            print(f'{UserName}はUserNameです') #値確認用
+            print(f'{UserEmail}はUserEmailです') #値確認用
             session["user_id"] = UserId
-            return redirect(url_for("public_channels_view"))
+            session["user_name"] = UserName
+            session["user_email"] = UserEmail
+            return redirect(url_for("public_bookrooms_view"))
     # バリデーションエラーでsignup_processに戻る時、フォームに入力した値をauth/signup.htmlに返す
     print(f"{password}がpassword")
     print(f"{passwordConfirmation}がpassword_confirmation")
