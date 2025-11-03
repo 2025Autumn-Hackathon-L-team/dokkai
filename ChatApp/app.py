@@ -158,7 +158,7 @@ def public_channels_view():
 
     # publicなブックルームのみ取得
     bookrooms = Bookroom.get_public_bookrooms()
-    current_uid = session.get("user_id",TEST_USER_ID)
+    current_uid = session.get("user_id", TEST_USER_ID)
     return render_template("bookroom.html", bookrooms=bookrooms, is_public=True, uid=current_uid)
 
 # パブリックブックルームの作成
