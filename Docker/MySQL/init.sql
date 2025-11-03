@@ -10,6 +10,7 @@ USE chatapp;
 
 GRANT ALL PRIVILEGES ON chatapp.* TO 'testuser';
 
+-- TODO M_iconsテーブルができたら、外部キー制約を入れる
 CREATE TABLE users (
     id VARCHAR(255) NOT NULL PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE,
