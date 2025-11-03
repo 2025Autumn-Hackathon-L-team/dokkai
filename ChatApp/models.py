@@ -219,7 +219,7 @@ class Message:
 ############################メッセージ関係（ここまで）############################
 
 ############################プロフィール画面関係（ここから)############################
-class Profile: # TODO 求める値が出るか検証する
+class Profile:
     # アイコンの変更
     @classmethod
     def icon_update(cls,iconid):
@@ -265,6 +265,7 @@ class Profile: # TODO 求める値が出るか検証する
         finally:
             db_pool.release(conn)
     
+    # TODO リアクションの実装が完了したら
     # リアクションの数を取得(T_reactuin_messagesのuser_idはリアクションをしたuser_id)
     @classmethod
     def get_reactions_count(cls,id):
@@ -290,7 +291,7 @@ class Profile: # TODO 求める値が出るか検証する
                 sql = "SELECT COUNT(id) FROM messages WHERE user_id=%s" 
                 cur.execute(sql,(id,))
                 messages_count=cur.fetchone()
-                return messages_count
+                return messages_count['COUNT(id)']
         except pymysql.Error as e:
             print(f'エラーが発生しています:{e}')
             abort(500)
