@@ -163,10 +163,6 @@
   object-fit: contain; /* アスペクト比を維持して表示 */
 }
 
-.pagination {
-  color: black;
-}
-
 /* ================== フローティングアクションボタン (FAB) ================== */
 .create-bookroom-button { /* 新しいセレクタとして追加 */
   position: fixed;
