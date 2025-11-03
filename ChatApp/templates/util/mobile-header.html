@@ -14,9 +14,9 @@
           <li class ="logo">
             DOKKAI</li>
           <li class="page-links">
-            <a href="#">
+            <a href="public_bookrooms_view">
               <span class="icon">
-                <img src="static/img/public.png" alt="public_icon" width="24" height="24">
+                <img src="{{ url_for('static', filename='img/public.png')}}" alt="public_icon" width="24" height="24">
               </span>
               <span class="title">PUBLIC</span>
             </a>
@@ -24,7 +24,7 @@
           <li class="page-links">
             <a href="#">
               <span class="icon">
-                <img src="static/img/private.png" alt="private_icon" width="24" height="24">
+                <img src="{{ url_for('static', filename='img/private.png')}}" alt="private_icon" width="24" height="24">
               </span>
               <span>PRIVATE</span>
             </a>
@@ -32,7 +32,7 @@
           <li class="page-links">
             <a href="#">
               <span class="icon">
-                <img src="static/img/history.png" alt="history_icon" width="24" height="24">
+                <img src="{{ url_for('static', filename='img/history.png')}}" alt="history_icon" width="24" height="24">
               </span>
               <span>HISTORY</span>
             </a>
@@ -40,15 +40,15 @@
           <li class="page-links">
             <a href="#">
               <span class="icon">
-                <img src="static/img/profile.png" alt="profile_icon" width="24" height="24">
+                <img src="{{ url_for('static', filename='img/profile.png')}}" alt="profile_icon" width="24" height="24">
               </span>
               <span>PROFILE</span>
             </a>
           </li>
           <li class="page-links">
-            <a href="#">
+            <a href="logout">
               <span class="icon">
-                  <img src="static/img/signout.png" alt="signout_icon" width="24" height="24">
+                  <img src="{{ url_for('static', filename='img/signout.png')}}" alt="signout_icon" width="24" height="24">
               </span>
               <span>SIGNOUT</span>
             </a>

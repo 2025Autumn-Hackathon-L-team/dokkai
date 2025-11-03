@@ -25,8 +25,10 @@
     {% for bookroom in paginated_bookrooms %}
     <div class="memo-item-card"> {# Card for each memo #}
       <div class="memo-content">
+        <a href="{{ url_for('detail', bookroom_id=bookroom.id) }}" class="bookroom-to-message">
         <h3 class="memo-title">{{ bookroom.name }}</h3>
         <p class="memo-description">{{ bookroom.description }}</p>
+      </a>
       </div>
       <div class="memo-meta">
         <span class="memo-date">{{bookroom.created_at}}</span>
