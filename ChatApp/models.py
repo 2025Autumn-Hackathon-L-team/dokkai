@@ -183,7 +183,10 @@ class Message:
         try:
             with conn.cursor() as cur:
                 sql = """
-                    SELECT m.id, u.id, u.name, m.content 
+                    SELECT m.id, 
+                    u.id AS user_id,
+                    u.name AS user_name,
+                    m.content AS message 
                     FROM messages AS m 
                     INNER JOIN users AS u ON m.user_id = u.id 
                     WHERE m.bookroom_id = %s 

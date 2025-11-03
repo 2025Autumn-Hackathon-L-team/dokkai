@@ -22,26 +22,32 @@
   </div>
 
   <div id="bookroom-list"> 
-    {% for bookroom in bookrooms %}
+    {% for bookroom in paginated_bookrooms %}
     <div class="memo-item-card"> {# Card for each memo #}
       <div class="memo-content">
+        <a href="{{ url_for('detail', bookroom_id=bookroom.id) }}" class="bookroom-to-message">
         <h3 class="memo-title">{{ bookroom.name }}</h3>
         <p class="memo-description">{{ bookroom.description }}</p>
+      </a>
       </div>
       <div class="memo-meta">
-        <span class="memo-date">2025/10/28</span>
+        <span class="memo-date">{{bookroom.created_at}}</span>
         <span class="memo-category {{ bookroom.category_tag | default('uncategorized') }}">
           {{ bookroom.category | default('未分類') }}
         </span>
       </div>
       <div class="memo-icon">
+        {% if session.get('user_id') == bookroom.user_id %}
        <img src="{{ url_for('static', filename='img/trash-can.png') }}" alt="アイコン" />
+        {% endif %}
       </div>
     </div>
     {% endfor %}
 
-    <ul class="bookroom-box">
-      <!-- Pagination --></ul>
+    <div class="bookroom-box">
+      {{ pagination.info }}
+      {{ pagination.links }}
+    </div>
   </div>
 
   {# Floating Action Button #}
@@ -56,7 +62,7 @@
 {% block script %}
 <script type="text/javascript">
   // prettier-ignore
-  const bookrooms = JSON.parse('{{ bookrooms|tojson }}'); 
+  const bookrooms = JSON.parse('{{ paginated_bookrooms|tojson }}'); 
   // prettier-ignore
   const uid = JSON.parse('{{ uid|tojson }}');
 </script>

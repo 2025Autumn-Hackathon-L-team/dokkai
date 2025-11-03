@@ -104,7 +104,7 @@
   margin-bottom: 12px;
 }
 
-.switch-auth-mode {
+.switch-auth-template {
   color: rgb(198, 8, 8);
   line-height: 28px;
   font-size: 14px;
@@ -112,7 +112,7 @@
   padding: 0.5rem 2rem 0 2rem;
 
 }
-.switch-auth-mode:hover {
+.switch-auth-template:hover {
   color: var(--brown);
 }
 
