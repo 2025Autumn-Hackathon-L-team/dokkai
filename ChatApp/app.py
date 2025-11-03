@@ -67,7 +67,7 @@ def signup_process():
             password = hashlib.sha256(password.encode("utf-8")).hexdigest()
             User.create(id,name,email,password)
             UserId = str(id)
-            session['id'] = UserId
+            session["user_id"] = UserId
             return redirect(url_for("public_channels_view"))
     # バリデーションエラーでsignup_processに戻る時、フォームに入力した値をauth/signup.htmlに返す
     print(f"{password}がpassword")
@@ -154,14 +154,11 @@ def is_bookroom_owner(user_id, bookroom_id):
 @app.route("/public_bookrooms", methods=["GET"])
 def public_channels_view():
     # 仮のユーザを設定
-    #session["user_id"] = TEST_USER_ID
+    session["user_id"] = TEST_USER_ID
 
     # publicなブックルームのみ取得
     bookrooms = Bookroom.get_public_bookrooms()
-    #u_idをブックルームに渡す
-    current_uid = session.get("user_id")
-    # ログイン中のユーザーの確認
-    print(f'{current_uid}は現在セッションを持っているユーザーです')
+    current_uid = session.get("user_id",TEST_USER_ID)
     return render_template("bookroom.html", bookrooms=bookrooms, is_public=True, uid=current_uid)
 
 # パブリックブックルームの作成
