@@ -5,7 +5,7 @@ import uuid
 import re
 import os
 
-from models import User, Bookroom, Message
+from models import User, Bookroom, Message, Profile
 
 # user idを仮で作成するためにランダムを作成 ここから
 TEST_USER_ID = "970af84c-dd40-47ff-af23-282b72b7cca8"
@@ -27,9 +27,9 @@ app.jinja_env.cache = {}
 # ルートページのリダイレクト
 @app.route("/")
 def index():
-    id = session.get("id")
-    print (f'sessionは{id}です')
-    if id is None:
+    user_id = session.get("user_id")
+    print (f'sessionは{user_id}です')
+    if user_id is None:
         return redirect(url_for('login_view'))
     return redirect(url_for('public_channels_view'))
 
@@ -111,6 +111,8 @@ def login_process():
                 flash("メールアドレスかパスワードが間違っています。")
             else:
                 session["user_id"]=user["id"]
+                session["user_name"]=user["name"]
+                session["user_email"]=user["email"]
                 print(f"{user}でログインできました") #ログインできているかチェック、後ほど削除
                 return redirect(url_for("public_channels_view"))
     # バリデーションエラーでauth/login.htmlnに戻る時、フォームに入力した値をauth/login.htmlに返す
@@ -287,6 +289,24 @@ def delete_message(bookroom_id, message_id):
         "/public-bookrooms/{bookroom_id}/messages".format(bookroom_id=bookroom_id)
     )
 
+########プロフィール画面（ここから）##########
+@app.route("/profile")
+def profile_view():
+    current_uid=session.get("user_id")
+    if current_uid is None:
+        return redirect(url_for('login_view'))
+    current_name=session.get("user_name")
+    current_email=session.get("user_email")
+    messages_count=Profile.get_messages_count(current_uid) 
+    # TODO リアクション機能実装後、リアクションの数を取得する。
+    #printはサーバーで出る値を確認。後日削除する。
+    print(f'{current_uid}はprofile.htmlで現在セッションを持っているユーザーです')
+    print(f'{current_name}はprofile.htmlで現在セッションを持っているユーザーのnameを表示しています')
+    print(f'{current_email}はprofile.htmlで現在セッションを持っているユーザーのemailを表示しています')
+    print(f'{messages_count}は{current_name}が投稿したメッセージの数を表しています')
+    return render_template("profile.html",uid=current_uid,name=current_name,email=current_email,messages_count=messages_count)
+
+########プロフィール画面（ここまで）##########
 
 @app.errorhandler(404)
 def page_not_found(error):
