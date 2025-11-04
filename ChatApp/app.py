@@ -8,9 +8,6 @@ import os
 
 from models import User, Bookroom, Message, Profile
 
-# user idを仮で作成するためにランダムを作成 ここから
-TEST_USER_ID = "970af84c-dd40-47ff-af23-282b72b7cca8"
-# user idを仮で作成するためにランダムを作成 ここまで
 
 EMAIL_PATTERN = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 SESSION_DAYS = 30
@@ -166,7 +163,7 @@ def public_bookrooms_view():
     # publicなブックルームのみ取得
     bookrooms = Bookroom.get_public_bookrooms()
     #表示チェックのためデフォルト値を設定
-    user_id = session.get("id", TEST_USER_ID)
+    user_id = session.get("user_id")
 
     # ページネーション
     page = request.args.get(get_page_parameter(), type=int, default=1)
@@ -176,8 +173,6 @@ def public_bookrooms_view():
         total=len(bookrooms),
         per_page=PER_PAGE,
         css_framework='bootstrap5',
-        prev_label='前へ',
-        next_label='次へ',
         display_pages=True,
         record_name='ブックルーム'
         )
@@ -192,7 +187,7 @@ def create_public_bookroom():
     bookroom = Bookroom.find_by_bookroom_name(bookroom_name)
     if bookroom == None:
         bookroom_description = request.form.get("bookroom_description")
-        user_id = session.get("id", TEST_USER_ID)
+        user_id = session.get("user_id")
         Bookroom.create(
             user_id=user_id,
             name=bookroom_name,
@@ -209,7 +204,7 @@ def create_public_bookroom():
 # ブックルーム編集ページ表示
 @app.route("/public_bookrooms/update/<bookroom_id>", methods=["GET"])
 def show_public_bookroom(bookroom_id):
-    user_id = session.get("id", TEST_USER_ID)
+    user_id = session.get("user_id")
     if user_id is None:
         return redirect(url_for("login_view"))
 
@@ -223,7 +218,7 @@ def show_public_bookroom(bookroom_id):
 # ブックルームの編集作業
 @app.route("/public_bookrooms/update/<bookroom_id>", methods=["POST"])
 def update_public_bookroom(bookroom_id):
-    user_id = session.get("id", TEST_USER_ID)
+    user_id = session.get("user_id")
     if user_id is None:
         return redirect(url_for("login_view"))
 
@@ -243,7 +238,7 @@ def update_public_bookroom(bookroom_id):
 def delete_public_bookroom(bookroom_id):
     # user_id = session.get('user_id')
     # セッションが未実装なため、仮値を入れる
-    user_id = session.get("id", TEST_USER_ID)
+    user_id = session.get("user_id")
     if user_id is None:
         return redirect(url_for("login_view"))
 
@@ -266,7 +261,7 @@ def delete_public_bookroom(bookroom_id):
 @app.route("/public_bookrooms/<bookroom_id>/messages", methods=["GET"])
 def detail(bookroom_id):
     #表示チェックのためデフォルトユーザを設定
-    user_id = session.get("id",TEST_USER_ID)
+    user_id = session.get("user_id")
 
     if user_id is None:
         return redirect(url_for("login_view"))
@@ -282,7 +277,7 @@ def detail(bookroom_id):
 # メッセージの投稿
 @app.route("/public_bookrooms/<bookroom_id>/messages", methods=["POST"])
 def create_message(bookroom_id):
-    user_id = session.get("id",TEST_USER_ID)
+    user_id = session.get("user_id")
     if user_id is None:
         return redirect(url_for("login_view"))
 

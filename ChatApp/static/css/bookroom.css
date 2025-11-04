@@ -212,3 +212,17 @@
     margin-top: 0px; 
 }
 }
+
+.pagination{
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  gap:10px;
+}
+.page-link{
+  color:var(--brown);
+}
+.page-item.active .page-link {
+  font-weight: bold;
+  color: #6aa6ed; 
+}
