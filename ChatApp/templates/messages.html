@@ -16,7 +16,7 @@
         </span>
       
      {% endif %}{% if bookroom.user_id == uid %}
-      <button class="update-bookroom-button"id="update-bookroom-modal"label="更新">
+      <button class="update-bookroom-button" id="update-bookroom-modal" label="更新">
         <img src="{{ url_for('static', filename='img/pen.png') }}" alt="アイコン" >
       </button>
      {% include 'modal/update-bookroom.html' %} {% endif %}
@@ -80,7 +80,7 @@
   type="text/javascript"
 ></script>
 <script
-  src="{{url_for('static',filename='js/channels/update-channel.js')}}"
+  src="{{url_for('static',filename='js/bookroom/update-bookroom.js')}}"
   type="text/javascript"
 ></script>
 {% endblock %}

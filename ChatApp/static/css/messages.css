@@ -47,7 +47,7 @@
   letter-spacing: 0.15em;
 }
 
-#bookroom-update-button {
+#update-bookroom-button {
     background-color: var(--lightgreen);
     border-radius: 50%;
     height: 100%;
@@ -55,7 +55,7 @@
     padding: 0.2em 0.6em;
     margin: 0;
 }
-#bookroom-update-button:hover {
+#update-bookroom-button:hover {
   background-color: var(--green);
   cursor: pointer;
 }
