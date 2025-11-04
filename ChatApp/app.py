@@ -70,8 +70,15 @@ def signup_process():
             password = hashlib.sha256(password.encode("utf-8")).hexdigest()
             User.create(id,name,email,password)
             UserId = str(id)
+            UserName = str(name)
+            UserEmail = str(email)
+            print(f'{UserId}はUserIdです') #代入された値の確認用
+            print(f'{UserName}はUserNameです') #値確認用
+            print(f'{UserEmail}はUserEmailです') #値確認用
             session["user_id"] = UserId
-            return redirect(url_for("public_channels_view"))
+            session["user_name"] = UserName
+            session["user_email"] = UserEmail
+            return redirect(url_for("public_bookrooms_view"))
     # バリデーションエラーでsignup_processに戻る時、フォームに入力した値をauth/signup.htmlに返す
     print(f"{password}がpassword")
     print(f"{passwordConfirmation}がpassword_confirmation")
@@ -310,14 +317,16 @@ def profile_view():
         return redirect(url_for('login_view'))
     current_name=session.get("user_name")
     current_email=session.get("user_email")
+    icon_view=Profile.icon_view(current_uid)
     messages_count=Profile.get_messages_count(current_uid) 
     # TODO リアクション機能実装後、リアクションの数を取得する。
     #printはサーバーで出る値を確認。後日削除する。
+    print(f'{icon_view}はiconidです')
     print(f'{current_uid}はprofile.htmlで現在セッションを持っているユーザーです')
     print(f'{current_name}はprofile.htmlで現在セッションを持っているユーザーのnameを表示しています')
     print(f'{current_email}はprofile.htmlで現在セッションを持っているユーザーのemailを表示しています')
     print(f'{messages_count}は{current_name}が投稿したメッセージの数を表しています')
-    return render_template("profile.html",uid=current_uid,name=current_name,email=current_email,messages_count=messages_count)
+    return render_template("profile.html",icon=icon_view,uid=current_uid,name=current_name,email=current_email,messages_count=messages_count)
 
 ########プロフィール画面（ここまで）##########
 
