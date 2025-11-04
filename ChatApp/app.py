@@ -159,7 +159,7 @@ def public_bookrooms_view():
     # publicなブックルームのみ取得
     bookrooms = Bookroom.get_public_bookrooms()
     #表示チェックのためデフォルト値を設定
-    user_id = session.get("id", TEST_USER_ID)
+    user_id = session.get("user_id", TEST_USER_ID)
 
     # ページネーション
     page = request.args.get(get_page_parameter(), type=int, default=1)
@@ -185,7 +185,7 @@ def create_public_bookroom():
     bookroom = Bookroom.find_by_bookroom_name(bookroom_name)
     if bookroom == None:
         bookroom_description = request.form.get("bookroom_description")
-        user_id = session.get("id", TEST_USER_ID)
+        user_id = session.get("user_id", TEST_USER_ID)
         Bookroom.create(
             user_id=user_id,
             name=bookroom_name,
@@ -202,7 +202,7 @@ def create_public_bookroom():
 # ブックルーム編集ページ表示
 @app.route("/public_bookrooms/update/<bookroom_id>", methods=["GET"])
 def show_public_bookroom(bookroom_id):
-    user_id = session.get("id", TEST_USER_ID)
+    user_id = session.get("user_id", TEST_USER_ID)
     if user_id is None:
         return redirect(url_for("login_view"))
 
@@ -216,7 +216,7 @@ def show_public_bookroom(bookroom_id):
 # ブックルームの編集作業
 @app.route("/public_bookrooms/update/<bookroom_id>", methods=["POST"])
 def update_public_bookroom(bookroom_id):
-    user_id = session.get("id", TEST_USER_ID)
+    user_id = session.get("user_id", TEST_USER_ID)
     if user_id is None:
         return redirect(url_for("login_view"))
 
@@ -236,7 +236,7 @@ def update_public_bookroom(bookroom_id):
 def delete_public_bookroom(bookroom_id):
     # user_id = session.get('user_id')
     # セッションが未実装なため、仮値を入れる
-    user_id = session.get("id", TEST_USER_ID)
+    user_id = session.get("user_id", TEST_USER_ID)
     if user_id is None:
         return redirect(url_for("login_view"))
 
@@ -259,7 +259,7 @@ def delete_public_bookroom(bookroom_id):
 @app.route("/public_bookrooms/<bookroom_id>/messages", methods=["GET"])
 def detail(bookroom_id):
     #表示チェックのためデフォルトユーザを設定
-    user_id = session.get("id",TEST_USER_ID)
+    user_id = session.get("user_id",TEST_USER_ID)
 
     if user_id is None:
         return redirect(url_for("login_view"))
@@ -275,7 +275,7 @@ def detail(bookroom_id):
 # メッセージの投稿
 @app.route("/public_bookrooms/<bookroom_id>/messages", methods=["POST"])
 def create_message(bookroom_id):
-    user_id = session.get("id",TEST_USER_ID)
+    user_id = session.get("user_id",TEST_USER_ID)
     if user_id is None:
         return redirect(url_for("login_view"))
 
@@ -292,7 +292,7 @@ def create_message(bookroom_id):
 # メッセージの削除
 @app.route("/public_bookrooms/<bookroom_id>/messages/<message_id>", methods=["POST"])
 def delete_message(bookroom_id, message_id):
-    user_id = session.get("id")
+    user_id = session.get("user_id")
     if user_id is None:
         return redirect(url_for("login_view"))
 
