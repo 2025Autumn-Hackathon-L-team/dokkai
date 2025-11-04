@@ -208,6 +208,10 @@
   .memo-date { 
     display:None;
 }
+  .memo-content {
+   flex-grow: 1; 
+   max-width: 55%;
+}
 }
 @media screen and (max-height: 768px){
     #bookroom-list { 
