@@ -1,7 +1,19 @@
 {% extends "base.html" %}
 <title>profile</title>
 {% block body %}
-<div class="profile_main_container">
+<div class="main_container">
+
+    <div id="profile">
+      <h1>PROFILE</h1> 
+      <div class="message-meta">
+      <div id ="profile-contents">
+    </div>
+    
+      <button class="update-bookroom-button" id="update-bookroom-button">
+        <img src="{{ url_for('static', filename='img/pen.png') }}" alt="アイコン" >
+      </button>
+      </div>
+    </div>
     <p>ユーザアイコンは{{icon}}</p>
     <p>{{uid}}がログインしています</p>
     <p>nameは{{name}}</p>
