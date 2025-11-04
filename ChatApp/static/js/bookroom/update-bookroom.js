@@ -2,8 +2,8 @@
 チャンネルを更新するモーダルの制御
 */
 
-const updateButton = document.getElementById("bookroom-update-button");
-const updateChannelModal = document.getElementById("update-bookroom-modal");
+const updateButton = document.getElementById("update-bookroom-button");
+const updateBookroomModal = document.getElementById("update-bookroom-modal");
 const updatePageButtonClose = document.getElementById(
   "update-page-close-button"
 );

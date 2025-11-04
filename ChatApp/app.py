@@ -294,7 +294,7 @@ def create_message(bookroom_id):
 # メッセージの削除
 @app.route("/public_bookrooms/<bookroom_id>/messages/<message_id>", methods=["POST"])
 def delete_message(bookroom_id, message_id):
-    user_id = session.get("id")
+    user_id = session.get("user_id")
     if user_id is None:
         return redirect(url_for("login_view"))
 
