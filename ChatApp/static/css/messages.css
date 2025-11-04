@@ -50,10 +50,10 @@
 #update-bookroom-button {
     background-color: var(--lightgreen);
     border-radius: 50%;
-    height: 100%;
-    width: 100px;
+    width: 10vh; 
+    height: 7vh;
     padding: 0.2em 0.6em;
-    margin: 0;
+    margin-left: auto
 }
 #update-bookroom-button:hover {
   background-color: var(--green);
@@ -313,7 +313,12 @@
   #message-area {
   padding-top: 20vh;
 }
-
+  #update-bookroom-button {
+    width: 30%; 
+    height: 30%;
+    padding: 0.2em 0.6em;
+    margin: 40px 0 0 0 ;
+}
 }
 @media only screen and (min-width: 640px) {
   .box {

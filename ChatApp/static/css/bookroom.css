@@ -205,6 +205,9 @@
     left: 0px;
     width:100%;
 }
+  .memo-date { 
+    display:None;
+}
 }
 @media screen and (max-height: 768px){
     #bookroom-list { 
