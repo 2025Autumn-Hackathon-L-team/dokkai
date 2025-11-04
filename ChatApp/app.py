@@ -8,9 +8,6 @@ import os
 
 from models import User, Bookroom, Message, Profile
 
-# user idを仮で作成するためにランダムを作成 ここから
-TEST_USER_ID = "970af84c-dd40-47ff-af23-282b72b7cca8"
-# user idを仮で作成するためにランダムを作成 ここまで
 
 EMAIL_PATTERN = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 SESSION_DAYS = 30
@@ -70,8 +67,15 @@ def signup_process():
             password = hashlib.sha256(password.encode("utf-8")).hexdigest()
             User.create(id,name,email,password)
             UserId = str(id)
+            UserName = str(name)
+            UserEmail = str(email)
+            print(f'{UserId}はUserIdです') #代入された値の確認用
+            print(f'{UserName}はUserNameです') #値確認用
+            print(f'{UserEmail}はUserEmailです') #値確認用
             session["user_id"] = UserId
-            return redirect(url_for("public_channels_view"))
+            session["user_name"] = UserName
+            session["user_email"] = UserEmail
+            return redirect(url_for("public_bookrooms_view"))
     # バリデーションエラーでsignup_processに戻る時、フォームに入力した値をauth/signup.htmlに返す
     print(f"{password}がpassword")
     print(f"{passwordConfirmation}がpassword_confirmation")
@@ -159,7 +163,7 @@ def public_bookrooms_view():
     # publicなブックルームのみ取得
     bookrooms = Bookroom.get_public_bookrooms()
     #表示チェックのためデフォルト値を設定
-    user_id = session.get("user_id", TEST_USER_ID)
+    user_id = session.get("user_id")
 
     # ページネーション
     page = request.args.get(get_page_parameter(), type=int, default=1)
@@ -169,8 +173,6 @@ def public_bookrooms_view():
         total=len(bookrooms),
         per_page=PER_PAGE,
         css_framework='bootstrap5',
-        prev_label='前へ',
-        next_label='次へ',
         display_pages=True,
         record_name='ブックルーム'
         )
@@ -185,7 +187,7 @@ def create_public_bookroom():
     bookroom = Bookroom.find_by_bookroom_name(bookroom_name)
     if bookroom == None:
         bookroom_description = request.form.get("bookroom_description")
-        user_id = session.get("user_id", TEST_USER_ID)
+        user_id = session.get("user_id")
         Bookroom.create(
             user_id=user_id,
             name=bookroom_name,
@@ -202,7 +204,7 @@ def create_public_bookroom():
 # ブックルーム編集ページ表示
 @app.route("/public_bookrooms/update/<bookroom_id>", methods=["GET"])
 def show_public_bookroom(bookroom_id):
-    user_id = session.get("user_id", TEST_USER_ID)
+    user_id = session.get("user_id")
     if user_id is None:
         return redirect(url_for("login_view"))
 
@@ -216,7 +218,7 @@ def show_public_bookroom(bookroom_id):
 # ブックルームの編集作業
 @app.route("/public_bookrooms/update/<bookroom_id>", methods=["POST"])
 def update_public_bookroom(bookroom_id):
-    user_id = session.get("user_id", TEST_USER_ID)
+    user_id = session.get("user_id")
     if user_id is None:
         return redirect(url_for("login_view"))
 
@@ -259,7 +261,7 @@ def delete_public_bookroom(bookroom_id):
 @app.route("/public_bookrooms/<bookroom_id>/messages", methods=["GET"])
 def detail(bookroom_id):
     #表示チェックのためデフォルトユーザを設定
-    user_id = session.get("user_id",TEST_USER_ID)
+    user_id = session.get("user_id")
 
     if user_id is None:
         return redirect(url_for("login_view"))
@@ -275,7 +277,7 @@ def detail(bookroom_id):
 # メッセージの投稿
 @app.route("/public_bookrooms/<bookroom_id>/messages", methods=["POST"])
 def create_message(bookroom_id):
-    user_id = session.get("user_id",TEST_USER_ID)
+    user_id = session.get("user_id")
     if user_id is None:
         return redirect(url_for("login_view"))
 
@@ -310,14 +312,16 @@ def profile_view():
         return redirect(url_for('login_view'))
     current_name=session.get("user_name")
     current_email=session.get("user_email")
+    icon_view=Profile.icon_view(current_uid)
     messages_count=Profile.get_messages_count(current_uid) 
     # TODO リアクション機能実装後、リアクションの数を取得する。
     #printはサーバーで出る値を確認。後日削除する。
+    print(f'{icon_view}はiconidです')
     print(f'{current_uid}はprofile.htmlで現在セッションを持っているユーザーです')
     print(f'{current_name}はprofile.htmlで現在セッションを持っているユーザーのnameを表示しています')
     print(f'{current_email}はprofile.htmlで現在セッションを持っているユーザーのemailを表示しています')
     print(f'{messages_count}は{current_name}が投稿したメッセージの数を表しています')
-    return render_template("profile.html",uid=current_uid,name=current_name,email=current_email,messages_count=messages_count)
+    return render_template("profile.html",icon=icon_view,uid=current_uid,name=current_name,email=current_email,messages_count=messages_count)
 
 ########プロフィール画面（ここまで）##########
 

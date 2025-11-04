@@ -220,6 +220,22 @@ class Message:
 
 ############################プロフィール画面関係（ここから)############################
 class Profile:
+    # アイコンの表示
+    @classmethod
+    def icon_view(cls,iconid):
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                sql = "SELECT iconid FROM users WHERE id=%s"
+                cur.execute(sql,(iconid,))
+                user_icon=cur.fetchone()
+                return user_icon['iconid']
+        except pymysql.Error as e:
+            print(f'エラーが発生しています：{e}')
+            abort(500)
+        finally:
+            db_pool.release(conn)
+
     # アイコンの変更
     @classmethod
     def icon_update(cls,iconid):
