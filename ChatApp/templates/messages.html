@@ -15,7 +15,7 @@
           仮タグ
         </span>
       
-     {% endif %} {% if uid == bookroom.user_id %}
+     {% endif %}{% if bookroom.user_id == uid %}
       <button class="update-bookroom-button"id="update-bookroom-modal"label="更新">
         <img src="{{ url_for('static', filename='img/pen.png') }}" alt="アイコン" >
       </button>
