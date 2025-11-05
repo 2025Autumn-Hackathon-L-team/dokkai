@@ -60,7 +60,7 @@ class Bookroom:
        try:
            with conn.cursor() as cur:
                sql = "SELECT * FROM bookrooms WHERE name=%s;"
-               cur.execute(sql, (bookroom_name))
+               cur.execute(sql, (bookroom_name,))
                bookroom = cur.fetchone()
                return bookroom
        except pymysql.Error as e:
@@ -75,7 +75,7 @@ class Bookroom:
         try:
             with conn.cursor() as cur:
                 sql = "SELECT * FROM bookrooms WHERE id=%s;"
-                cur.execute(sql, (bookroom_id))
+                cur.execute(sql, (bookroom_id,))
                 bookroom = cur.fetchone()
                 return bookroom
         except pymysql.Error as e:
@@ -133,7 +133,7 @@ class Bookroom:
         try:
             with conn.cursor() as cur:
                 sql = "UPDATE bookrooms SET name=%s, description=%s WHERE id=%s;"
-                cur.execute(sql, (name, description, bookroom_id))
+                cur.execute(sql, (name, description, bookroom_id,))
                 conn.commit()
         except pymysql.Error as e:
             print(f'エラーが発生しています：{e}')
@@ -147,7 +147,7 @@ class Bookroom:
         try:
             with conn.cursor() as cur:
                 sql = "DELETE FROM bookrooms WHERE id=%s;"
-                cur.execute(sql, (bookroom_id))
+                cur.execute(sql, (bookroom_id,))
                 conn.commit()
         except pymysql.Error as e:
             print(f'エラーが発生しています：{e}')

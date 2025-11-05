@@ -239,6 +239,7 @@ def delete_public_bookroom(bookroom_id):
     # user_id = session.get('user_id')
     # セッションが未実装なため、仮値を入れる
     user_id = session.get("user_id")
+    print(user_id)
     if user_id is None:
         return redirect(url_for("login_view"))
 

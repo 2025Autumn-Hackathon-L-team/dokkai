@@ -38,7 +38,7 @@
       </div>
       <div class="memo-icon">
         {% if session.get('user_id') == bookroom.user_id %}
-         <button class="delete-message-button" id="delete-bookroom-button">
+         <button class="delete-bookroom-trigger" data-bookroom-id="{{ bookroom.id }}">
         <img src="{{ url_for('static', filename='img/trash-can.png') }}" alt="アイコン" >
          </button>
         {% endif %}
