@@ -305,6 +305,7 @@ def delete_message(bookroom_id, message_id):
     )
 
 ########プロフィール画面（ここから）##########
+# プロフィール画面の表示
 @app.route("/profile")
 def profile_view():
     current_uid=session.get("user_id")
@@ -322,6 +323,26 @@ def profile_view():
     print(f'{current_email}はprofile.htmlで現在セッションを持っているユーザーのemailを表示しています')
     print(f'{messages_count}は{current_name}が投稿したメッセージの数を表しています')
     return render_template("profile.html",icon=icon_view,uid=current_uid,name=current_name,email=current_email,messages_count=messages_count)
+
+# プロフィール画面の編集
+@app.route("/prifile/update",methods=["POST"])
+def update_profile():
+    user_id=session.get("user_id")
+
+    #if user_id in None:
+    #    return redirect(url_for("login_view"))
+    
+    # TODO フロントからどう持ってくるか確認する
+    name=request.form.get("profile_name")
+    email=request.form.get("profile_email")
+    # 表示確認用
+    print(f'{name}は入力されたname')
+    print(f'{email}は入力されたemail')
+
+    Profile.name_email_update(user_id,name,email)
+    #Profile.email_update(user_id,email)
+    return redirect(url_for("profile_view"))
+    
 
 ########プロフィール画面（ここまで）##########
 

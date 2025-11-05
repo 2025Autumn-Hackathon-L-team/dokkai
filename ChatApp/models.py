@@ -253,12 +253,12 @@ class Profile:
 
     # nameの変更
     @classmethod
-    def name_update(cls,name):
+    def name_email_update(cls,user_id,name,email):
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = "UPDATE users SET name=%s WHERE id=%s"
-                cur.execute(sql, (name,))
+                sql = "UPDATE users SET id=%s, name=%s, email=%s WHERE id=%s"
+                cur.execute(sql, (user_id, name,email))
                 conn.commit()
         except pymysql.Error as e:
             print(f'エラーが発生しています：{e}')
