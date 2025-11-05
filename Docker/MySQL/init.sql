@@ -36,7 +36,9 @@ CREATE TABLE bookrooms (
 CREATE TABLE tags (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE
-) -- 初期値を挿入
+);
+
+-- 初期値を挿入
 -- users を2人分入れてから
 INSERT INTO
     users (id, name, email, password)

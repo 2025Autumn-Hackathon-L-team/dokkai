@@ -6,32 +6,36 @@ import uuid
 import re
 import os
 
-from models import User, Bookroom, Message, Profile
+from models import User, Bookroom, Message, Profile, Tag
 
 
 EMAIL_PATTERN = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 SESSION_DAYS = 30
 
-PER_PAGE = 5 #1ページに表示するブックルームの数
+PER_PAGE = 5  # 1ページに表示するブックルームの数
+
+# ユーザーIDを仮で作成
+TEST_USER_ID = "970af84c-dd40-47ff-af23-282b72b7cca8"
 
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY', uuid.uuid4().hex)
+app.secret_key = os.getenv("SECRET_KEY", uuid.uuid4().hex)
 app.permanent_session_lifetime = timedelta(days=SESSION_DAYS)
 
 # 開発中の確認のために使用
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.jinja_env.auto_reload = True
 app.jinja_env.cache = {}
+app.config["DEBUG"] = False  # 開発確認中TRUE 本番FALSE
 
 
 # ルートページのリダイレクト
 @app.route("/")
 def index():
     user_id = session.get("user_id")
-    print (f'sessionは{user_id}です')
+    print(f"sessionは{user_id}です")
     if user_id is None:
-        return redirect(url_for('login_view'))
-    return redirect(url_for('public_bookrooms_view'))
+        return redirect(url_for("login_view"))
+    return redirect(url_for("public_bookrooms_view"))
 
 
 # サインアップページの表示
@@ -54,8 +58,8 @@ def signup_process():
     elif re.fullmatch(EMAIL_PATTERN, email) is None:
         flash("有効なメールアドレスの形式ではありません")
     else:
-        registered_email_user= User.find_by_email(email) 
-        registered_name_user=User.find_by_name(name)
+        registered_email_user = User.find_by_email(email)
+        registered_name_user = User.find_by_name(name)
         if registered_email_user != None:
             flash("入力されたメールアドレスは使用されています。")
             flash("違うメールアドレスを入力してください。")
@@ -65,13 +69,13 @@ def signup_process():
         else:
             id = uuid.uuid4()
             password = hashlib.sha256(password.encode("utf-8")).hexdigest()
-            User.create(id,name,email,password)
+            User.create(id, name, email, password)
             UserId = str(id)
             UserName = str(name)
             UserEmail = str(email)
-            print(f'{UserId}はUserIdです') #代入された値の確認用
-            print(f'{UserName}はUserNameです') #値確認用
-            print(f'{UserEmail}はUserEmailです') #値確認用
+            print(f"{UserId}はUserIdです")  # 代入された値の確認用
+            print(f"{UserName}はUserNameです")  # 値確認用
+            print(f"{UserEmail}はUserEmailです")  # 値確認用
             session["user_id"] = UserId
             session["user_name"] = UserName
             session["user_email"] = UserEmail
@@ -79,7 +83,13 @@ def signup_process():
     # バリデーションエラーでsignup_processに戻る時、フォームに入力した値をauth/signup.htmlに返す
     print(f"{password}がpassword")
     print(f"{passwordConfirmation}がpassword_confirmation")
-    return render_template("auth/signup.html",name=name,email=email,password=password,password_confirmation=passwordConfirmation)
+    return render_template(
+        "auth/signup.html",
+        name=name,
+        email=email,
+        password=password,
+        password_confirmation=passwordConfirmation,
+    )
 
 
 # ログインページの表示
@@ -113,21 +123,23 @@ def login_process():
             hashPassword = hashlib.sha256(password.encode("utf-8")).hexdigest()
             user = User.find_by_email(email)
             # ログイン失敗、セキュリティのため、mailとpasswordのどちらかが間違っているようなメッセージを表示。
-            if user["password"] != hashPassword:  
+            if user["password"] != hashPassword:
                 flash("ログインできませんでした。")
                 flash("メールアドレスかパスワードが間違っています。")
             else:
-                session["user_id"]=user["id"]
-                session["user_name"]=user["name"]
-                session["user_email"]=user["email"]
-                print(f"{user}でログインできました") #ログインできているかチェック、後ほど削除
+                session["user_id"] = user["id"]
+                session["user_name"] = user["name"]
+                session["user_email"] = user["email"]
+                print(
+                    f"{user}でログインできました"
+                )  # ログインできているかチェック、後ほど削除
                 return redirect(url_for("public_bookrooms_view"))
     # バリデーションエラーでauth/login.htmlnに戻る時、フォームに入力した値をauth/login.htmlに返す
-    return render_template("auth/login.html",email=email,password=password)
+    return render_template("auth/login.html", email=email, password=password)
 
 
 # ログアウト処理
-@app.route("/logout", methods=["GET","POST"])
+@app.route("/logout", methods=["GET", "POST"])
 def logout():
     session.clear()
     return redirect(url_for("login_view"))
@@ -160,24 +172,53 @@ def is_bookroom_owner(user_id, bookroom_id):
 # パブリックブックルームの一覧表示
 @app.route("/public_bookrooms", methods=["GET"])
 def public_bookrooms_view():
+    print("DEBUG? ->", app.debug)
+
     # publicなブックルームのみ取得
     bookrooms = Bookroom.get_public_bookrooms()
-    #表示チェックのためデフォルト値を設定
+
+    # 開発テスト用
+    if app.debug:
+        session["user_id"] = TEST_USER_ID
+
     user_id = session.get("user_id")
 
     # ページネーション
     page = request.args.get(get_page_parameter(), type=int, default=1)
-    paginated_bookrooms = bookrooms[(page - 1)*PER_PAGE: page*PER_PAGE]
+    paginated_bookrooms = bookrooms[(page - 1) * PER_PAGE : page * PER_PAGE]
     pagination = Pagination(
         page=page,
         total=len(bookrooms),
         per_page=PER_PAGE,
-        css_framework='bootstrap5',
+        css_framework="bootstrap5",
         display_pages=True,
-        record_name='ブックルーム'
+        record_name="ブックルーム",
+    )
+
+    # タグテーブルに登録されているタグを取得
+    tags = Tag.get_all_tags()
+
+    if app.debug:
+        print("DEBUG? ->", app.debug)
+        return render_template(
+            "test/bookroom.html",
+            is_public=True,
+            uid=user_id,
+            paginated_bookrooms=paginated_bookrooms,
+            pagination=pagination,
+            tags=tags,
+        )
+    else:
+        print("DEBUG? ->", app.debug)
+        return render_template(
+            "bookroom.html",
+            is_public=True,
+            uid=user_id,
+            paginated_bookrooms=paginated_bookrooms,
+            pagination=pagination,
+            tags=tags,
         )
 
-    return render_template("bookroom.html",is_public=True, uid=user_id, paginated_bookrooms=paginated_bookrooms, pagination=pagination)
 
 # パブリックブックルームの作成
 @app.route("/public_bookrooms", methods=["POST"])
@@ -187,7 +228,13 @@ def create_public_bookroom():
     bookroom = Bookroom.find_by_bookroom_name(bookroom_name)
     if bookroom == None:
         bookroom_description = request.form.get("bookroom_description")
+
+        # 開発テスト用
+        if app.debug:
+            session["user_id"] = TEST_USER_ID
+
         user_id = session.get("user_id")
+
         Bookroom.create(
             user_id=user_id,
             name=bookroom_name,
@@ -204,7 +251,13 @@ def create_public_bookroom():
 # ブックルーム編集ページ表示
 @app.route("/public_bookrooms/update/<bookroom_id>", methods=["GET"])
 def show_public_bookroom(bookroom_id):
+
+    # 開発テスト用
+    if app.debug:
+        session["user_id"] = TEST_USER_ID
+
     user_id = session.get("user_id")
+
     if user_id is None:
         return redirect(url_for("login_view"))
 
@@ -212,13 +265,26 @@ def show_public_bookroom(bookroom_id):
         return redirect(url_for("public_bookrooms_view"))
 
     bookroom = Bookroom.find_by_bookroom_id(bookroom_id)
-    return render_template("test/update-bookroom.html", bookroom=bookroom)
+    tags = Tag.get_all_tags()
+
+    if app.debug:
+        return render_template(
+            "test/update-bookroom.html", bookroom=bookroom, tags=tags
+        )
+    else:
+        return render_template("update-bookroom.html", bookroom=bookroom, tags=tags)
 
 
 # ブックルームの編集作業
 @app.route("/public_bookrooms/update/<bookroom_id>", methods=["POST"])
 def update_public_bookroom(bookroom_id):
+
+    # 開発テスト用
+    if app.debug:
+        session["user_id"] = TEST_USER_ID
+
     user_id = session.get("user_id")
+
     if user_id is None:
         return redirect(url_for("login_view"))
 
@@ -227,9 +293,7 @@ def update_public_bookroom(bookroom_id):
 
     name = request.form.get("bookroom_name")
     description = request.form.get("bookroom_description")
-    Bookroom.update(
-        bookroom_id=bookroom_id,name=name, description=description
-    )
+    Bookroom.update(bookroom_id=bookroom_id, name=name, description=description)
     return redirect(url_for("public_bookrooms_view"))
 
 
@@ -238,7 +302,13 @@ def update_public_bookroom(bookroom_id):
 def delete_public_bookroom(bookroom_id):
     # user_id = session.get('user_id')
     # セッションが未実装なため、仮値を入れる
+
+    # 開発テスト用
+    if app.debug:
+        session["user_id"] = TEST_USER_ID
+
     user_id = session.get("user_id")
+
     if user_id is None:
         return redirect(url_for("login_view"))
 
@@ -260,7 +330,7 @@ def delete_public_bookroom(bookroom_id):
 # ブックルーム詳細ページの表示
 @app.route("/public_bookrooms/<bookroom_id>/messages", methods=["GET"])
 def detail(bookroom_id):
-    #表示チェックのためデフォルトユーザを設定
+    # 表示チェックのためデフォルトユーザを設定
     user_id = session.get("user_id")
 
     if user_id is None:
@@ -304,26 +374,40 @@ def delete_message(bookroom_id, message_id):
         "/public_bookrooms/{bookroom_id}/messages".format(bookroom_id=bookroom_id)
     )
 
+
 ########プロフィール画面（ここから）##########
 @app.route("/profile")
 def profile_view():
-    current_uid=session.get("user_id")
+    current_uid = session.get("user_id")
     if current_uid is None:
-        return redirect(url_for('login_view'))
-    current_name=session.get("user_name")
-    current_email=session.get("user_email")
-    icon_view=Profile.icon_view(current_uid)
-    messages_count=Profile.get_messages_count(current_uid) 
+        return redirect(url_for("login_view"))
+    current_name = session.get("user_name")
+    current_email = session.get("user_email")
+    icon_view = Profile.icon_view(current_uid)
+    messages_count = Profile.get_messages_count(current_uid)
     # TODO リアクション機能実装後、リアクションの数を取得する。
-    #printはサーバーで出る値を確認。後日削除する。
-    print(f'{icon_view}はiconidです')
-    print(f'{current_uid}はprofile.htmlで現在セッションを持っているユーザーです')
-    print(f'{current_name}はprofile.htmlで現在セッションを持っているユーザーのnameを表示しています')
-    print(f'{current_email}はprofile.htmlで現在セッションを持っているユーザーのemailを表示しています')
-    print(f'{messages_count}は{current_name}が投稿したメッセージの数を表しています')
-    return render_template("profile.html",icon=icon_view,uid=current_uid,name=current_name,email=current_email,messages_count=messages_count)
+    # printはサーバーで出る値を確認。後日削除する。
+    print(f"{icon_view}はiconidです")
+    print(f"{current_uid}はprofile.htmlで現在セッションを持っているユーザーです")
+    print(
+        f"{current_name}はprofile.htmlで現在セッションを持っているユーザーのnameを表示しています"
+    )
+    print(
+        f"{current_email}はprofile.htmlで現在セッションを持っているユーザーのemailを表示しています"
+    )
+    print(f"{messages_count}は{current_name}が投稿したメッセージの数を表しています")
+    return render_template(
+        "profile.html",
+        icon=icon_view,
+        uid=current_uid,
+        name=current_name,
+        email=current_email,
+        messages_count=messages_count,
+    )
+
 
 ########プロフィール画面（ここまで）##########
+
 
 @app.errorhandler(404)
 def page_not_found(error):

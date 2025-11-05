@@ -34,6 +34,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -75,7 +76,7 @@
 
 .bookroom-form-input {
   width: 100%;
-  background-color:var(--lightgreen);
+  background-color: var(--lightgreen);
   margin-top: 8px;
   margin-bottom: 20px;
   padding: 0.5rem;
@@ -84,43 +85,53 @@
 
 .bookroom-form-input-wide {
   width: 100%;
-  background-color:var(--lightgreen);
+  background-color: var(--lightgreen);
   margin-top: 8px;
   margin-bottom: 20px;
   padding: 1.0rem;
   color: var(--lightgreen);
 }
+
 .bookroom-form-input::placeholder {
   color: var(--brown);
   font-size: 10px;
 }
+
 .bookroom-form-input-wide::placeholder {
   color: var(--brown);
-  font-size: 10px; 
+  font-size: 10px;
   overflow-wrap: anywhere;
 }
+
 .bookroom-form-input:focus::placeholder {
-  color: var(--snow); /* フォーカス時のプレースホルダーの文字色を雪色（白）にする */
+  color: var(--snow);
+  /* フォーカス時のプレースホルダーの文字色を雪色（白）にする */
 }
+
 .bookroom-form-input-wide:focus::placeholder {
-  color: var(--snow); 
+  color: var(--snow);
 }
+
 .bookroom-form-input:focus {
   background-color: var(--green);
   color: var(--snow);
 }
+
 .bookroom-form-input-wide:focus {
   background-color: var(--green);
   color: var(--snow);
 }
+
 .bookroom-form-input:hover {
   background-color: var(--green);
   color: var(--snow);
 }
+
 .bookroom-form-input-wide:hover {
   background-color: var(--green);
   color: var(--snow);
 }
+
 .modal-gif {
   position: absolute;
   z-index: 2;
@@ -146,6 +157,7 @@
   background-color: var(--green);
 }
 
+
 /* ========================================================== */
 /* レスポンシブ */
 
@@ -154,6 +166,7 @@
     margin: 35% auto;
     width: 95%;
   }
+
   #modal-gif {
     display: none;
   }
@@ -163,14 +176,17 @@
   .modal-content {
     width: 95%;
   }
+
   .modal {
     padding-left: 60px;
   }
 }
+
 @media only screen and (min-width: 671px) and (max-width: 1024px) {
   .modal-content {
     width: 80%;
   }
+
   .modal {
     padding-left: 60px;
   }
