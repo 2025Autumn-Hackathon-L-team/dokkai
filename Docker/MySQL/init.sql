@@ -23,17 +23,20 @@ CREATE TABLE users (
 
 -- ############################ブックルーム関係（ここから）############################
 CREATE TABLE bookrooms (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     user_id VARCHAR(255) NOT NULL,
-    name NVARCHAR(50) NOT NULL,
-    description NVARCHAR(1000),
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR(255),
     is_public BOOLEAN,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- 初期値を挿入
+CREATE TABLE tags (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE
+) -- 初期値を挿入
 -- users を2人分入れてから
 INSERT INTO
     users (id, name, email, password)
@@ -51,7 +54,7 @@ VALUES
         'dummy'
     );
 
--- その後で bookrooms
+-- bookrooms
 INSERT INTO
     bookrooms (
         user_id,
@@ -86,6 +89,15 @@ VALUES
         '2020-01-01 00:00:00',
         '2020-01-01 00:00:00'
     );
+
+-- tagデータ
+INSERT INTO
+    tags (name)
+VALUES
+    ('恋愛'),
+    ('SF'),
+    ('日本文学'),
+    ('ミステリー');
 
 -- ############################ブックルーム関係（ここまで）############################
 CREATE TABLE messages (
