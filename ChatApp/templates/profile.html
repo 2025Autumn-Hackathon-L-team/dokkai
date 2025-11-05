@@ -1,26 +1,56 @@
 {% extends "base.html" %}
+
+{% block title %}
 <title>profile</title>
+{% endblock %} 
+
 {% block body %}
 <div class="main_container">
-
-    <div id="profile">
+    <div class="profile-title">
       <h1>PROFILE</h1> 
-      <div class="message-meta">
       <div id ="profile-contents">
-    </div>
-    
-      <button class="update-bookroom-button" id="update-bookroom-button">
-        <img src="{{ url_for('static', filename='img/pen.png') }}" alt="アイコン" >
-      </button>
       </div>
     </div>
-    <p>ユーザアイコンは{{icon}}</p>
-    <p>{{uid}}がログインしています</p>
-    <p>nameは{{name}}</p>
-    <p>emailは{{email}}</p>
-    <p>リアクションテーブルができたら、リアクション数を表示</p>
-    <p>messages_countは{{messages_count}}</p>
+    <div class="profile_display_items">
+        <div>
+            <p>ユーザアイコンは{{icon}}</p>
+         </div>
+        <div>
+            <p>{{uid}}がログインしています</p>
+        </div>
+        <div>
+            <p>nameは{{name}}</p>
+        </div>
+        <div>
+            <p>emailは{{email}}</p>
+        </div>
+        <div>
+            <p>リアクションテーブルができたら、リアクション数を表示</p>
+        </div>
+        <div>
+            <p>messages_countは{{messages_count}}</p>
+        </div>
+        {# Floating Action Button #}
+        <button class="update-profile-button" id="update-profile-button" label="nameとemailの変更">
+            MAKE
+        </button>
+        {% include 'modal/update-profile.html' %} 
+    </div>
 </div>
 {% endblock %}
 
+{% block script %}
+<script type="text/javascript">
+  // prettier-ignore
+  const uid = JSON.parse('{{ uid|tojson }}');
+</script>
+<script
+  src="{{url_for('static',filename='js/bookroom/create-bookroom.js')}}"
+  type="module"
+></script>
+<script
+  src="{{url_for('static',filename='js/bookroom/delete-bookroom.js')}}"
+  type="module"
+></script>
+{% endblock %}
 
