@@ -18,6 +18,7 @@ if (deleteBookroomModal) {
   const deletePageButtonClose = document.getElementById(
     "delete-page-close-button"
   )
+  };
   // モーダル内のXボタンが押された時にモーダルを非表示にする
   deletePageButtonClose.addEventListener("click", () => {
     deleteBookroomModal.style.display = "none";
@@ -29,4 +30,3 @@ if (deleteBookroomModal) {
       deleteBookroomModal.style.display = "none";
     }
   })
-};
