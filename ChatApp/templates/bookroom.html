@@ -38,7 +38,12 @@
       </div>
       <div class="memo-icon">
         {% if session.get('user_id') == bookroom.user_id %}
-       <img src="{{ url_for('static', filename='img/trash-can.png') }}" alt="アイコン" />
+        <form action="/public_bookrooms/delete/{{ bookroom.id }}" method="POST">
+        <input type="hidden" name="_method" value="DELETE"> 
+         <button type="submit" class="delete-message-button">
+        <img src="{{ url_for('static', filename='img/trash-can.png') }}" alt="アイコン" >
+         </button>
+      </form>  
         {% endif %}
       </div>
     </div>
