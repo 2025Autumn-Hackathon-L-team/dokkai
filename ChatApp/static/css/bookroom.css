@@ -163,6 +163,22 @@
   object-fit: contain; /* アスペクト比を維持して表示 */
 }
 
+.delete-bookroom-trigger {
+  background-color: var(--snow);
+  height: 20px;
+  width: 20px;
+  line-height: 47px;
+  padding: 0;
+  margin: 0;
+  bottom: 8px;
+  right: 8px;
+}
+
+.delete-message-trigger img{
+  font-size: 1rem;
+  width: 30px;
+  height: 30px;
+}
 /* ================== フローティングアクションボタン (FAB) ================== */
 .create-bookroom-button { /* 新しいセレクタとして追加 */
   position: fixed;
