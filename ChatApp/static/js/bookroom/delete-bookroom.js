@@ -1,8 +1,24 @@
 /*
 チャンネルを削除するモーダルの制御
 */
+if (uid === channel.uid) {
+  const deleteButton = document.createElement("button");
+          deleteButton.innerHTML =
+            '<ion-icon name="trash-bin-outline" style="color: #f57978"></ion-icon>';
+          deleteButton.classList.add("delete-button");
+          li.appendChild(deleteButton);
+          // ゴミ箱ボタンが押された時にdeleteモーダルを表示させる
+          deleteButton.addEventListener("click", () => {
+            deleteChannelModal.style.display = "flex";
 
-export const initDeleteChannelModal = () => {
+            const deleteChannelForm =
+              document.getElementById("deleteChannelForm");
+
+            const endpoint = `/channels/delete/${channel.id}`;
+            deleteChannelForm.action = endpoint;
+          });
+        }
+
   const deletePageButtonClose = document.getElementById(
     "delete-page-close-button"
   );
@@ -20,4 +36,3 @@ export const initDeleteChannelModal = () => {
       deleteChannelModal.style.display = "none";
     }
   });
-};
