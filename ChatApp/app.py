@@ -308,23 +308,23 @@ def delete_message(bookroom_id, message_id):
 # プロフィール画面の表示
 @app.route("/profile")
 def profile_view():
-    current_uid=session.get("user_id")
-    if current_uid is None:
+    user_id=session.get("user_id")
+    if user_id is None:
         return redirect(url_for('login_view'))
-    current_name=session.get("user_name")
-    current_email=session.get("user_email")
-    icon_view=Profile.icon_view(current_uid)
-    messages_count=Profile.get_messages_count(current_uid) 
+    current_name=Profile.name_view(user_id)
+    current_email=Profile.email_view(user_id)
+    icon_view=Profile.icon_view(user_id)
+    messages_count=Profile.get_messages_count(user_id) 
     # TODO リアクション機能実装後、リアクションの数を取得する。
     #printはサーバーで出る値を確認。後日削除する。
     print(f'{icon_view}はiconidです')
-    print(f'{current_uid}はprofile.htmlで現在セッションを持っているユーザーです')
+    print(f'{user_id}はprofile.htmlで現在セッションを持っているユーザーです')
     print(f'{current_name}はprofile.htmlで現在セッションを持っているユーザーのnameを表示しています')
     print(f'{current_email}はprofile.htmlで現在セッションを持っているユーザーのemailを表示しています')
     print(f'{messages_count}は{current_name}が投稿したメッセージの数を表しています')
-    return render_template("profile.html",icon=icon_view,uid=current_uid,name=current_name,email=current_email,messages_count=messages_count)
+    return render_template("profile.html",icon=icon_view,uid=user_id,name=current_name,email=current_email,messages_count=messages_count)
 
-# プロフィール画面の編集
+# プロフィール画面の編集(name,email)
 @app.route("/profile/update",methods=["POST"])
 def update_profile():
     user_id=session.get("user_id")
@@ -340,6 +340,7 @@ def update_profile():
     print(f'{email}は入力されたemail')
 
     Profile.name_email_update(name,email,user_id)
+    # TODO: ここでsesseionの更新
     return render_template("profile.html",uid=user_id,name=name,email=email)   
 
 ########プロフィール画面（ここまで）##########
