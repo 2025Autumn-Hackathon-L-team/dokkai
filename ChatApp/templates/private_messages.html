@@ -1,10 +1,10 @@
 {% extends 'base.html' %} {% block title %}
-<title>messages</title>
+<title>private-messages</title>
 {% endblock %} {% block body %}
 <div class="main-container">
 
     <div id="bookroom-header">
-      <h1>PUBLIC</h1> 
+      <h1>PRIVATE</h1> 
       <div class="message-meta">
       <div id ="bookroom-contents">
       <p id="bookroom-name">{{ bookroom.name | default("ブックルームの名前") }}</p>
@@ -19,7 +19,7 @@
       <button class="update-bookroom-button" id="update-bookroom-button">
         <img src="{{ url_for('static', filename='img/pen.png') }}" alt="アイコン" >
       </button>
-     {% include 'modal/update-bookroom.html' %} {% endif %}
+     {% include 'private_modal/update-private-bookroom.html' %} {% endif %}
       </div>
     </div>  
     <div id="message-area">
@@ -33,7 +33,7 @@
         <div class="reaction-icon-wrapper reaction-icon-left">
            <img src="{{ url_for('static', filename='#') }}" alt="reaction" class="reaction-icon">
         </div>
-      <form action="/public_bookrooms/{{ bookroom.id }}/messages/{{ message.id }}" method="POST">
+      <form action="/private_bookrooms/{{ bookroom.id }}/messages/{{ message.id }}" method="POST">
         <input type="hidden" name="_method" value="DELETE"> 
       
          <button type="submit" class="delete-message-button">
