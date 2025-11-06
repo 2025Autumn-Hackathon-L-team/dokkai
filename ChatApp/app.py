@@ -377,6 +377,52 @@ def delete_message(bookroom_id, message_id):
         "/public_bookrooms/{bookroom_id}/messages".format(bookroom_id=bookroom_id)
     )
 
+# プライベートブックルーム詳細ページの表示
+@app.route("/secret_bookrooms/<bookroom_id>/messages", methods=["GET"])
+def detail(bookroom_id):
+    #表示チェックのためデフォルトユーザを設定
+    user_id = session.get("user_id")
+
+    if user_id is None:
+        return redirect(url_for("login_view"))
+
+    bookroom = Bookroom.find_by_bookroom_id(bookroom_id)
+    messages = Message.get_all(bookroom_id)
+
+    return render_template(
+        "secret-messages.html", messages=messages, bookroom=bookroom, uid=user_id
+    )
+
+
+# メッセージの投稿
+@app.route("/secret_bookrooms/<bookroom_id>/messages", methods=["POST"])
+def create_message(bookroom_id):
+    user_id = session.get("user_id")
+    if user_id is None:
+        return redirect(url_for("login_view"))
+
+    message = request.form.get("message")
+
+    if message:
+        Message.create(user_id, bookroom_id, message)
+
+    return redirect(
+        "/secret_bookrooms/{bookroom_id}/messages".format(bookroom_id=bookroom_id)
+    )
+
+
+# メッセージの削除
+@app.route("/secret_bookrooms/<bookroom_id>/messages/<message_id>", methods=["POST"])
+def delete_message(bookroom_id, message_id):
+    user_id = session.get("user_id")
+    if user_id is None:
+        return redirect(url_for("login_view"))
+
+    if message_id:
+        Message.delete(message_id)
+    return redirect(
+        "/secret_bookrooms/{bookroom_id}/messages".format(bookroom_id=bookroom_id)
+    )
 ########プロフィール画面（ここから）##########
 @app.route("/profile")
 def profile_view():
