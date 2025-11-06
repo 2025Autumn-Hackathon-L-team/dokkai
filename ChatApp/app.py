@@ -177,7 +177,7 @@ def public_bookrooms_view():
         record_name='ブックルーム'
         )
 
-    return render_template("bookroom.html",is_public=True, uid=user_id, paginated_bookrooms=paginated_bookrooms, pagination=pagination)
+    return render_template("public_bookroom.html",is_public=True, uid=user_id, paginated_bookrooms=paginated_bookrooms, pagination=pagination)
 
 # パブリックブックルームの作成
 @app.route("/public_bookrooms", methods=["POST"])
@@ -347,7 +347,7 @@ def detail(bookroom_id):
     messages = Message.get_all(bookroom_id)
 
     return render_template(
-        "messages.html", messages=messages, bookroom=bookroom, uid=user_id
+        "public_messages.html", messages=messages, bookroom=bookroom, uid=user_id
     )
 
 
