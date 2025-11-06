@@ -222,21 +222,14 @@
   color: var(--snow); 
 }
 .bookroom-form-input-private:focus {
-  background-color: var(--green);
+  background-color: var(--deep_green);
   color: var(--snow);
 }
 .bookroom-form-input-wide-private:focus {
-  background-color: var(--green);
+  background-color: var(--deep_green);
   color: var(--snow);
 }
-.bookroom-form-input-private:hover {
-  background-color: var(--green);
-  color: var(--snow);
-}
-.bookroom-form-input-wide-private:hover {
-  background-color: var(--green);
-  color: var(--snow);
-}
+
 .modal-gif {
   position: absolute;
   z-index: 2;
