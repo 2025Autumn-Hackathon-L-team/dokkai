@@ -1,7 +1,5 @@
 /*ブックルームを新規作成するモーダルの制御*/
 
-
-export const initCreatebookroomModal = () => {
   const createBookroomModal = document.getElementById("create-bookroom-modal");
   const addPageButtonClose = document.getElementById("add-page-close-button");
 
@@ -54,6 +52,3 @@ export const initCreatebookroomModal = () => {
       }
     }
   }
-};
-
-initCreatebookroomModal();
