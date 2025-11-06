@@ -6,7 +6,7 @@ import uuid
 import re
 import os
 
-from models import User, Bookroom, Message, Profile, Tag
+from models import User, Bookroom, Message, Profile, Tag, BookroomTag
 
 
 EMAIL_PATTERN = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
@@ -172,8 +172,6 @@ def is_bookroom_owner(user_id, bookroom_id):
 # パブリックブックルームの一覧表示
 @app.route("/public_bookrooms", methods=["GET"])
 def public_bookrooms_view():
-    print("DEBUG? ->", app.debug)
-
     # publicなブックルームのみ取得
     bookrooms = Bookroom.get_public_bookrooms()
 
@@ -199,7 +197,6 @@ def public_bookrooms_view():
     tags = Tag.get_all_tags()
 
     if app.debug:
-        print("DEBUG? ->", app.debug)
         return render_template(
             "test/bookroom.html",
             is_public=True,
@@ -209,7 +206,6 @@ def public_bookrooms_view():
             tags=tags,
         )
     else:
-        print("DEBUG? ->", app.debug)
         return render_template(
             "bookroom.html",
             is_public=True,
@@ -223,24 +219,27 @@ def public_bookrooms_view():
 # パブリックブックルームの作成
 @app.route("/public_bookrooms", methods=["POST"])
 def create_public_bookroom():
-    # user_idは仮の値を使用（init.sqlでこのユーザーは作成済み）
     bookroom_name = request.form.get("bookroom_name")
     bookroom = Bookroom.find_by_bookroom_name(bookroom_name)
-    if bookroom == None:
-        bookroom_description = request.form.get("bookroom_description")
 
+    if bookroom == None:
         # 開発テスト用
         if app.debug:
             session["user_id"] = TEST_USER_ID
 
         user_id = session.get("user_id")
-
-        Bookroom.create(
+        bookroom_description = request.form.get("bookroom_description")
+        bookroom_id = Bookroom.create(
             user_id=user_id,
             name=bookroom_name,
             description=bookroom_description,
             is_public=True,
         )
+
+        tag_ids = request.form.getlist("tag_ids")
+        for tag_id in tag_ids:
+            print(f"tag_id->{tag_id}")
+        BookroomTag.create(bookroom_id, tag_ids)
 
         return redirect(url_for("public_bookrooms_view"))
     else:
@@ -300,8 +299,6 @@ def update_public_bookroom(bookroom_id):
 # パブリックブックルームの削除
 @app.route("/public_bookrooms/delete/<bookroom_id>", methods=["POST"])
 def delete_public_bookroom(bookroom_id):
-    # user_id = session.get('user_id')
-    # セッションが未実装なため、仮値を入れる
 
     # 開発テスト用
     if app.debug:

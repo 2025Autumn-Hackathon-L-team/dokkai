@@ -38,6 +38,15 @@ CREATE TABLE tags (
     name VARCHAR(255) NOT NULL UNIQUE
 );
 
+CREATE TABLE bookroom_tag (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    bookroom_id INT NOT NULL,
+    tag_id INT NOT NULL,
+    UNIQUE KEY (bookroom_id, tag_id),
+    FOREIGN KEY (bookroom_id) REFERENCES bookrooms(id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+);
+
 -- 初期値を挿入
 -- users を2人分入れてから
 INSERT INTO

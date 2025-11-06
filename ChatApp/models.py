@@ -68,7 +68,7 @@ class Bookroom:
         try:
             with conn.cursor() as cur:
                 sql = "SELECT * FROM bookrooms WHERE name=%s;"
-                cur.execute(sql, (bookroom_name))
+                cur.execute(sql, (bookroom_name,))
                 bookroom = cur.fetchone()
                 return bookroom
         except pymysql.Error as e:
@@ -83,7 +83,7 @@ class Bookroom:
         try:
             with conn.cursor() as cur:
                 sql = "SELECT * FROM bookrooms WHERE id=%s;"
-                cur.execute(sql, (bookroom_id))
+                cur.execute(sql, (bookroom_id,))
                 bookroom = cur.fetchone()
                 return bookroom
         except pymysql.Error as e:
@@ -137,6 +137,8 @@ class Bookroom:
                     ),
                 )
                 conn.commit()
+                bookroom_id = cur.lastrowid
+                return bookroom_id
         except pymysql.Error as e:
             print(f"エラーが発生しています：{e}")
             abort(500)
@@ -149,7 +151,14 @@ class Bookroom:
         try:
             with conn.cursor() as cur:
                 sql = "UPDATE bookrooms SET name=%s, description=%s WHERE id=%s;"
-                cur.execute(sql, (name, description, bookroom_id))
+                cur.execute(
+                    sql,
+                    (
+                        name,
+                        description,
+                        bookroom_id,
+                    ),
+                )
                 conn.commit()
         except pymysql.Error as e:
             print(f"エラーが発生しています：{e}")
@@ -163,7 +172,7 @@ class Bookroom:
         try:
             with conn.cursor() as cur:
                 sql = "DELETE FROM bookrooms WHERE id=%s;"
-                cur.execute(sql, (bookroom_id))
+                cur.execute(sql, (bookroom_id,))
                 conn.commit()
         except pymysql.Error as e:
             print(f"エラーが発生しています：{e}")
@@ -184,6 +193,32 @@ class Tag:
                 tags = cur.fetchall()
                 return tags
         except pymysql.Eroor as e:
+            print(f"エラーが発生しています：{e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
+
+
+############ブックルームタグ############
+class BookroomTag:
+    @classmethod
+    def create(cls, bookroom_id, tag_ids):
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                for tag_id in tag_ids:
+                    sql = (
+                        "INSERT INTO bookroom_tag(bookroom_id, tag_id) VALUES(%s, %s);"
+                    )
+                    cur.execute(
+                        sql,
+                        (
+                            bookroom_id,
+                            tag_id,
+                        ),
+                    )
+                    conn.commit()
+        except pymysql.Error as e:
             print(f"エラーが発生しています：{e}")
             abort(500)
         finally:
