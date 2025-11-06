@@ -1,3 +1,5 @@
+/*ブックルームを新規作成するモーダルの制御*/
+
 
 export const initCreatebookroomModal = () => {
   const createBookroomModal = document.getElementById("create-bookroom-modal");
@@ -22,7 +24,7 @@ export const initCreatebookroomModal = () => {
     }
   });
 
-  // create-channel-modalが表示されている時に Ctrl/Command + Enterで送信
+  // create-bookroom-modalが表示されている時に Ctrl/Command + Enterで送信
   // Enterで自動送信を防ぐ
   document.addEventListener("keydown", keydownEvent);
 

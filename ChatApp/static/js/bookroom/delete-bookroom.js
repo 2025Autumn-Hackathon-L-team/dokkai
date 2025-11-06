@@ -1,6 +1,4 @@
-/*
-チャンネルを削除するモーダルの制御
-*/
+/*ブックルームを削除するモーダルの制御*/
 const deleteButtons = document.querySelectorAll(".delete-bookroom-trigger"); 
 const deleteBookroomModal = document.getElementById("delete-bookroom-modal");
 const deletePageButtonClose = document.getElementById("delete-page-close-button");
