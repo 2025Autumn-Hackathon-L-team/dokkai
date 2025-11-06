@@ -100,15 +100,13 @@ class Bookroom:
             db_pool.release(conn)
     
     @classmethod # <-- @classmethod を追加
-    def get_private_bookrooms(cls, user_id): # <-- メソッド名を変更し、user_idを引数に追加
+    def get_private_bookrooms(cls, user_id):  #<-- user_idを引数に追加
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                # SQLを修正: ログインユーザー(user_id)が作成したすべてのブックルームを取得
-                # is_public の値に関わらず、自身が作成したものを取得するのが一般的
                 sql = "SELECT * FROM bookrooms WHERE user_id=%s AND is_public=0;" 
                 cur.execute(sql, (user_id,))
-                private_bookrooms = cur.fetchall() # <-- 変数名を修正 (public -> user)
+                private_bookrooms = cur.fetchall() 
                 return private_bookrooms
         except pymysql.Error as e:
             print(f"エラーが発生しています:{e}")
@@ -131,7 +129,7 @@ class Bookroom:
            db_pool.release(conn)
     
     @classmethod
-    def update(cls, bookroom_id, name, description, user_id):
+    def update(cls, bookroom_id, name, description, user_id):#<-- user_idを引数に追加
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
@@ -145,7 +143,7 @@ class Bookroom:
             db_pool.release(conn)
     
     @classmethod
-    def delete(cls, bookroom_id, user_id):
+    def delete(cls, bookroom_id, user_id):#<-- user_idを引数に追加
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
