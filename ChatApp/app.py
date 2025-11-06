@@ -325,24 +325,22 @@ def profile_view():
     return render_template("profile.html",icon=icon_view,uid=current_uid,name=current_name,email=current_email,messages_count=messages_count)
 
 # プロフィール画面の編集
-@app.route("/prifile/update",methods=["POST"])
+@app.route("/profile/update",methods=["POST"])
 def update_profile():
     user_id=session.get("user_id")
 
-    #if user_id in None:
-    #    return redirect(url_for("login_view"))
+    if user_id is None:
+        return redirect(url_for("login_view"))
     
     # TODO フロントからどう持ってくるか確認する
     name=request.form.get("profile_name")
     email=request.form.get("profile_email")
-    # 表示確認用
+    # 値確認用
     print(f'{name}は入力されたname')
     print(f'{email}は入力されたemail')
 
-    Profile.name_email_update(user_id,name,email)
-    #Profile.email_update(user_id,email)
-    return redirect(url_for("profile_view"))
-    
+    Profile.name_email_update(name,email,user_id)
+    return render_template("profile.html",uid=user_id,name=name,email=email)   
 
 ########プロフィール画面（ここまで）##########
 
