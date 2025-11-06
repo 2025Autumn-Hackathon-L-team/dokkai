@@ -270,7 +270,7 @@ def private_bookrooms_view():
         record_name='ブックルーム'
         )
 
-    return render_template("private_bookroom.html",is_public=False, uid=user_id, paginated_bookrooms=paginated_bookrooms, pagination=pagination)
+    return render_template("private-bookroom.html",is_public=False, uid=user_id, paginated_bookrooms=paginated_bookrooms, pagination=pagination)
 
 # プライベートブックルームの作成
 @app.route("/private_bookrooms", methods=["POST"])
