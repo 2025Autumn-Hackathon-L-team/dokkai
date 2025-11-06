@@ -8,7 +8,7 @@ import os
 
 from models import User, Bookroom, Message, Profile
 
-
+############################認証関係(ここから)####################################
 EMAIL_PATTERN = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 SESSION_DAYS = 30
 
@@ -132,7 +132,7 @@ def logout():
     session.clear()
     return redirect(url_for("login_view"))
 
-
+############################認証関係(ここまで)####################################
 ############################ブックルーム関係（ここから）############################
 
 ###########################
@@ -200,8 +200,8 @@ def create_public_bookroom():
         error = "既に同じ名前のブックルームが存在しています。"
         return render_template("error/404.html", error_message=error)
 
-
-# ブックルーム編集ページ表示
+###########################未使用ここから####################################
+# パブリックブックルーム編集ページ表示
 @app.route("/public_bookrooms/update/<bookroom_id>", methods=["GET"])
 def show_public_bookroom(bookroom_id):
     user_id = session.get("user_id")
@@ -213,9 +213,9 @@ def show_public_bookroom(bookroom_id):
 
     bookroom = Bookroom.find_by_bookroom_id(bookroom_id)
     return render_template("test/update-bookroom.html", bookroom=bookroom)
+###########################未使用ここまで####################################
 
-
-# ブックルームの編集作業
+# パブリックブックルームの編集作業
 @app.route("/public_bookrooms/update/<bookroom_id>", methods=["POST"])
 def update_public_bookroom(bookroom_id):
     user_id = session.get("user_id")
@@ -293,7 +293,7 @@ def create_private_bookroom():
         error = "既に同じ名前のブックルームが存在しています。"
         return render_template("error/404.html", error_message=error)
 
-# ブックルームの編集作業
+# プライベートブックルームの編集作業
 @app.route("/private_bookrooms/update/<bookroom_id>", methods=["POST"])
 def update_private_bookroom(bookroom_id):
     user_id = session.get("user_id")
@@ -328,9 +328,13 @@ def delete_private_bookroom(bookroom_id):
 
 
 ############################ブックルーム関係（ここまで）############################
+############################メッセージ関係（ここから）############################
 
+#####################################
+#  パブリックブックルームのメッセージ   #
+#####################################
 
-# ブックルーム詳細ページの表示
+# パブリックブックルーム詳細ページの表示
 @app.route("/public_bookrooms/<bookroom_id>/messages", methods=["GET"])
 def detail(bookroom_id):
     #表示チェックのためデフォルトユーザを設定
@@ -347,7 +351,7 @@ def detail(bookroom_id):
     )
 
 
-# メッセージの投稿
+# パブリックブックルームメッセージの投稿
 @app.route("/public_bookrooms/<bookroom_id>/messages", methods=["POST"])
 def create_message(bookroom_id):
     user_id = session.get("user_id")
@@ -364,7 +368,7 @@ def create_message(bookroom_id):
     )
 
 
-# メッセージの削除
+# パブリックブックルームメッセージの削除
 @app.route("/public_bookrooms/<bookroom_id>/messages/<message_id>", methods=["POST"])
 def delete_message(bookroom_id, message_id):
     user_id = session.get("user_id")
@@ -377,6 +381,10 @@ def delete_message(bookroom_id, message_id):
         "/public_bookrooms/{bookroom_id}/messages".format(bookroom_id=bookroom_id)
     )
 
+
+#####################################
+#  プライベートブックルームのメッセージ   #
+#####################################
 # プライベートブックルーム詳細ページの表示
 @app.route("/private_bookrooms/<bookroom_id>/messages", methods=["GET"])
 def private_detail(bookroom_id):
@@ -393,8 +401,7 @@ def private_detail(bookroom_id):
         "private_messages.html", messages=messages, bookroom=bookroom, uid=user_id
     )
 
-
-# メッセージの投稿
+# プライベートブックルームへのメッセージの投稿
 @app.route("/private_bookrooms/<bookroom_id>/messages", methods=["POST"])
 def private_create_message(bookroom_id):
     user_id = session.get("user_id")
@@ -411,7 +418,7 @@ def private_create_message(bookroom_id):
     )
 
 
-# メッセージの削除
+# プライベートブックルームのメッセージの削除
 @app.route("/private_bookrooms/<bookroom_id>/messages/<message_id>", methods=["POST"])
 def private_delete_message(bookroom_id, message_id):
     user_id = session.get("user_id")
@@ -423,7 +430,8 @@ def private_delete_message(bookroom_id, message_id):
     return redirect(
         "/private_bookrooms/{bookroom_id}/messages".format(bookroom_id=bookroom_id)
     )
-########プロフィール画面（ここから）##########
+############################メッセージ関係（ここから）############################
+############################プロフィール画面（ここから）##########################
 @app.route("/profile")
 def profile_view():
     current_uid=session.get("user_id")
