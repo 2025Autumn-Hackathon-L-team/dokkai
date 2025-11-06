@@ -99,14 +99,17 @@ class Bookroom:
         finally:
             db_pool.release(conn)
     
-    def get_private_bookrooms(cls):
+    @classmethod # <-- @classmethod を追加
+    def get_private_bookrooms(cls, user_id): # <-- メソッド名を変更し、user_idを引数に追加
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = "SELECT * FROM bookrooms WHERE is_public=FALSE;"
-                cur.execute(sql)
-                public_bookrooms = cur.fetchall()
-                return public_bookrooms
+                # SQLを修正: ログインユーザー(user_id)が作成したすべてのブックルームを取得
+                # is_public の値に関わらず、自身が作成したものを取得するのが一般的
+                sql = "SELECT * FROM bookrooms WHERE user_id=%s AND is_public=0;" 
+                cur.execute(sql, (user_id,))
+                private_bookrooms = cur.fetchall() # <-- 変数名を修正 (public -> user)
+                return private_bookrooms
         except pymysql.Error as e:
             print(f"エラーが発生しています:{e}")
             abort(500)
@@ -128,12 +131,12 @@ class Bookroom:
            db_pool.release(conn)
     
     @classmethod
-    def update(cls, bookroom_id, name, description):
+    def update(cls, bookroom_id, name, description, user_id):
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = "UPDATE bookrooms SET name=%s, description=%s WHERE id=%s;"
-                cur.execute(sql, (name, description, bookroom_id,))
+                sql = "UPDATE bookrooms SET name=%s, description=%s WHERE id=%s AND user_id=%s;"
+                cur.execute(sql, (name, description, bookroom_id,user_id,))
                 conn.commit()
         except pymysql.Error as e:
             print(f'エラーが発生しています：{e}')
@@ -142,12 +145,12 @@ class Bookroom:
             db_pool.release(conn)
     
     @classmethod
-    def delete(cls, bookroom_id):
+    def delete(cls, bookroom_id, user_id):
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = "DELETE FROM bookrooms WHERE id=%s;"
-                cur.execute(sql, (bookroom_id,))
+                sql = "DELETE FROM bookrooms WHERE id=%s AND user_id=%s;"
+                cur.execute(sql, (bookroom_id,user_id,))
                 conn.commit()
         except pymysql.Error as e:
             print(f'エラーが発生しています：{e}')
