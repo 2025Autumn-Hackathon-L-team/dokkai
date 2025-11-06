@@ -224,7 +224,7 @@
   width: 56px;
   height: 56px;
   border-radius: 75%;
-  background-color: var(--brown); 
+  background-color: var(--green); 
   color: #fff;
   display: flex;
   justify-content: center;
@@ -237,25 +237,6 @@
   transition: background-color 0.2s, transform 0.2s;
 }
 
-.create-bookroom-button { /* 新しいセレクタとして追加 */
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  width: 56px;
-  height: 56px;
-  border-radius: 75%;
-  background-color: var(--brown); 
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.0rem; /* アイコンのサイズ */
-  box-shadow: 0 4px 10px var(--shadow-strong);
-  cursor: pointer;
-  z-index: 2;
-  border: none;
-  transition: background-color 0.2s, transform 0.2s;
-}
 .create-bookroom-button:hover {
   background-color: var(--brown); /* ホバーで少し暗く */
   transform: translateY(-2px);

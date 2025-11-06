@@ -1,20 +1,20 @@
 
 <div id="create-bookroom-modal" class="modal">
-  <div class="modal-content">
-    <div class="modal-header">
+  <div class="modal-content-private">
+    <div class="modal-header-private">
       <h5>MAKE BOOKROOM -PRIVATE-</h5>
       <span class="modalClose" id="add-page-close-button">×</span>
     </div>
     <form
       name="createBookroomForm"
-      class="modal-body"
+      class="modal-body-private"
       action="/private_bookrooms"
       method="POST"
     >
       <input
         type="text"
         placeholder=" BOOKROOMのテーマ(本の名前、著者名、ジャンルなど)を入力"
-        class="bookroom-form-input"
+        class="bookroom-form-input-private"
         name="bookroom_name"
         required
       />
@@ -22,7 +22,7 @@
         type="text"
         placeholder="BOOKROOMの紹介文を入力
 (例: 00年代限定、学生集まれ、まったり読んでますなど)"
-        class="bookroom-form-input-wide"
+        class="bookroom-form-input-wide-private"
         name="bookroom_description"
       />
       <button>MAKE</button>

@@ -63,7 +63,6 @@
 .modalClose:hover {
   cursor: pointer;
 }
-
 .modal-body {
   padding: 10px 20px;
   display: flex;
@@ -75,7 +74,8 @@
 
 .bookroom-form-input {
   width: 100%;
-  background-color:var(--lightgreen);
+  border: 2px var(--wood) solid;
+  outline: none;
   margin-top: 8px;
   margin-bottom: 20px;
   padding: 0.5rem;
@@ -84,41 +84,42 @@
 
 .bookroom-form-input-wide {
   width: 100%;
-  background-color:var(--lightgreen);
+  border: 2px var(--wood) solid;
+  outline: none;
   margin-top: 8px;
   margin-bottom: 20px;
   padding: 1.0rem;
   color: var(--brown);
 }
 .bookroom-form-input::placeholder {
-  color: var(--brown);
+  color: var(--gray);
   font-size: 10px;
 }
 .bookroom-form-input-wide::placeholder {
-  color: var(--brown);
+  color: var(--gray);
   font-size: 10px; 
   overflow-wrap: anywhere;
 }
 .bookroom-form-input:focus::placeholder {
-  color: var(--snow); /* フォーカス時のプレースホルダーの文字色を雪色（白）にする */
-}
+  color: var(--snow); 
+}  
 .bookroom-form-input-wide:focus::placeholder {
   color: var(--snow); 
 }
 .bookroom-form-input:focus {
-  background-color: var(--green);
+  background-color: var(--brown);
   color: var(--snow);
 }
 .bookroom-form-input-wide:focus {
-  background-color: var(--green);
+  background-color: var(--brown);
   color: var(--snow);
 }
 .bookroom-form-input:hover {
-  background-color: var(--green);
+  background-color: var(--brown);
   color: var(--snow);
 }
 .bookroom-form-input-wide:hover {
-  background-color: var(--green);
+  background-color: var(--brown);
   color: var(--snow);
 }
 .modal-gif {
@@ -135,7 +136,7 @@
 
 .modal-body button {
   width: 70%;
-  background-color: var(--green);
+  background-color: var(--wood);
 }
 
 #delete-bookroom-confirmation-button {
@@ -147,14 +148,135 @@
   text-align: center;
 }
 .modal-body button:hover {
+  background-color: var(--brown);
+}
+
+
+/* プライベート用 */
+.modal-content-private {
+  background-color: var(--snow);
+  margin: 20% auto;
+  width: 80%;
+  border: 12px solid var(--green);
+  animation-name: modalopen;
+  animation-duration: 1s;
+  position: relative;
+}
+
+.modal-header-private h1 {
+  margin: 1rem 0;
+}
+
+.modal-header-private {
+  background: var(--green);
+  padding: 3px 15px 3px 32px;
+  color: var(--snow);
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-header-private h5,
+.modal-header-private span {
+  z-index: 4;
+}
+
+.modal-body-private {
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--snow);
+  border-radius: 0 0 20px 20px;
+}
+
+.bookroom-form-input-private {
+  width: 100%;
+  background-color:var(--lightgreen);
+  margin-top: 8px;
+  margin-bottom: 20px;
+  padding: 0.5rem;
+  color: var(--brown);
+}
+
+.bookroom-form-input-wide-private {
+  width: 100%;
+  background-color:var(--lightgreen);
+  margin-top: 8px;
+  margin-bottom: 20px;
+  padding: 1.0rem;
+  color: var(--brown);
+}
+.bookroom-form-input-private::placeholder {
+  color: var(--brown);
+  font-size: 10px;
+}
+.bookroom-form-input-wide-private::placeholder {
+  color: var(--brown);
+  font-size: 10px; 
+  overflow-wrap: anywhere;
+}
+.bookroom-form-input-private:focus::placeholder {
+  color: var(--snow); /* フォーカス時のプレースホルダーの文字色を雪色（白）にする */
+}
+.bookroom-form-input-wide-private:focus::placeholder {
+  color: var(--snow); 
+}
+.bookroom-form-input-private:focus {
+  background-color: var(--green);
+  color: var(--snow);
+}
+.bookroom-form-input-wide-private:focus {
+  background-color: var(--green);
+  color: var(--snow);
+}
+.bookroom-form-input-private:hover {
+  background-color: var(--green);
+  color: var(--snow);
+}
+.bookroom-form-input-wide-private:hover {
+  background-color: var(--green);
+  color: var(--snow);
+}
+.modal-gif {
+  position: absolute;
+  z-index: 2;
+  top: -65px;
+  left: 30%;
+}
+
+.modal-body-private p,
+.modal-body-private a {
+  width: 100%;
+}
+
+.modal-body-private button {
+  width: 70%;
   background-color: var(--green);
 }
+
+#delete-bookroom-confirmation-button {
+  width: 100%;
+}
+
+#deleteBookroomForm p {
+  color: var(--brown);
+  text-align: center;
+}
+.modal-body-private button:hover {
+  background-color: var(--green);
+}
+
+
 
 /* ========================================================== */
 /* レスポンシブ */
 
 @media screen and (max-width: 639px) {
   .modal-content {
+    margin: 35% auto;
+    width: 95%;
+  }
+  .modal-content-private {
     margin: 35% auto;
     width: 95%;
   }
@@ -167,12 +289,18 @@
   .modal-content {
     width: 95%;
   }
+  .modal-content-private {
+    width: 95%;
+  }
   .modal {
     padding-left: 60px;
   }
 }
 @media only screen and (min-width: 671px) and (max-width: 1024px) {
   .modal-content {
+    width: 80%;
+  }
+  .modal-content-private {
     width: 80%;
   }
   .modal {
@@ -184,10 +312,16 @@
   .modal-content {
     width: 70%;
   }
+  .modal-content-private {
+    width: 70%;
+  }
 }
 
 @media screen and (min-width: 1025px) {
   .modal-content {
+    width: 50%;
+  }
+  .modal-content-private {
     width: 50%;
   }
 }

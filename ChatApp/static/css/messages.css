@@ -19,12 +19,36 @@
   padding-left: 20px;
   z-index: 2;
 }
+#bookroom-header_private {
+  background-color: var(--green);
+  color: var(--snow);
+  height: auto;
+  width: calc(100vw - 50px);
+  position: fixed;
+  top: 0;
+  right: 0;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap:0rem;
+  padding-left: 20px;
+  z-index: 2;
+}
 #bookroom-header > h1 { /* タイトル */
   font-size: 1.5rem;
   font-weight: 500;
   letter-spacing: normal;
   text-align: center;
 }
+
+#bookroom-header_private > h1 { /* タイトル */
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: normal;
+  text-align: center;
+}
+
 #bookroom-contents{
   display: flex;
   width:100%;
@@ -48,15 +72,15 @@
 }
 
 #update-bookroom-button {
-    background-color: var(--lightgreen);
+    background-color: var(--wood);
     border-radius: 50%;
     width: 10vh; 
-    height: 7vh;
+    height: 6vh;
     padding: 0.2em 0.6em;
     margin-left: auto
 }
 #update-bookroom-button:hover {
-  background-color: var(--green);
+  background-color: var(--wood);
   cursor: pointer;
 }
 .message-meta { 
@@ -66,7 +90,7 @@
     gap: 5px;
 }
 
-.memo-category { /* カテゴリタグ */
+.tag-category { /* カテゴリタグ */
   font-size: 0.7rem;
   font-weight: 600;
   color: var(--brown);
