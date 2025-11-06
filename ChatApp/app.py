@@ -228,7 +228,7 @@ def update_public_bookroom(bookroom_id):
     name = request.form.get("bookroom_name")
     description = request.form.get("bookroom_description")
     Bookroom.update(
-        bookroom_id=bookroom_id,name=name, description=description
+        bookroom_id=bookroom_id,name=name, description=description,user_id=user_id
     )
     return redirect(url_for("public_bookrooms_view"))
 
@@ -245,7 +245,7 @@ def delete_public_bookroom(bookroom_id):
     if not is_bookroom_owner(user_id, bookroom_id):
         flash("ブックルーム作成者のみ削除可能です")
     else:
-        Bookroom.delete(bookroom_id)
+        Bookroom.delete(bookroom_id,user_id=user_id)
     return redirect(url_for("public_bookrooms_view"))
 
 
