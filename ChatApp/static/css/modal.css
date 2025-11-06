@@ -1,4 +1,19 @@
 /* 各モーダルのCSS */
+@keyframes modalopen {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.modalClose {
+  font-size: 2rem;
+}
+
+.modalClose:hover {
+  cursor: pointer;
+}
 
 .modal {
   position: fixed;
@@ -19,6 +34,7 @@
   display: none;
 }
 
+/* パブリック用 */
 .modal-content {
   background-color: var(--snow);
   margin: 20% auto;
@@ -28,15 +44,6 @@
   animation-name: modalopen;
   animation-duration: 1s;
   position: relative;
-}
-
-@keyframes modalopen {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
 }
 
 .modal-header h1 {
@@ -56,13 +63,6 @@
   z-index: 4;
 }
 
-.modalClose {
-  font-size: 2rem;
-}
-
-.modalClose:hover {
-  cursor: pointer;
-}
 .modal-body {
   padding: 10px 20px;
   display: flex;
@@ -263,7 +263,7 @@
   text-align: center;
 }
 .modal-body-private button:hover {
-  background-color: var(--green);
+  background-color: var(--deep_green);
 }
 
 
