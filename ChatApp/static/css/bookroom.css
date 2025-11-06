@@ -34,7 +34,30 @@
   z-index: 2; /* 他の要素より手前に */
 }
 
-.bookroom-title h1 { /* タイトル */
+.bookroom-title_private { /* privateのヘッダー */
+  position: fixed; 
+  top: 0px;
+  left: 50px;
+  width: 100%;
+  height: 100px; 
+  background-color: var(--green);
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 15px;
+  z-index: 2; /* 他の要素より手前に */
+}
+
+.bookroom-title h1{ /* publicのタイトル */
+  font-size: 1.5rem;
+  margin: 0;
+  font-weight: 500;
+  letter-spacing: normal;
+  text-align: center;
+  width: calc(100% - 50px);
+}
+.bookroom-title_private h1 { /* privateのタイトル */
   font-size: 1.5rem;
   margin: 0;
   font-weight: 500;
@@ -98,6 +121,21 @@
   transition: transform 0.2s ease-in-out;
 
 }
+.memo-item-card_private { /* bookroom in bookrooms の各要素に適用 */
+  background-color: var(--lightgreen);
+  border: 1px solid var(--brown);
+  border-radius: 12px;
+  width: 100%;
+  /* カードの最大幅 */
+  margin-bottom: 15px;
+  padding: 15px;
+  display: flex;
+  flex-direction:row;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.2s ease-in-out;
+
+}
 
 .memo-item-card:hover {
   transform: translateY(-3px); /* 軽く浮き上がるエフェクト */
@@ -106,7 +144,6 @@
 .memo-content {
   flex-grow: 1; /* 残りのスペースを占める */
 }
-
 .memo-title { /* メモのタイトル */
   font-size: 1rem;
   font-weight: 600;
@@ -164,7 +201,7 @@
 }
 
 .delete-bookroom-trigger {
-  background-color: var(--snow);
+  background-color: transparent;
   height: 20px;
   width: 20px;
   line-height: 47px;
@@ -187,7 +224,7 @@
   width: 56px;
   height: 56px;
   border-radius: 75%;
-  background-color: var(--green); 
+  background-color: var(--brown); 
   color: #fff;
   display: flex;
   justify-content: center;
@@ -200,8 +237,27 @@
   transition: background-color 0.2s, transform 0.2s;
 }
 
+.create-bookroom-button { /* 新しいセレクタとして追加 */
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 56px;
+  height: 56px;
+  border-radius: 75%;
+  background-color: var(--brown); 
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.0rem; /* アイコンのサイズ */
+  box-shadow: 0 4px 10px var(--shadow-strong);
+  cursor: pointer;
+  z-index: 2;
+  border: none;
+  transition: background-color 0.2s, transform 0.2s;
+}
 .create-bookroom-button:hover {
-  background-color: var(--green); /* ホバーで少し暗く */
+  background-color: var(--brown); /* ホバーで少し暗く */
   transform: translateY(-2px);
 }
 
@@ -213,6 +269,10 @@
     padding-left: 0px;
   }
   .bookroom-title { 
+    position: fixed; 
+    left: 0px;
+}
+  .bookroom-title_private { 
     position: fixed; 
     left: 0px;
 }

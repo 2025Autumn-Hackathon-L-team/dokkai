@@ -6,7 +6,7 @@
 
 {% block body %}
 <div class="main-container">
-  <div class="bookroom-title">
+  <div class="bookroom-title_private">
     <h1>PRIVATE BOOKROOM</h1> 
   </div>
 
@@ -22,7 +22,7 @@
   </div>
   <div id="bookroom-list"> 
     {% for bookroom in paginated_bookrooms %}
-    <div class="memo-item-card"> {# Card for each memo #}
+    <div class="memo-item-card_private"> {# Card for each memo #}
       <div class="memo-content">
         <a href="{{ url_for('private_detail', bookroom_id=bookroom.id) }}" class="bookroom-to-message">
         <h3 class="memo-title">{{ bookroom.name }}</h3>
