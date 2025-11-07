@@ -1,0 +1,79 @@
+{% extends 'base.html' %} 
+
+{% block title %}
+<title>private-bookroom</title>
+{% endblock %} 
+
+{% block body %}
+<div class="main-container">
+  <div class="bookroom-title_private">
+    <h1>PRIVATE BOOKROOM</h1> 
+  </div>
+
+  {# Category selection dropdown #}
+  <div class="category-select-wrapper">
+    <select name="category" id="category-filter">
+      <option value="">カテゴリを選択</option>
+      <option value="idea">小説</option>
+      <option value="todo">ノンフィクション</option>
+      <option value="shopping">雑誌</option>
+      <option value="uncategorized">未分類</option>
+    </select>
+  </div>
+  <div id="bookroom-list"> 
+    {% for bookroom in paginated_bookrooms %}
+    <div class="memo-item-card_private"> {# Card for each memo #}
+      <div class="memo-content">
+        <a href="{{ url_for('private_detail', bookroom_id=bookroom.id) }}" class="bookroom-to-message">
+        <h3 class="memo-title">{{ bookroom.name }}</h3>
+        <p class="memo-description">{{ bookroom.description }}</p>
+      </a>
+      </div>
+      <div class="memo-meta">
+        <span class="memo-date">{{bookroom.created_at}}</span>
+        <span class="memo-category {{ bookroom.category_tag | default('uncategorized') }}">
+          {{ bookroom.category | default('未分類') }}
+        </span>
+      </div>
+      <div class="memo-icon">
+        {% if session.get('user_id') == bookroom.user_id %}
+         <button class="delete-bookroom-trigger" data-bookroom-id="{{ bookroom.id }}">
+        <img src="{{ url_for('static', filename='img/trash-can.png') }}" alt="アイコン" >
+         </button>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+
+    <div class="pagination-container">
+      {{ pagination.info }}
+      {{ pagination.links }}
+    </div>
+  </div>
+
+  {# Floating Action Button #}
+  <button class="create-bookroom-button"id="create-bookroom-button"label="作成">
+     MAKE
+  </button>
+  {% include 'private_modal/create-private-bookroom.html' %} 
+  {% include 'private_modal/delete-private-bookroom.html' %}
+</div>
+{% endblock %} 
+
+{% block script %}
+<script type="text/javascript">
+  // prettier-ignore
+  const bookrooms = JSON.parse('{{ paginated_bookrooms|tojson }}'); 
+  // prettier-ignore
+  const uid = JSON.parse('{{ uid|tojson }}');
+  const IS_PUBRIC = false;
+</script>
+<script
+  src="{{url_for('static',filename='js/bookroom/create-bookroom.js')}}"
+  type="module"
+></script>
+<script
+  src="{{url_for('static',filename='js/bookroom/delete-bookroom.js')}}"
+  type="module"
+></script>
+{% endblock %}
