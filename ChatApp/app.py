@@ -338,10 +338,30 @@ def update_profile():
     # 値確認用
     print(f'{name}は入力されたname')
     print(f'{email}は入力されたemail')
-
     Profile.name_email_update(name,email,user_id)
     # TODO: ここでsesseionの更新
-    return render_template("profile.html",uid=user_id,name=name,email=email)   
+    return render_template("profile.html",uid=user_id,name=name,email=email)
+
+    # バリデーションチェックをしたいがどうすれば？
+    """
+    if name == "" or email == "":
+        flash("入力されていないフォームがあります")
+    elif re.fullmatch(EMAIL_PATTERN, email) is None:
+        flash("有効なメールアドレスの形式ではありません")
+    else:
+        registered_email_user= User.find_by_email(email) 
+        registered_name_user=User.find_by_name(name)
+        if registered_email_user != None:
+            flash("入力されたメールアドレスは使用されています。")
+            flash("違うメールアドレスを入力してください。")
+        elif registered_name_user != None:
+            flash("入力された名前は使用されています。")
+            flash("違う名前を入力してください。")
+        else:
+            Profile.name_email_update(name,email,user_id)
+            # TODO: ここでsesseionの更新
+            return render_template("profile.html",uid=user_id,name=name,email=email)
+    """
 
 ########プロフィール画面（ここまで）##########
 
