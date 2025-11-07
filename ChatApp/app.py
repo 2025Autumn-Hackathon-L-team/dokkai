@@ -430,7 +430,7 @@ def private_delete_message(bookroom_id, message_id):
     return redirect(
         "/private_bookrooms/{bookroom_id}/messages".format(bookroom_id=bookroom_id)
     )
-############################メッセージ関係（ここから）############################
+############################メッセージ関係（ここまで）############################
 ############################プロフィール画面（ここから）##########################
 
 # プロフィール画面の表示
