@@ -63,12 +63,12 @@ class User:
 # ブックルームクラス
 class Bookroom:
     @classmethod
-    def find_by_bookroom_name(cls, bookroom_name):
+    def find_by_bookroom_name(cls, bookroom_name, is_public=None):
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = "SELECT * FROM bookrooms WHERE name=%s;"
-                cur.execute(sql, (bookroom_name,))
+                sql = "SELECT * FROM bookrooms WHERE name=%s AND is_public=%s"
+                cur.execute(sql, (bookroom_name, is_public))
                 bookroom = cur.fetchone()
                 return bookroom
         except pymysql.Error as e:
@@ -91,6 +91,7 @@ class Bookroom:
             abort(500)
         finally:
             db_pool.release(conn)
+    
 
     @classmethod
     def get_public_bookrooms(cls):

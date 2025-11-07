@@ -220,7 +220,7 @@ def public_bookrooms_view():
 @app.route("/public_bookrooms", methods=["POST"])
 def create_public_bookroom():
     bookroom_name = request.form.get("bookroom_name")
-    bookroom = Bookroom.find_by_bookroom_name(bookroom_name)
+    bookroom = Bookroom.find_by_bookroom_name(bookroom_name=bookroom_name, is_public=True)
 
     if bookroom == None:
         # 開発テスト用
