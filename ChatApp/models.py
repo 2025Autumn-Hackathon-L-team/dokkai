@@ -129,12 +129,12 @@ class Bookroom:
            db_pool.release(conn)
     
     @classmethod
-    def update(cls, bookroom_id, name, description, user_id):#<-- user_idを引数に追加
+    def update(cls, bookroom_id, name, description):
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = "UPDATE bookrooms SET name=%s, description=%s WHERE id=%s AND user_id=%s;"
-                cur.execute(sql, (name, description, bookroom_id,user_id,))
+                sql = "UPDATE bookrooms SET name=%s, description=%s WHERE id=%s"
+                cur.execute(sql, (name, description, bookroom_id,))
                 conn.commit()
         except pymysql.Error as e:
             print(f'エラーが発生しています：{e}')
@@ -143,12 +143,12 @@ class Bookroom:
             db_pool.release(conn)
     
     @classmethod
-    def delete(cls, bookroom_id, user_id):#<-- user_idを引数に追加
+    def delete(cls, bookroom_id):
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = "DELETE FROM bookrooms WHERE id=%s AND user_id=%s;"
-                cur.execute(sql, (bookroom_id,user_id,))
+                sql = "DELETE FROM bookrooms WHERE id=%s"
+                cur.execute(sql, (bookroom_id,))
                 conn.commit()
         except pymysql.Error as e:
             print(f'エラーが発生しています：{e}')
