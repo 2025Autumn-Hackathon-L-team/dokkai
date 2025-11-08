@@ -1,7 +1,7 @@
 <div id="update-profile-modal" class="modal">
   <div class="modal-content">
     <div class="modal-header">
-      <h5>Edit PROFILE</h5>
+      <h5>EDIT PROFILE</h5>
       <span class="modalClose" id="update-page-close-button">×</span>
     </div>
     <form
@@ -19,9 +19,16 @@
       />
       <input
         type="text"
-        placeholder="変更度のemailを入力してください"
+        placeholder="変更後のemailを入力してください"
         class="bookroom-form-input"
         name="profile_email"
+        required
+      />
+      <input
+        type="text"
+        placeholder="passwordを入力してください"
+        class="bookroom-form-input"
+        name="password"
         required
       />
       <button>EDIT</button>

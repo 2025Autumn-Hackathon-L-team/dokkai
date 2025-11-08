@@ -328,6 +328,7 @@ def profile_view():
 @app.route("/profile/update",methods=["POST"])
 def update_profile():
     user_id=session.get("user_id")
+    current_email=Profile.email_view(user_id)
 
     if user_id is None:
         return redirect(url_for("login_view"))
@@ -335,13 +336,21 @@ def update_profile():
     # TODO フロントからどう持ってくるか確認する
     name=request.form.get("profile_name")
     email=request.form.get("profile_email")
+    password = request.form.get("password")
     # 値確認用
     print(f'{name}は入力されたname')
     print(f'{email}は入力されたemail')
-    Profile.name_email_update(name,email,user_id)
-    # TODO: ここでsesseionの更新
-    return render_template("profile.html",uid=user_id,name=name,email=email)
-
+    hashPassword = hashlib.sha256(password.encode("utf-8")).hexdigest()
+    user = User.find_by_email(current_email)
+    # ログインチェック
+    if user["password"] != hashPassword:
+        return redirect(url_for("profile_view"))  
+    #  flash("ログインできませんでした。")
+    #  flash("メールアドレスかパスワードが間違っています。")
+    else:
+        Profile.name_email_update(name,email,user_id)
+    return redirect(url_for("profile_view"))
+    
     # バリデーションチェックをしたいがどうすれば？
     """
     if name == "" or email == "":
