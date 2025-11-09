@@ -152,14 +152,7 @@ class Bookroom:
         try:
             with conn.cursor() as cur:
                 sql = "UPDATE bookrooms SET name=%s, description=%s WHERE id=%s;"
-                cur.execute(
-                    sql,
-                    (
-                        name,
-                        description,
-                        bookroom_id,
-                    ),
-                )
+                cur.execute(sql, (name, description, bookroom_id,))
                 conn.commit()
         except pymysql.Error as e:
             print(f"エラーが発生しています：{e}")

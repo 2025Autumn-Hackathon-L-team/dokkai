@@ -25,11 +25,7 @@
     <div id="message-area">
       {% if messages|length > 0 %} {% for message in messages %} {% if
       message.user_id == uid %}
-      <div class="my-messages">
-  
-    <form action="/public_bookrooms/{{ bookroom.id }}/messages/{{ message.id }}" method="POST">
-      <input type="hidden" name="_method" value="DELETE"> 
-      
+    <div class="my-messages">
       <div class="message-and-reaction-right">
         <p class="box box-right">{{ message.message }}
         <span class="timestamp timestamp-right">2025/10/28 16:54</span>
@@ -37,12 +33,14 @@
         <div class="reaction-icon-wrapper reaction-icon-left">
            <img src="{{ url_for('static', filename='#') }}" alt="reaction" class="reaction-icon">
         </div>
-      </div> 
+      <form action="/public_bookrooms/{{ bookroom.id }}/messages/{{ message.id }}" method="POST">
+        <input type="hidden" name="_method" value="DELETE"> 
       
-      <button type="submit" class="delete-message-button">
+         <button type="submit" class="delete-message-button">
         <img src="{{ url_for('static', filename='img/trash-can.png') }}" alt="アイコン" >
-      </button>
-    </form> 
+         </button>
+      </form>  
+      </div> 
     </div>
       {% else %}
       <div class="messages">

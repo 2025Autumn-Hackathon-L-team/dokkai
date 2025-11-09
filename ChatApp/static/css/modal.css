@@ -80,7 +80,7 @@
   margin-top: 8px;
   margin-bottom: 20px;
   padding: 0.5rem;
-  color: var(--lightgreen);
+  color: var(--brown);
 }
 
 .bookroom-form-input-wide {
@@ -89,7 +89,7 @@
   margin-top: 8px;
   margin-bottom: 20px;
   padding: 1.0rem;
-  color: var(--lightgreen);
+  color: var(--brown);
 }
 
 .bookroom-form-input::placeholder {
@@ -149,10 +149,14 @@
   background-color: var(--green);
 }
 
-#delete-channel-confirmation-button {
+#delete-bookroom-confirmation-button {
   width: 100%;
 }
 
+#deleteBookroomForm p {
+  color: var(--brown);
+  text-align: center;
+}
 .modal-body button:hover {
   background-color: var(--green);
 }
