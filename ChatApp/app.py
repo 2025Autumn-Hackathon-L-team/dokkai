@@ -193,7 +193,6 @@ def public_bookrooms_view():
         page=page,
         total=len(bookrooms),
         per_page=PER_PAGE,
-        css_framework="bootstrap5",
         display_pages=True,
         record_name="ブックルーム",
     )
