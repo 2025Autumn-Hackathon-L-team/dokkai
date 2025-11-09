@@ -38,7 +38,9 @@
       </div>
       <div class="memo-icon">
         {% if session.get('user_id') == bookroom.user_id %}
-       <img src="{{ url_for('static', filename='img/trash-can.png') }}" alt="アイコン" />
+         <button class="delete-bookroom-trigger" data-bookroom-id="{{ bookroom.id }}">
+        <img src="{{ url_for('static', filename='img/trash-can.png') }}" alt="アイコン" >
+         </button>
         {% endif %}
       </div>
     </div>
@@ -65,6 +67,7 @@
   const bookrooms = JSON.parse('{{ paginated_bookrooms|tojson }}'); 
   // prettier-ignore
   const uid = JSON.parse('{{ uid|tojson }}');
+  const IS_PUBRIC = true;
 </script>
 <script
   src="{{url_for('static',filename='js/bookroom/create-bookroom.js')}}"

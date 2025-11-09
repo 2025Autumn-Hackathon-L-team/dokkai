@@ -1,6 +1,4 @@
-/*
-チャンネルを更新するモーダルの制御
-*/
+/*ブックルームを更新するモーダルの制御*/
 
 const updateButton = document.getElementById("update-bookroom-button");
 const updateBookroomModal = document.getElementById("update-bookroom-modal");
@@ -28,7 +26,7 @@ if (updateBookroomModal) {
   });
 }
 
-// update-channel-modalが表示されている時に Ctrl/Command + Enter で送信
+// update-bookroom-modalが表示されている時に Ctrl/Command + Enter で送信
 function sendUpdateForm() {
   const newBookroomTitle = document.updateBookroomForm.BookroomTitle.value;
 
