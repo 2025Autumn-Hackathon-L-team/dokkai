@@ -249,6 +249,20 @@
   background-color: var(--green);
 }
 
+
+#delete-bookroom-confirmation-button {
+  width: 100%;
+}
+
+#deleteBookroomForm p {
+  color: var(--brown);
+  text-align: center;
+}
+.modal-body-private button:hover {
+  background-color: var(--deep_green);
+}
+
+
 /*アイコン更新モーダル*/
 .modal-icons-content {
   background-color: #FFFACD;
@@ -304,19 +318,6 @@
 }
 
 /*アイコン更新モーダルここまで*/
-#delete-bookroom-confirmation-button {
-  width: 100%;
-}
-
-#deleteBookroomForm p {
-  color: var(--brown);
-  text-align: center;
-}
-.modal-body-private button:hover {
-  background-color: var(--deep_green);
-}
-
-
 
 /* ========================================================== */
 /* レスポンシブ */
