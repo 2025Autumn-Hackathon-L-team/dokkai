@@ -181,6 +181,10 @@ def public_bookrooms_view():
 
     user_id = session.get("user_id")
 
+    # ログインしていない場合はログインページへ
+    if user_id is None:
+        return redirect(url_for("login_view"))
+
     # ページネーション
     page = request.args.get(get_page_parameter(), type=int, default=1)
     paginated_bookrooms = bookrooms[(page - 1) * PER_PAGE : page * PER_PAGE]
@@ -228,6 +232,11 @@ def create_public_bookroom():
             session["user_id"] = TEST_USER_ID
 
         user_id = session.get("user_id")
+
+        # ログインしていない場合はログインページへ
+        if user_id is None:
+            return redirect(url_for("login_view"))
+    
         bookroom_description = request.form.get("bookroom_description")
         bookroom_id = Bookroom.create(
             user_id=user_id,
