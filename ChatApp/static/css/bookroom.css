@@ -144,7 +144,8 @@
 }
 /* タイトルと説明文がカードの残りのスペースを占める */
 .memo-content {
-  flex-grow: 1; 
+  flex-grow: 1;
+  max-width: 80%;
 }
 
  /* ブックルームのタイトル */
@@ -274,7 +275,7 @@
 }
   .memo-content {
    flex-grow: 1; 
-   max-width: 55%;
+   max-width: 70%;
 }
 }
 @media screen and (max-height: 768px){
