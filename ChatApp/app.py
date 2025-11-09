@@ -326,6 +326,7 @@ def delete_private_bookroom(bookroom_id):
         Bookroom.delete(bookroom_id,user_id=user_id)
     return redirect(url_for("private_bookrooms_view"))
 
+# ヒストリーブックルームの表示（仮設置）
 @app.route("/history", methods=["GET"])
 def history_view():
     # publicなブックルームのみ取得
