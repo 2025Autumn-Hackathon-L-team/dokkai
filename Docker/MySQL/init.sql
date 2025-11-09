@@ -27,9 +27,10 @@ CREATE TABLE bookrooms (
     user_id VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
     description VARCHAR(255),
-    is_public BOOLEAN,
+    is_public BOOLEAN NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY (name, is_public),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
@@ -97,6 +98,14 @@ VALUES
         'ハリーポッターとアズカバンの囚人',
         'アズカバンの囚人について細かく話そう！',
         TRUE,
+        '2020-01-01 00:00:00',
+        '2020-01-01 00:00:00'
+    ),
+    (
+        '970af84c-dd40-47ff-af23-282b72b7cca8',
+        'ハリーポッターと炎のゴブレット',
+        'ゴブレットの意味を教えて',
+        FALSE,
         '2020-01-01 00:00:00',
         '2020-01-01 00:00:00'
     );

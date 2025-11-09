@@ -168,22 +168,23 @@ def is_bookroom_owner(user_id, bookroom_id):
         return False
     return True
 
-
-# パブリックブックルームの一覧表示
-@app.route("/public_bookrooms", methods=["GET"])
-def public_bookrooms_view():
-    # publicなブックルームのみ取得
-    bookrooms = Bookroom.get_public_bookrooms()
-
-    # 開発テスト用
+# ログインしているuser_idを返す。テストの際は、TEST_USER_IDを格納する。
+def get_login_user_id():
     if app.debug:
         session["user_id"] = TEST_USER_ID
 
     user_id = session.get("user_id")
+    return user_id
 
-    # ログインしていない場合はログインページへ
+# パブリックブックルームの一覧表示
+@app.route("/public_bookrooms", methods=["GET"])
+def public_bookrooms_view():
+    user_id = get_login_user_id()
     if user_id is None:
         return redirect(url_for("login_view"))
+    
+    # publicなブックルームのみ取得
+    bookrooms = Bookroom.get_public_bookrooms()
 
     # ページネーション
     page = request.args.get(get_page_parameter(), type=int, default=1)
@@ -202,7 +203,7 @@ def public_bookrooms_view():
 
     if app.debug:
         return render_template(
-            "test/bookroom.html",
+            "test/public_bookroom.html",
             is_public=True,
             uid=user_id,
             paginated_bookrooms=paginated_bookrooms,
@@ -223,20 +224,13 @@ def public_bookrooms_view():
 # パブリックブックルームの作成
 @app.route("/public_bookrooms", methods=["POST"])
 def create_public_bookroom():
+    user_id = get_login_user_id()
+    if user_id is None:
+        return redirect(url_for("login_view"))
+    
     bookroom_name = request.form.get("bookroom_name")
     bookroom = Bookroom.find_by_bookroom_name(bookroom_name=bookroom_name, is_public=True)
-
-    if bookroom == None:
-        # 開発テスト用
-        if app.debug:
-            session["user_id"] = TEST_USER_ID
-
-        user_id = session.get("user_id")
-
-        # ログインしていない場合はログインページへ
-        if user_id is None:
-            return redirect(url_for("login_view"))
-    
+    if bookroom is None:
         bookroom_description = request.form.get("bookroom_description")
         bookroom_id = Bookroom.create(
             user_id=user_id,
@@ -260,12 +254,7 @@ def create_public_bookroom():
 @app.route("/public_bookrooms/update/<bookroom_id>", methods=["GET"])
 def show_public_bookroom(bookroom_id):
 
-    # 開発テスト用
-    if app.debug:
-        session["user_id"] = TEST_USER_ID
-
-    user_id = session.get("user_id")
-
+    user_id = get_login_user_id()
     if user_id is None:
         return redirect(url_for("login_view"))
 
@@ -280,49 +269,40 @@ def show_public_bookroom(bookroom_id):
             "test/update-bookroom.html", bookroom=bookroom, tags=tags
         )
     else:
-        return render_template("test/update-bookroom.html", bookroom=bookroom, tags=tags)
+        return render_template("update-bookroom.html", bookroom=bookroom, tags=tags)
 
 # パブリックブックルームの編集作業
 @app.route("/public_bookrooms/update/<bookroom_id>", methods=["POST"])
 def update_public_bookroom(bookroom_id):
-
-    # 開発テスト用
-    if app.debug:
-        session["user_id"] = TEST_USER_ID
-
-    user_id = session.get("user_id")
-
+    # ログインしているかのチェック
+    user_id = get_login_user_id()
     if user_id is None:
         return redirect(url_for("login_view"))
-
+    
     if not is_bookroom_owner(user_id, bookroom_id):
         return redirect(url_for("public_bookrooms_view"))
 
     name = request.form.get("bookroom_name")
+    tag_ids = request.form.getlist("tag_ids")
     description = request.form.get("bookroom_description")
-    Bookroom.update(bookroom_id=bookroom_id, name=name, description=description)
-    return redirect(url_for("public_bookrooms_view"))
 
+    Bookroom.update(bookroom_id=bookroom_id, name=name, description=description)
+    # エラー発生中 BookroomTag.update(bookroom_id, tag_ids)
+    
+    return redirect(url_for("public_bookrooms_view"))
 
 # パブリックブックルームの削除
 @app.route("/public_bookrooms/delete/<bookroom_id>", methods=["POST"])
 def delete_public_bookroom(bookroom_id):
-
-    # 開発テスト用
-    if app.debug:
-        session["user_id"] = TEST_USER_ID
-
-    user_id = session.get("user_id")
-
+    # ログインしているかのチェック
+    user_id = get_login_user_id()
     if user_id is None:
         return redirect(url_for("login_view"))
 
-    if not is_bookroom_owner(user_id, bookroom_id):
-        flash("ブックルーム作成者のみ削除可能です")
-    else:
+    if is_bookroom_owner(user_id, bookroom_id):
         Bookroom.delete(bookroom_id)
-    return redirect(url_for("public_bookrooms_view"))
 
+    return redirect(url_for("public_bookrooms_view"))
 
 ###########################
 # プライベートブックルーム  #
@@ -330,9 +310,14 @@ def delete_public_bookroom(bookroom_id):
 # プライベートブックルームの一覧表示
 @app.route("/private_bookrooms", methods=["GET"])
 def private_bookrooms_view():
-    user_id = session.get("user_id")
+    # ログインしているかのチェック
+    user_id = get_login_user_id()
+    if user_id is None:
+        return redirect(url_for("login_view"))
+
     # privateなブックルームのみ取得
     bookrooms = Bookroom.get_private_bookrooms(user_id)
+
     # ページネーション
     page = request.args.get(get_page_parameter(), type=int, default=1)
     paginated_bookrooms = bookrooms[(page - 1)*PER_PAGE: page*PER_PAGE]
@@ -344,24 +329,51 @@ def private_bookrooms_view():
         display_pages=True,
         record_name='ブックルーム'
         )
-
-    return render_template("private_bookroom.html",is_public=False, uid=user_id, paginated_bookrooms=paginated_bookrooms, pagination=pagination)
+    
+    # タグテーブルに登録されているタグを取得
+    tags = Tag.get_all_tags()
+    
+    if app.debug:
+        return render_template(
+            "test/private_bookroom.html",
+            is_public=False,
+            uid=user_id,
+            paginated_bookrooms=paginated_bookrooms,
+            pagination=pagination,
+            tags=tags,
+        )
+    else:
+        return render_template(
+            "private_bookroom.html",
+            is_public=False,
+            uid=user_id,
+            paginated_bookrooms=paginated_bookrooms,
+            pagination=pagination,
+            tags=tags,
+        )
 
 # プライベートブックルームの作成
 @app.route("/private_bookrooms", methods=["POST"])
 def create_private_bookroom():
-    # user_idは仮の値を使用（init.sqlでこのユーザーは作成済み）
+    # ログインしているかのチェック
+    user_id = get_login_user_id()
+    if user_id is None:
+        return redirect(url_for("login_view"))
+    
     bookroom_name = request.form.get("bookroom_name")
-    bookroom = Bookroom.find_by_bookroom_name(bookroom_name)
-    if bookroom == None:
+    bookroom = Bookroom.find_by_bookroom_name(bookroom_name=bookroom_name, is_public=False)
+    if bookroom is None:
         bookroom_description = request.form.get("bookroom_description")
-        user_id = session.get("user_id")
-        Bookroom.create(
+        bookroom_id = Bookroom.create(
             user_id=user_id,
             name=bookroom_name,
             description=bookroom_description,
             is_public=False,
         )
+
+        #タグ取得
+        tag_ids = request.form.getlist("tag_ids")
+        BookroomTag.create(bookroom_id, tag_ids)
 
         return redirect(url_for("private_bookrooms_view"))
     else:
@@ -371,7 +383,8 @@ def create_private_bookroom():
 # プライベートブックルームの編集作業
 @app.route("/private_bookrooms/update/<bookroom_id>", methods=["POST"])
 def update_private_bookroom(bookroom_id):
-    user_id = session.get("user_id")
+    # ログインしているかのチェック
+    user_id = get_login_user_id()
     if user_id is None:
         return redirect(url_for("login_view"))
 
@@ -380,21 +393,22 @@ def update_private_bookroom(bookroom_id):
 
     name = request.form.get("bookroom_name")
     description = request.form.get("bookroom_description")
-    Bookroom.update(
-        bookroom_id=bookroom_id,name=name, description=description
-    )
+    tag_ids = request.form.getlist("tag_ids")
+
+    Bookroom.update(bookroom_id=bookroom_id,name=name, description=description)
+    # エラー発生中BookroomTag.update(bookroom_id, tag_ids)
+
     return redirect(url_for("private_bookrooms_view"))
 
 
 # プライベートブックルームの削除
 @app.route("/private_bookrooms/delete/<bookroom_id>", methods=["POST"])
 def delete_private_bookroom(bookroom_id):
-    # user_id = session.get('user_id')
-    # セッションが未実装なため、仮値を入れる
-    user_id = session.get("user_id")
+    # ログインしているかのチェック
+    user_id = get_login_user_id()
     if user_id is None:
         return redirect(url_for("login_view"))
-
+    
     if not is_bookroom_owner(user_id, bookroom_id):
         flash("ブックルーム作成者のみ削除可能です")
     else:

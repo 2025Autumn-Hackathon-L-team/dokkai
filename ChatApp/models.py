@@ -153,7 +153,7 @@ class Bookroom:
         try:
             with conn.cursor() as cur:
                 sql = "UPDATE bookrooms SET name=%s, description=%s WHERE id=%s"
-                cur.execute(sql, (name, description,))
+                cur.execute(sql, (name, description, bookroom_id,))
                 conn.commit()
         except pymysql.Error as e:
             print(f"エラーが発生しています：{e}")
@@ -187,12 +187,11 @@ class Tag:
                 cur.execute(sql)
                 tags = cur.fetchall()
                 return tags
-        except pymysql.Eroor as e:
+        except pymysql.Error as e:
             print(f"エラーが発生しています：{e}")
             abort(500)
         finally:
             db_pool.release(conn)
-
 
 ############ブックルームタグ############
 class BookroomTag:
@@ -202,22 +201,16 @@ class BookroomTag:
         try:
             with conn.cursor() as cur:
                 for tag_id in tag_ids:
-                    sql = (
-                        "INSERT INTO bookroom_tag(bookroom_id, tag_id) VALUES(%s, %s);"
-                    )
-                    cur.execute(
-                        sql,
-                        (
-                            bookroom_id,
-                            tag_id,
-                        ),
-                    )
+                    sql = ("INSERT INTO bookroom_tag(bookroom_id, tag_id) VALUES(%s, %s);")
+                    cur.execute(sql,(bookroom_id, tag_id,))
                     conn.commit()
         except pymysql.Error as e:
             print(f"エラーが発生しています：{e}")
             abort(500)
         finally:
             db_pool.release(conn)
+
+
 
 
 ############################ブックルーム関係（ここまで）############################
