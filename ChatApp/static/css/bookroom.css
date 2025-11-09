@@ -1,3 +1,4 @@
+/* ブックルーム一覧画面のCSS */
 /* 全体設定 */
 .main-container {
   background-color: var(--snow);
@@ -18,8 +19,8 @@
   flex-direction:column;
 
 }
-
-.bookroom-title { /* ヘッダー */
+/* パブリックブックルームのヘッダー */
+.bookroom-title { 
   position: fixed; 
   top: 0px;
   left: 50px;
@@ -31,10 +32,25 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 15px;
-  z-index: 2; /* 他の要素より手前に */
+  z-index: 2; 
 }
-
-.bookroom-title h1 { /* タイトル */
+/* プライベートブックルームのヘッダー */
+.bookroom-title_private { 
+  position: fixed; 
+  top: 0px;
+  left: 50px;
+  width: 100%;
+  height: 100px; 
+  background-color: var(--green);
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 15px;
+  z-index: 2; 
+}
+/* パブリックブックルームのタイトル */
+.bookroom-title h1{ 
   font-size: 1.5rem;
   margin: 0;
   font-weight: 500;
@@ -42,7 +58,16 @@
   text-align: center;
   width: calc(100% - 50px);
 }
-/* ================== カテゴリ選択ドロップダウン ================== */
+/* プライベートブックルームのタイトル */
+.bookroom-title_private h1 { 
+  font-size: 1.5rem;
+  margin: 0;
+  font-weight: 500;
+  letter-spacing: normal;
+  text-align: center;
+  width: calc(100% - 50px);
+}
+/* カテゴリ選択ドロップダウン(使用するか未定) */
 .category-select-wrapper { 
   width: calc(100% - 60px);
   margin: 15px 0 0 0;
@@ -69,26 +94,26 @@
   box-shadow: 0 2px 5px var(--shadow-light);
 }
 
-/* ================== bookroomのリスト ================== */
+/* ================== ブックルームのリスト ================== */
 
-#bookroom-list { /* リストのコンテナ */
+/* リストのコンテナ */
+#bookroom-list { 
   margin-top: 150px;
   padding-top: 0; 
   padding: 15px 15px 80px; 
   display: flex;
-  flex-direction: column; /* 縦並び */
+  flex-direction: column;
   align-items: center; /* 中央寄せ */
   width: 100%;
-  box-sizing: border-box; /* paddingをwidthに含める */
+  box-sizing: border-box; 
 }
 
-/* 各カードのスタイル */
-.memo-item-card { /* bookroom in bookrooms の各要素に適用 */
+/* パブリックブックルームのbookroom in bookrooms の各要素に適用 */
+.memo-item-card { 
   background-color: var(--snow);
   border: 1px solid var(--brown);
   border-radius: 12px;
   width: 100%;
-  /* カードの最大幅 */
   margin-bottom: 15px;
   padding: 15px;
   display: flex;
@@ -98,16 +123,32 @@
   transition: transform 0.2s ease-in-out;
 
 }
+/* プライベートブックルームのbookroom in bookrooms の各要素に適用 */
+.memo-item-card_private { 
+  background-color: var(--lightgreen);
+  border: 1px solid var(--brown);
+  border-radius: 12px;
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 15px;
+  display: flex;
+  flex-direction:row;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.2s ease-in-out;
 
+}
+/* 軽く浮き上がるエフェクト */
 .memo-item-card:hover {
-  transform: translateY(-3px); /* 軽く浮き上がるエフェクト */
+  transform: translateY(-3px); 
 }
-
+/* タイトルと説明文がカードの残りのスペースを占める */
 .memo-content {
-  flex-grow: 1; /* 残りのスペースを占める */
+  flex-grow: 1; 
 }
 
-.memo-title { /* メモのタイトル */
+ /* ブックルームのタイトル */
+.memo-title {
   font-size: 1rem;
   font-weight: 600;
   margin: 0 0 5px 0;
@@ -117,25 +158,28 @@
   text-overflow: ellipsis; /* ...で省略 */
 }
 
-.memo-description { /* メモの簡単な説明文 */
+ /* ブックルームの簡単な説明文 */
+.memo-description {
   font-size: 0.8rem;
   color: var(--brown);
   margin: 0;
 }
 
-.memo-meta { /* 日付とカテゴリコンテナ */
+/* 日付とカテゴリコンテナ */
+.memo-meta { 
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 5px;
 }
 
-.memo-date { /* 日付 */
+/* 日付 */
+.memo-date { 
     font-size: 0.75rem;
     color: var(--brown);
 }
-
-.memo-category { /* カテゴリタグ */
+ /* カテゴリタグ */
+.memo-category {
   font-size: 0.7rem;
   font-weight: 600;
   color: #fff;
@@ -145,26 +189,26 @@
   white-space: nowrap;
 }
 /* カテゴリごとの色があれば追加 */
-.memo-category.idea { background-color: var(--brown); }
-.memo-category.todo { background-color: var(--brown); }
-.memo-category.shopping { background-color: var(--brown); }
+.memo-category.fantasy { background-color: var(--brown); }
+.memo-category.magazine { background-color: var(--brown); }
+.memo-category.romance { background-color: var(--brown); }
 
-
-.memo-icon { /* アイコン */
+/* リアクション用のアイコン */
+.memo-icon { 
   width: 30px;
   height: 30px;
   margin-left: 15px;
-  flex-shrink: 0; /* スペースが足りなくても縮まない */
+  flex-shrink: 0; 
 }
 
 .memo-icon img {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* アスペクト比を維持して表示 */
+  object-fit: contain; 
 }
 
 .delete-bookroom-trigger {
-  background-color: var(--snow);
+  background-color: transparent;
   height: 20px;
   width: 20px;
   line-height: 47px;
@@ -180,7 +224,7 @@
   height: 30px;
 }
 /* ================== フローティングアクションボタン (FAB) ================== */
-.create-bookroom-button { /* 新しいセレクタとして追加 */
+.create-bookroom-button { 
   position: fixed;
   bottom: 25px;
   right: 25px;
@@ -192,7 +236,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.0rem; /* アイコンのサイズ */
+  font-size: 1.0rem; 
   box-shadow: 0 4px 10px var(--shadow-strong);
   cursor: pointer;
   z-index: 2;
@@ -201,7 +245,7 @@
 }
 
 .create-bookroom-button:hover {
-  background-color: var(--green); /* ホバーで少し暗く */
+  background-color: var(--brown); 
   transform: translateY(-2px);
 }
 
@@ -213,6 +257,10 @@
     padding-left: 0px;
   }
   .bookroom-title { 
+    position: fixed; 
+    left: 0px;
+}
+  .bookroom-title_private { 
     position: fixed; 
     left: 0px;
 }

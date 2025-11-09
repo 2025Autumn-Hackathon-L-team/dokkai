@@ -8,7 +8,7 @@ import os
 
 from models import User, Bookroom, Message, Profile, Tag, BookroomTag
 
-
+############################認証関係(ここから)####################################
 EMAIL_PATTERN = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 SESSION_DAYS = 30
 
@@ -144,7 +144,7 @@ def logout():
     session.clear()
     return redirect(url_for("login_view"))
 
-
+############################認証関係(ここまで)####################################
 ############################ブックルーム関係（ここから）############################
 
 ###########################
@@ -246,8 +246,8 @@ def create_public_bookroom():
         error = "既に同じ名前のブックルームが存在しています。"
         return render_template("error/404.html", error_message=error)
 
-
-# ブックルーム編集ページ表示
+###########################未使用ここから####################################
+# パブリックブックルーム編集ページ表示
 @app.route("/public_bookrooms/update/<bookroom_id>", methods=["GET"])
 def show_public_bookroom(bookroom_id):
 
@@ -271,10 +271,9 @@ def show_public_bookroom(bookroom_id):
             "test/update-bookroom.html", bookroom=bookroom, tags=tags
         )
     else:
-        return render_template("update-bookroom.html", bookroom=bookroom, tags=tags)
+        return render_template("test/update-bookroom.html", bookroom=bookroom, tags=tags)
 
-
-# ブックルームの編集作業
+# パブリックブックルームの編集作業
 @app.route("/public_bookrooms/update/<bookroom_id>", methods=["POST"])
 def update_public_bookroom(bookroom_id):
 
@@ -319,12 +318,89 @@ def delete_public_bookroom(bookroom_id):
 ###########################
 # プライベートブックルーム  #
 ###########################
+# プライベートブックルームの一覧表示
+@app.route("/private_bookrooms", methods=["GET"])
+def private_bookrooms_view():
+    user_id = session.get("user_id")
+    # privateなブックルームのみ取得
+    bookrooms = Bookroom.get_private_bookrooms(user_id)
+    # ページネーション
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    paginated_bookrooms = bookrooms[(page - 1)*PER_PAGE: page*PER_PAGE]
+    pagination = Pagination(
+        page=page,
+        total=len(bookrooms),
+        per_page=PER_PAGE,
+        css_framework='bootstrap5',
+        display_pages=True,
+        record_name='ブックルーム'
+        )
+
+    return render_template("private_bookroom.html",is_public=False, uid=user_id, paginated_bookrooms=paginated_bookrooms, pagination=pagination)
+
+# プライベートブックルームの作成
+@app.route("/private_bookrooms", methods=["POST"])
+def create_private_bookroom():
+    # user_idは仮の値を使用（init.sqlでこのユーザーは作成済み）
+    bookroom_name = request.form.get("bookroom_name")
+    bookroom = Bookroom.find_by_bookroom_name(bookroom_name)
+    if bookroom == None:
+        bookroom_description = request.form.get("bookroom_description")
+        user_id = session.get("user_id")
+        Bookroom.create(
+            user_id=user_id,
+            name=bookroom_name,
+            description=bookroom_description,
+            is_public=False,
+        )
+
+        return redirect(url_for("private_bookrooms_view"))
+    else:
+        error = "既に同じ名前のブックルームが存在しています。"
+        return render_template("error/404.html", error_message=error)
+
+# プライベートブックルームの編集作業
+@app.route("/private_bookrooms/update/<bookroom_id>", methods=["POST"])
+def update_private_bookroom(bookroom_id):
+    user_id = session.get("user_id")
+    if user_id is None:
+        return redirect(url_for("login_view"))
+
+    if not is_bookroom_owner(user_id, bookroom_id):
+        return redirect(url_for("private_bookrooms_view"))
+
+    name = request.form.get("bookroom_name")
+    description = request.form.get("bookroom_description")
+    Bookroom.update(
+        bookroom_id=bookroom_id,name=name, description=description
+    )
+    return redirect(url_for("private_bookrooms_view"))
+
+
+# プライベートブックルームの削除
+@app.route("/private_bookrooms/delete/<bookroom_id>", methods=["POST"])
+def delete_private_bookroom(bookroom_id):
+    # user_id = session.get('user_id')
+    # セッションが未実装なため、仮値を入れる
+    user_id = session.get("user_id")
+    if user_id is None:
+        return redirect(url_for("login_view"))
+
+    if not is_bookroom_owner(user_id, bookroom_id):
+        flash("ブックルーム作成者のみ削除可能です")
+    else:
+        Bookroom.delete(bookroom_id)
+    return redirect(url_for("private_bookrooms_view"))
 
 
 ############################ブックルーム関係（ここまで）############################
+############################メッセージ関係（ここから）############################
 
+#####################################
+#  パブリックブックルームのメッセージ   #
+#####################################
 
-# ブックルーム詳細ページの表示
+# パブリックブックルーム詳細ページの表示
 @app.route("/public_bookrooms/<bookroom_id>/messages", methods=["GET"])
 def detail(bookroom_id):
     # 表示チェックのためデフォルトユーザを設定
@@ -337,11 +413,11 @@ def detail(bookroom_id):
     messages = Message.get_all(bookroom_id)
 
     return render_template(
-        "messages.html", messages=messages, bookroom=bookroom, uid=user_id
+        "public_messages.html", messages=messages, bookroom=bookroom, uid=user_id
     )
 
 
-# メッセージの投稿
+# パブリックブックルームメッセージの投稿
 @app.route("/public_bookrooms/<bookroom_id>/messages", methods=["POST"])
 def create_message(bookroom_id):
     user_id = session.get("user_id")
@@ -358,7 +434,7 @@ def create_message(bookroom_id):
     )
 
 
-# メッセージの削除
+# パブリックブックルームメッセージの削除
 @app.route("/public_bookrooms/<bookroom_id>/messages/<message_id>", methods=["POST"])
 def delete_message(bookroom_id, message_id):
     user_id = session.get("user_id")
@@ -372,36 +448,94 @@ def delete_message(bookroom_id, message_id):
     )
 
 
-########プロフィール画面（ここから）##########
-@app.route("/profile")
-def profile_view():
-    current_uid = session.get("user_id")
-    if current_uid is None:
+#####################################
+#  プライベートブックルームのメッセージ   #
+#####################################
+# プライベートブックルーム詳細ページの表示
+@app.route("/private_bookrooms/<bookroom_id>/messages", methods=["GET"])
+def private_detail(bookroom_id):
+    #表示チェックのためデフォルトユーザを設定
+    user_id = session.get("user_id")
+
+    if user_id is None:
         return redirect(url_for("login_view"))
-    current_name = session.get("user_name")
-    current_email = session.get("user_email")
-    icon_view = Profile.icon_view(current_uid)
-    messages_count = Profile.get_messages_count(current_uid)
-    # TODO リアクション機能実装後、リアクションの数を取得する。
-    # printはサーバーで出る値を確認。後日削除する。
-    print(f"{icon_view}はiconidです")
-    print(f"{current_uid}はprofile.htmlで現在セッションを持っているユーザーです")
-    print(
-        f"{current_name}はprofile.htmlで現在セッションを持っているユーザーのnameを表示しています"
-    )
-    print(
-        f"{current_email}はprofile.htmlで現在セッションを持っているユーザーのemailを表示しています"
-    )
-    print(f"{messages_count}は{current_name}が投稿したメッセージの数を表しています")
+
+    bookroom = Bookroom.find_by_bookroom_id(bookroom_id)
+    messages = Message.get_all(bookroom_id)
+
     return render_template(
-        "profile.html",
-        icon=icon_view,
-        uid=current_uid,
-        name=current_name,
-        email=current_email,
-        messages_count=messages_count,
+        "private_messages.html", messages=messages, bookroom=bookroom, uid=user_id
     )
 
+# プライベートブックルームへのメッセージの投稿
+@app.route("/private_bookrooms/<bookroom_id>/messages", methods=["POST"])
+def private_create_message(bookroom_id):
+    user_id = session.get("user_id")
+    if user_id is None:
+        return redirect(url_for("login_view"))
+
+    message = request.form.get("message")
+
+    if message:
+        Message.create(user_id, bookroom_id, message)
+
+    return redirect(
+        "/private_bookrooms/{bookroom_id}/messages".format(bookroom_id=bookroom_id)
+    )
+
+
+# プライベートブックルームのメッセージの削除
+@app.route("/private_bookrooms/<bookroom_id>/messages/<message_id>", methods=["POST"])
+def private_delete_message(bookroom_id, message_id):
+    user_id = session.get("user_id")
+    if user_id is None:
+        return redirect(url_for("login_view"))
+
+    if message_id:
+        Message.delete(message_id)
+    return redirect(
+        "/private_bookrooms/{bookroom_id}/messages".format(bookroom_id=bookroom_id)
+    )
+############################メッセージ関係（ここまで）############################
+############################プロフィール画面（ここから）##########################
+
+# プロフィール画面の表示
+@app.route("/profile")
+def profile_view():
+    user_id=session.get("user_id")
+    if user_id is None:
+        return redirect(url_for('login_view'))
+    current_name=Profile.name_view(user_id)
+    current_email=Profile.email_view(user_id)
+    icon_view=Profile.icon_view(user_id)
+    messages_count=Profile.get_messages_count(user_id) 
+    # TODO リアクション機能実装後、リアクションの数を取得する。
+    #printはサーバーで出る値を確認。後日削除する。
+    print(f'{icon_view}はiconidです')
+    print(f'{user_id}はprofile.htmlで現在セッションを持っているユーザーです')
+    print(f'{current_name}はprofile.htmlで現在セッションを持っているユーザーのnameを表示しています')
+    print(f'{current_email}はprofile.htmlで現在セッションを持っているユーザーのemailを表示しています')
+    print(f'{messages_count}は{current_name}が投稿したメッセージの数を表しています')
+    return render_template("profile.html",icon=icon_view,uid=user_id,name=current_name,email=current_email,messages_count=messages_count)
+
+# プロフィール画面の編集(name,email)
+@app.route("/profile/update",methods=["POST"])
+def update_profile():
+    user_id=session.get("user_id")
+
+    if user_id is None:
+        return redirect(url_for("login_view"))
+    
+    # TODO フロントからどう持ってくるか確認する
+    name=request.form.get("profile_name")
+    email=request.form.get("profile_email")
+    # 値確認用
+    print(f'{name}は入力されたname')
+    print(f'{email}は入力されたemail')
+
+    Profile.name_email_update(name,email,user_id)
+    # TODO: ここでsesseionの更新
+    return render_template("profile.html",uid=user_id,name=name,email=email)   
 
 ########プロフィール画面（ここまで）##########
 
