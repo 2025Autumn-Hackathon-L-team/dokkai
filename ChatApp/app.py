@@ -333,7 +333,6 @@ def update_profile():
     if user_id is None:
         return redirect(url_for("login_view"))
     
-    # TODO フロントからどう持ってくるか確認する
     name=request.form.get("profile_name")
     email=request.form.get("profile_email")
     password = request.form.get("password")
@@ -343,34 +342,25 @@ def update_profile():
     hashPassword = hashlib.sha256(password.encode("utf-8")).hexdigest()
     user = User.find_by_email(current_email)
     # ログインチェック
+    # TODO バリデーションチェックが必要
     if user["password"] != hashPassword:
         return redirect(url_for("profile_view"))  
-    #  flash("ログインできませんでした。")
-    #  flash("メールアドレスかパスワードが間違っています。")
     else:
         Profile.name_email_update(name,email,user_id)
     return redirect(url_for("profile_view"))
     
-    # バリデーションチェックをしたいがどうすれば？
-    """
-    if name == "" or email == "":
-        flash("入力されていないフォームがあります")
-    elif re.fullmatch(EMAIL_PATTERN, email) is None:
-        flash("有効なメールアドレスの形式ではありません")
+# アイコン画面の変更
+@app.route("/icons/update",methods=["POST"])
+def update_icon():
+    user_id=session.get("user_id")
+
+    if user_id is None:
+        return redirect(url_for("login_view"))
     else:
-        registered_email_user= User.find_by_email(email) 
-        registered_name_user=User.find_by_name(name)
-        if registered_email_user != None:
-            flash("入力されたメールアドレスは使用されています。")
-            flash("違うメールアドレスを入力してください。")
-        elif registered_name_user != None:
-            flash("入力された名前は使用されています。")
-            flash("違う名前を入力してください。")
-        else:
-            Profile.name_email_update(name,email,user_id)
-            # TODO: ここでsesseionの更新
-            return render_template("profile.html",uid=user_id,name=name,email=email)
-    """
+        iconid=request.form.get("icon_name")
+        print(f'{iconid}は選択されたicon')
+        Profile.icon_update(iconid,user_id)
+    return render_template("profile.html")
 
 ########プロフィール画面（ここまで）##########
 

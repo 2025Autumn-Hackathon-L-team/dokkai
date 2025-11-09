@@ -14,7 +14,12 @@
     <div class="profile_display_items">
         <div>
             <p>ユーザアイコンは{{icon}}</p>
-         </div>
+        </div>
+        {# Floating Action Button #}
+        <button class="update-icon-button" id="update-icon-button" label="iconの変更">
+            アイコンを変更する
+        </button>
+        {% include 'modal/update-icon.html' %} 
         <div>
             <p>{{uid}}がログインしています</p>
         </div>
@@ -44,6 +49,10 @@
   // prettier-ignore
   const uid = JSON.parse('{{ uid|tojson }}');
 </script>
+<script
+  src="{{url_for('static',filename='js/profile/update-icon.js')}}"
+  type="module"
+></script>
 <script
   src="{{url_for('static',filename='js/profile/update-profile.js')}}"
   type="module"

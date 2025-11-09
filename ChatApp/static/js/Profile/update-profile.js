@@ -4,8 +4,8 @@
 
 const updateButton = document.getElementById("update-profile-button");
 const updateProfileModal = document.getElementById("update-profile-modal");
-const updatePageButtonClose = document.getElementById(
-  "update-page-close-button"
+const updateProfileButtonClose = document.getElementById(
+  "update-profile-close-button"
 );
 
 // モーダルが存在するページのみ（uidとチャンネルidが同じ時のみ）
@@ -16,7 +16,7 @@ if (updateProfileModal) {
   });
 
   // モーダル内のXボタンが押された時にモーダルを非表示にする
-  updatePageButtonClose.addEventListener("click", () => {
+  updateProfileButtonClose.addEventListener("click", () => {
     updateProfileModal.style.display = "none";
   });
 
