@@ -353,6 +353,8 @@ def update_profile():
 @app.route("/icons/update",methods=["POST"])
 def update_icon():
     user_id=session.get("user_id")
+    print("セッション内容:", dict(session))
+    print("取得したuser_id:", session.get("user_id"))
 
     if user_id is None:
         return redirect(url_for("login_view"))
@@ -360,7 +362,7 @@ def update_icon():
         iconid=request.form.get("icon_name")
         print(f'{iconid}は選択されたicon')
         Profile.icon_update(iconid,user_id)
-    return render_template("profile.html")
+    return redirect(url_for("profile_view"))
 
 ########プロフィール画面（ここまで）##########
 
