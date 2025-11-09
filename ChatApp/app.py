@@ -212,7 +212,7 @@ def public_bookrooms_view():
         )
     else:
         return render_template(
-            "bookroom.html",
+            "public_bookroom.html",
             is_public=True,
             uid=user_id,
             paginated_bookrooms=paginated_bookrooms,
