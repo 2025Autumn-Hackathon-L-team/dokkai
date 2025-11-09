@@ -47,19 +47,6 @@
   position: relative;
 }
 
-<<<<<<< HEAD
-@keyframes modalopen {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-=======
->>>>>>> develop
 .modal-header h1 {
   margin: 1rem 0;
 }
@@ -88,12 +75,8 @@
 
 .bookroom-form-input {
   width: 100%;
-<<<<<<< HEAD
-  background-color: var(--lightgreen);
-=======
   border: 2px var(--wood) solid;
   outline: none;
->>>>>>> develop
   margin-top: 8px;
   margin-bottom: 20px;
   padding: 0.5rem;
@@ -102,12 +85,8 @@
 
 .bookroom-form-input-wide {
   width: 100%;
-<<<<<<< HEAD
-  background-color: var(--lightgreen);
-=======
   border: 2px var(--wood) solid;
   outline: none;
->>>>>>> develop
   margin-top: 8px;
   margin-bottom: 20px;
   padding: 1.0rem;
@@ -120,26 +99,14 @@
 }
 
 .bookroom-form-input-wide::placeholder {
-<<<<<<< HEAD
-  color: var(--brown);
-  font-size: 10px;
-=======
   color: var(--gray);
   font-size: 10px; 
->>>>>>> develop
   overflow-wrap: anywhere;
 }
 
 .bookroom-form-input:focus::placeholder {
-<<<<<<< HEAD
-  color: var(--snow);
-  /* フォーカス時のプレースホルダーの文字色を雪色（白）にする */
-}
-
-=======
   color: var(--snow); 
 }  
->>>>>>> develop
 .bookroom-form-input-wide:focus::placeholder {
   color: var(--snow);
 }
@@ -289,8 +256,6 @@
   background-color: var(--green);
 }
 
-<<<<<<< HEAD
-=======
 #delete-bookroom-confirmation-button {
   width: 100%;
 }
@@ -304,7 +269,6 @@
 }
 
 
->>>>>>> develop
 
 /* ========================================================== */
 /* レスポンシブ */
@@ -314,14 +278,10 @@
     margin: 35% auto;
     width: 95%;
   }
-<<<<<<< HEAD
-
-=======
   .modal-content-private {
     margin: 35% auto;
     width: 95%;
   }
->>>>>>> develop
   #modal-gif {
     display: none;
   }
@@ -331,13 +291,9 @@
   .modal-content {
     width: 95%;
   }
-<<<<<<< HEAD
-
-=======
   .modal-content-private {
     width: 95%;
   }
->>>>>>> develop
   .modal {
     padding-left: 60px;
   }
@@ -347,13 +303,9 @@
   .modal-content {
     width: 80%;
   }
-<<<<<<< HEAD
-
-=======
   .modal-content-private {
     width: 80%;
   }
->>>>>>> develop
   .modal {
     padding-left: 60px;
   }
@@ -372,11 +324,7 @@
   .modal-content {
     width: 50%;
   }
-<<<<<<< HEAD
-}
-=======
   .modal-content-private {
     width: 50%;
   }
 }
->>>>>>> develop
