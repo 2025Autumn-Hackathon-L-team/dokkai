@@ -1,55 +1,54 @@
-<div class="search-section keyword-search">
-        <h2>キーワードで探す</h2>
-        <div class="input-container">
-            <input type="text" id="keyword" name="q" placeholder="タイトル、著者名などを入力してください">
-        </div>
+<div id="search-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5>SEARCH BOOKROOMS</h5>
+      <span class="modalClose" id="search-page-close-button">×</span>
     </div>
-    
-    <div class="search-section tag-search">
+    <form action="#" method="get">
+    <div class="search-section keyword-search">
+            <h2> キーワードで探す</h2>
+            <div class="input-container">
+                <input type="text" id="keyword" name="q" placeholder="タイトル、著者名などを入力してください">
+            </div>
+        </div>
+        
+        <div class="search-section tag-search">
+            <h2> タグで絞り込む</h2>
+            <div class="tag-container-wrapper"> 
+                <div class="tag-group">
+                    <label><input type="checkbox" name="tag_id[]" value=""> 文学・小説</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> ビジネス</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> 歴史</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> 科学</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> コミック</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> 暮らし</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> 料理</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> 単行本</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> 文庫本</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> 雑誌</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> 受賞作</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> 新刊</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> 翻訳</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> イラスト多め</label>
+                </div>
+                
+            </div>
+        </div>
+        <button class = search-button>SEARCH</button>
+      </form>
+    </div>
+  </div>     
+
+<!---<div class="search-section tag-search">
         <h2>タグで絞り込む</h2>
         <div class="tag-container-wrapper"> 
-            
-            <h3 class="tag-category-title">📖 ジャンル</h3>
-            <div class="tag-group">
-                <label><input type="checkbox" name="genre[]" value="fiction"> 文学・小説</label>
-                <label><input type="checkbox" name="genre[]" value="business"> ビジネス・経済</label>
-                <label><input type="checkbox" name="genre[]" value="history"> 歴史・地理</label>
-                <label><input type="checkbox" name="genre[]" value="science"> 科学・テクノロジー</label>
-                <label><input type="checkbox" name="genre[]" value="manga"> コミック・アニメ</label>
-                <label><input type="checkbox" name="genre[]" value="lifestyle"> 暮らし・健康・料理</label>
-            </div>
-            
-            <h3 class="tag-category-title">📱 形式・メディア</h3>
-            <div class="tag-group">
-                <label><input type="checkbox" name="media[]" value="paperback"> 単行本・ペーパーバック</label>
-                <label><input type="checkbox" name="media[]" value="ebook"> 電子書籍</label>
-                <label><input type="checkbox" name="media[]" value="audiobook"> オーディオブック</label>
-                <label><input type="checkbox" name="media[]" value="magazine"> 雑誌</label>
-            </div>
-            
-            <h3 class="tag-category-title">✨ テーマ・特徴</h3>
-            <div class="tag-group">
-                <label><input type="checkbox" name="feature[]" value="award"> 受賞作</label>
-                <label><input type="checkbox" name="feature[]" value="new"> 新刊</label>
-                <label><input type="checkbox" name="feature[]" value="translated"> 翻訳</label>
-                <label><input type="checkbox" name="feature[]" value="illustrated"> イラスト多め</label>
-                <label><input type="checkbox" name="feature[]" value="free"> 無料</label>
-            </div>
-            
+                <div class="tag-group">
+                    {% for tag in tag_list %}
+                        <label>
+                            <input type="checkbox" name="tag_ids[]" value="{{ tag.id }}"> 
+                            {{ tag.name }}
+                        </label>
+                    {% endfor %}
+                </div>
         </div>
-    </div>
-</form>
-
-<div class="search-section tag-search">
-    <h2>タグで絞り込む</h2>
-    <div class="tag-container-wrapper"> 
-            <div class="tag-group">
-                {% for tag in tag_list %}
-                    <label>
-                        <input type="checkbox" name="tag_ids[]" value="{{ tag.id }}"> 
-                        {{ tag.name }}
-                    </label>
-                {% endfor %}
-            </div>
-    </div>
-</div>
+    </div>-->

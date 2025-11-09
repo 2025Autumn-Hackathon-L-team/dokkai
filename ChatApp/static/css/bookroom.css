@@ -94,6 +94,42 @@
   box-shadow: 0 2px 5px var(--shadow-light);
 }
 
+/*　検索窓のスタイル　*/
+.search-form-5 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    left: 10%;
+    width:80%;
+    margin: 15px 0 0 0;
+    padding: 0 15px; 
+    position: fixed;
+    top: 100px;
+    overflow: hidden;
+    border-radius: 25px;
+    background-color: var(--wood);
+}
+
+.search-form-5 input {
+height: 45px;
+box-sizing: border-box;
+background-color: transparent;
+font-size: 1em;
+outline: none;
+}
+.search-form-5 input::placeholder {
+color: var(--snow);
+}
+.search-form-5 button {
+display: flex;
+justify-content: center;
+align-items: center;
+width: 50px;
+height: 45px;
+border: none;
+background-color: transparent;
+cursor: pointer;
+}
 /* ================== ブックルームのリスト ================== */
 
 /* リストのコンテナ */
@@ -269,6 +305,12 @@
     position: fixed; 
     left: 0px;
     width:100%;
+}
+  .search-form-5 { 
+    position: fixed; 
+    align-items: center;
+    left:10%;
+    width:80%;
 }
   .memo-date { 
     display:None;

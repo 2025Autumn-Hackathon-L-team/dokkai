@@ -31,6 +31,7 @@
 #create-bookroom-modal,
 #update-bookroom-modal,
 #delete-bookroom-modal,
+#search-modal,
 #update-profile-modal {
   display: none;
 }

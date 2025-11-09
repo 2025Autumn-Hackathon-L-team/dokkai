@@ -9,17 +9,13 @@
   <div class="bookroom-title">
     <h1>HISTORY BOOKROOM</h1> 
   </div>
-
-  {# Category selection dropdown #}
-  <div class="category-select-wrapper">
-    <select name="category" id="category-filter">
-      <option value="">カテゴリを選択</option>
-      <option value="idea">小説</option>
-      <option value="todo">ノンフィクション</option>
-      <option value="shopping">雑誌</option>
-      <option value="uncategorized">未分類</option>
-    </select>
-  </div>
+<div class="search-trigger-container search-form-5" id="search-button">
+    <label>
+        <input type="text" readonly name="q" id="keyword-preview" placeholder="条件検索はこちら">
+    </label>
+    <button type="button" aria-label="検索"></button>
+</div>
+  
 
   <div id="bookroom-list"> 
     {% for bookroom in paginated_bookrooms %}
@@ -40,7 +36,8 @@
       </div>
     </div>
     {% endfor %}
-
+    {% include 'modal/search.html'%}
+    
     <div class="pagination-container">
       {{ pagination.info }}
       {{ pagination.links }}
@@ -54,4 +51,8 @@
   // prettier-ignore
   const bookrooms = JSON.parse('{{ paginated_bookrooms|tojson }}'); 
 </script>
+<script
+  src="{{url_for('static',filename='js/bookroom/search.js')}}"
+  type="module"
+></script>
 {% endblock %}
