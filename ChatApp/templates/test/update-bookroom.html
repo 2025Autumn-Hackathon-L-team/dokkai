@@ -21,5 +21,13 @@
         <label for="exampleFormControlTextarea1" class="form-label">チャンネル説明</label>
         <textarea class="form-control" name="bookroom_description" id="exampleFormControlTextarea1" rows="3"></textarea>
       </div>
+
+      {% for tag in tags %}
+      <label>
+         <input type="checkbox" name="tag_ids" value="{{ tag.id }}">
+        {{ tag.name }}
+      </label>
+      {% endfor %}
+
       <button type="submit" class="btn btn-primary">変更</button>
     </form>

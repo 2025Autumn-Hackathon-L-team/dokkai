@@ -4,48 +4,56 @@ from util.DB import DB
 
 db_pool = DB.init_db_pool()
 
+
 class User:
     @classmethod
-    def create(cls,id,name,email,password):  
+    def create(cls, id, name, email, password):
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
                 sql = "INSERT INTO users (id,name,email,password) VALUES (%s,%s,%s,%s);"
-                cur.execute(sql,(id,name,email,password,))
+                cur.execute(
+                    sql,
+                    (
+                        id,
+                        name,
+                        email,
+                        password,
+                    ),
+                )
                 conn.commit()
         except pymysql.Error as e:
-            print(f'エラーが発生しています:{e}')
+            print(f"エラーが発生しています:{e}")
             abort(500)
         finally:
             db_pool.release(conn)
-            
 
     @classmethod
-    def find_by_email(cls,email):
+    def find_by_email(cls, email):
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
                 sql = "SELECT * FROM users WHERE email=%s"
-                cur.execute(sql,(email,))
+                cur.execute(sql, (email,))
                 user = cur.fetchone()
             return user
         except pymysql.Error as e:
-            print(f'エラーが発生しています:{e}')
+            print(f"エラーが発生しています:{e}")
             abort(500)
         finally:
             db_pool.release(conn)
 
     @classmethod
-    def find_by_name(cls,name):
+    def find_by_name(cls, name):
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
                 sql = "SELECT * FROM users WHERE name=%s"
-                cur.execute(sql,(name,))
+                cur.execute(sql, (name,))
                 user = cur.fetchone()
             return user
         except pymysql.Error as e:
-            print(f'エラーが発生しています:{e}')
+            print(f"エラーが発生しています:{e}")
             abort(500)
         finally:
             db_pool.release(conn)
@@ -55,20 +63,20 @@ class User:
 # ブックルームクラス
 class Bookroom:
     @classmethod
-    def find_by_bookroom_name(cls, bookroom_name):
-       conn = db_pool.get_conn()
-       try:
-           with conn.cursor() as cur:
-               sql = "SELECT * FROM bookrooms WHERE name=%s;"
-               cur.execute(sql, (bookroom_name,))
-               bookroom = cur.fetchone()
-               return bookroom
-       except pymysql.Error as e:
-           print(f'エラーが発生しています：{e}')
-           abort(500)
-       finally:
-           db_pool.release(conn)
-    
+    def find_by_bookroom_name(cls, bookroom_name, is_public=None):
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                sql = "SELECT * FROM bookrooms WHERE name=%s AND is_public=%s"
+                cur.execute(sql, (bookroom_name, is_public))
+                bookroom = cur.fetchone()
+                return bookroom
+        except pymysql.Error as e:
+            print(f"エラーが発生しています：{e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
+
     @classmethod
     def find_by_bookroom_id(cls, bookroom_id):
         conn = db_pool.get_conn()
@@ -79,11 +87,12 @@ class Bookroom:
                 bookroom = cur.fetchone()
                 return bookroom
         except pymysql.Error as e:
-            print(f'エラーが発生しています：{e}')
+            print(f"エラーが発生しています：{e}")
             abort(500)
         finally:
             db_pool.release(conn)
-            
+    
+
     @classmethod
     def get_public_bookrooms(cls):
         conn = db_pool.get_conn()
@@ -113,35 +122,45 @@ class Bookroom:
             abort(500)
         finally:
             db_pool.release(conn)
-    
+
     @classmethod
     def create(cls, user_id, name, description, is_public):
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
                 sql = "INSERT INTO bookrooms (user_id, name, description, is_public) VALUES(%s, %s, %s, %s)"
-                cur.execute(sql,(user_id, name, description, is_public,))
+                cur.execute(
+                    sql,
+                    (
+                        user_id,
+                        name,
+                        description,
+                        is_public,
+                    ),
+                )
                 conn.commit()
+                bookroom_id = cur.lastrowid
+                return bookroom_id
         except pymysql.Error as e:
-            print(f'エラーが発生しています：{e}')
+            print(f"エラーが発生しています：{e}")
             abort(500)
         finally:
-           db_pool.release(conn)
-    
+            db_pool.release(conn)
+
     @classmethod
     def update(cls, bookroom_id, name, description):
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
                 sql = "UPDATE bookrooms SET name=%s, description=%s WHERE id=%s"
-                cur.execute(sql, (name, description,))
+                cur.execute(sql, (name, description, bookroom_id,))
                 conn.commit()
         except pymysql.Error as e:
-            print(f'エラーが発生しています：{e}')
+            print(f"エラーが発生しています：{e}")
             abort(500)
         finally:
             db_pool.release(conn)
-    
+
     @classmethod
     def delete(cls, bookroom_id):
         conn = db_pool.get_conn()
@@ -151,16 +170,51 @@ class Bookroom:
                 cur.execute(sql, (bookroom_id,))
                 conn.commit()
         except pymysql.Error as e:
-            print(f'エラーが発生しています：{e}')
+            print(f"エラーが発生しています：{e}")
             abort(500)
         finally:
             db_pool.release(conn)
-    
+
+
+############タグ############
+class Tag:
+    @classmethod
+    def get_all_tags(cls):
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                sql = "SELECT * FROM tags ORDER BY id;"
+                cur.execute(sql)
+                tags = cur.fetchall()
+                return tags
+        except pymysql.Error as e:
+            print(f"エラーが発生しています：{e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
+
+############ブックルームタグ############
+class BookroomTag:
+    @classmethod
+    def create(cls, bookroom_id, tag_ids):
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                for tag_id in tag_ids:
+                    sql = ("INSERT INTO bookroom_tag(bookroom_id, tag_id) VALUES(%s, %s);")
+                    cur.execute(sql,(bookroom_id, tag_id,))
+                    conn.commit()
+        except pymysql.Error as e:
+            print(f"エラーが発生しています：{e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
 
 
 
 
 ############################ブックルーム関係（ここまで）############################
+
 
 ############################メッセージ関係（ここから）############################
 class Message:
@@ -170,10 +224,17 @@ class Message:
         try:
             with conn.cursor() as cur:
                 sql = "INSERT INTO messages(user_id, bookroom_id, content) VALUES(%s, %s, %s)"
-                cur.execute(sql, (user_id, bookroom_id, message,))
+                cur.execute(
+                    sql,
+                    (
+                        user_id,
+                        bookroom_id,
+                        message,
+                    ),
+                )
                 conn.commit()
         except pymysql.Error as e:
-            print(f'エラーが発生しています:) {e}')
+            print(f"エラーが発生しています:) {e}")
             abort(500)
         finally:
             db_pool.release(conn)
@@ -197,12 +258,11 @@ class Message:
                 messages = cur.fetchall()
                 return messages
         except pymysql.Error as e:
-            print(f'エラーが発生しています：{e}')
+            print(f"エラーが発生しています：{e}")
             abort(500)
         finally:
             db_pool.release(conn)
 
-    
     @classmethod
     def delete(cls, message_id):
         conn = db_pool.get_conn()
@@ -212,27 +272,29 @@ class Message:
                 cur.execute(sql, (message_id,))
                 conn.commit()
         except pymysql.Error as e:
-            print(f'エラーが発生しています：{e}')
+            print(f"エラーが発生しています：{e}")
             abort(500)
         finally:
             db_pool.release(conn)
 
+
 ############################メッセージ関係（ここまで）############################
+
 
 ############################プロフィール画面関係（ここから)############################
 class Profile:
     # アイコンの表示
     @classmethod
-    def icon_view(cls,iconid):
+    def icon_view(cls, iconid):
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
                 sql = "SELECT iconid FROM users WHERE id=%s"
-                cur.execute(sql,(iconid,))
-                user_icon=cur.fetchone()
-                return user_icon['iconid']
+                cur.execute(sql, (iconid,))
+                user_icon = cur.fetchone()
+                return user_icon["iconid"]
         except pymysql.Error as e:
-            print(f'エラーが発生しています：{e}')
+            print(f"エラーが発生しています：{e}")
             abort(500)
         finally:
             db_pool.release(conn)
@@ -251,7 +313,7 @@ class Profile:
                     print("対象ユーザーが見つかりません")
             conn.commit()
         except pymysql.Error as e:
-            print(f'エラーが発生しています：{e}')
+            print(f"エラーが発生しています：{e}")
             abort(500)
         finally:
             db_pool.release(conn)
@@ -267,7 +329,7 @@ class Profile:
                 user = cur.fetchone()
                 return user["name"]
         except pymysql.Error as e:
-            print(f'エラーが発生しています：{e}')
+            print(f"エラーが発生しています：{e}")
             abort(500)
         finally:
             db_pool.release(conn)
@@ -298,44 +360,43 @@ class Profile:
                 cur.execute(sql,(name, email, user_id,))
                 conn.commit()
         except pymysql.Error as e:
-            print(f'エラーが発生しています：{e}')
+            print(f"エラーが発生しています：{e}")
             abort(500)
         finally:
             db_pool.release(conn)
-    
+
     # TODO リアクションの実装が完了したら
     # リアクションの数を取得(T_reactuin_messagesのuser_idはリアクションをしたuser_id)
     @classmethod
-    def get_reactions_count(cls,id):
+    def get_reactions_count(cls, id):
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
                 sql = "SELECT COUNT(SUB.id) FROM (SELECT r.id,r.messages_id,m.user_id FROM reaction_messages AS r LEFT JOIN messages AS m ON r.messages_id = m.id WHERE m.user_id=%s)AS SUB"
-                cur.execute(sql,(id,))
-                reactions_count=cur.fetchone()
+                cur.execute(sql, (id,))
+                reactions_count = cur.fetchone()
                 return reactions_count
         except pymysql.Error as e:
-            print(f'エラーが発生しています：{e}')
+            print(f"エラーが発生しています：{e}")
             abort(500)
         finally:
             db_pool.release(conn)
 
     # 自分が投稿したメッセージの数を取得
     @classmethod
-    def get_messages_count(cls,id):
+    def get_messages_count(cls, id):
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = "SELECT COUNT(id) FROM messages WHERE user_id=%s" 
-                cur.execute(sql,(id,))
-                messages_count=cur.fetchone()
-                return messages_count['COUNT(id)']
+                sql = "SELECT COUNT(id) FROM messages WHERE user_id=%s"
+                cur.execute(sql, (id,))
+                messages_count = cur.fetchone()
+                return messages_count["COUNT(id)"]
         except pymysql.Error as e:
-            print(f'エラーが発生しています:{e}')
+            print(f"エラーが発生しています:{e}")
             abort(500)
         finally:
             db_pool.release(conn)
 
 
 ############################プロフィール画面関係（ここまで）###########################
-

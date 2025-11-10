@@ -93,37 +93,45 @@
   padding: 1.0rem;
   color: var(--brown);
 }
+
 .bookroom-form-input::placeholder {
   color: var(--gray);
   font-size: 10px;
 }
+
 .bookroom-form-input-wide::placeholder {
   color: var(--gray);
   font-size: 10px; 
   overflow-wrap: anywhere;
 }
+
 .bookroom-form-input:focus::placeholder {
   color: var(--snow); 
 }  
 .bookroom-form-input-wide:focus::placeholder {
-  color: var(--snow); 
+  color: var(--snow);
 }
+
 .bookroom-form-input:focus {
   background-color: var(--brown);
   color: var(--snow);
 }
+
 .bookroom-form-input-wide:focus {
   background-color: var(--brown);
   color: var(--snow);
 }
+
 .bookroom-form-input:hover {
   background-color: var(--brown);
   color: var(--snow);
 }
+
 .bookroom-form-input-wide:hover {
   background-color: var(--brown);
   color: var(--snow);
 }
+
 .modal-gif {
   position: absolute;
   z-index: 2;
@@ -347,6 +355,7 @@
     padding-left: 60px;
   }
 }
+
 @media only screen and (min-width: 671px) and (max-width: 1024px) {
   .modal-content {
     width: 80%;
