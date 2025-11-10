@@ -25,8 +25,6 @@ app.permanent_session_lifetime = timedelta(days=SESSION_DAYS)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.jinja_env.auto_reload = True
 app.jinja_env.cache = {}
-app.config["DEBUG"] = False  # 開発確認中TRUE 本番FALSE
-
 
 # ルートページのリダイレクト
 @app.route("/")
@@ -573,4 +571,4 @@ def internal_server_error(error):
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="0.0.0.0", debug=False)
