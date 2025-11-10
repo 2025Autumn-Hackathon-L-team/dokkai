@@ -3,37 +3,33 @@ body {
     padding: 20px;
 }
 
-/* セクションの見出し */
-.search-section h3 {
-    font-size: 20px;
-    color: var(--wood);
-    margin-bottom: 20px;
-    font-weight: bold;
+.keyword-input {
+  width: 100%;
+  border: 2px var(--wood) solid;
+  outline: none;
+  margin-top: 8px;
+  margin-bottom: 20px;
+  padding: 0.5rem;
+  color: var(--brown);
 }
 
 /* キーワード入力欄のスタイリング */
-/* 1. ホバー時のスタイル (.bookroom-form-input と同じ var(--brown) を使用) */
-.keyword-search .input-container:hover {
+.keyword-input:hover {
   background-color: var(--brown);
 }
 /* ホバー時のテキストとプレースホルダーの色変更 */
-.keyword-search .input-container:hover #keyword {
-  color: var(--snow);
+.keyword-input:hover {
+  color: var(--brown);
 }
-.keyword-search .input-container:hover #keyword::placeholder {
+.keyword-input:hover::placeholder {
   color: var(--snow);
 }
 
-
-/* 2. フォーカス時のスタイル (.bookroom-form-input と同じ var(--brown) を使用) */
-.keyword-search .input-container:focus-within {
-  background-color: var(--brown);
-}
 /* フォーカス時のテキストとプレースホルダーの色変更 */
-.keyword-search .input-container:focus-within #keyword {
+.keyword-input:focus {
   color: var(--snow);
 }
-.keyword-search .input-container:focus-within #keyword::placeholder {
+.keyword-input::placeholder {
   color: var(--snow);
 }
 /* --- 2. タグのスタイリング --- */
