@@ -1,16 +1,16 @@
-/* 共通スタイル */
+/* searchモーダルのCSS */
 body {
     padding: 20px;
 }
 form {
     padding: 20px;
 }
- /* 枠線は親の .input-container に持たせる */
+
 .input-container {
   width: 100%;
   border: 2px var(--wood) solid; 
-  border-radius: 8px; /* 角丸を追加 */
-  padding: 0; /* paddingを input に移動 */
+  border-radius: 8px; 
+  padding: 0;
   margin-top: 8px;
   margin-bottom: 20px;
 }
@@ -29,40 +29,40 @@ form {
   border: none;
 }
 
- /* --- ホバー・フォーカスのスタイリング --- */
+
 
 .input-container:hover {
   border-color: var(--brown);
   box-shadow: 0 0 5px rgba(139, 69, 19, 0.5);
 }
 
-/* input 自体に対するホバーとフォーカス */
+
 .keyword-input:focus {
   outline: none; 
   background-color: var(--brown); 
   color: var(--snow); 
 }
 
-/* ★重要★ ホバー時のテキスト色を修正。背景が茶色ならテキストは白 */
+
 .keyword-input:hover {
   background-color: var(--brown);
   color: var(--snow); 
 }
 
-/* プレースホルダーのデフォルト色 */
+
 .keyword-input::placeholder {
-  color: #ccc; /* 通常時は薄い色 */
+  color: #ccc; 
 }
-        /* ホバー時・フォーカス時のプレースホルダーの色 */
+
 .keyword-input:hover::placeholder,
 .keyword-input:focus::placeholder {
-  color: var(--snow); /* 白にする */
+  color: var(--snow); 
 }
-/* タグのスタイリング */
+
 .tag-container-wrapper {
   max-height: 250px; 
   overflow-y: auto; 
-  border: 1px solid #ddd; /* デフォルトの枠線を追加 */
+  border: 1px solid #ddd; 
   border-radius: 8px;
   padding: 10px;
   margin-top: 10px;
@@ -89,7 +89,7 @@ form {
   accent-color: var(--brown); 
 }
 
-/* ボタンのスタイリング */
+
 .search-button{
   width: 70%;
   background-color: var(--wood);
