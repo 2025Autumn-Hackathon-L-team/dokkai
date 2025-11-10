@@ -2,93 +2,110 @@
 body {
     padding: 20px;
 }
+form {
+    padding: 20px;
+}
+ /* 枠線は親の .input-container に持たせる */
+.input-container {
+  width: 100%;
+  border: 2px var(--wood) solid; 
+  border-radius: 8px; /* 角丸を追加 */
+  padding: 0; /* paddingを input に移動 */
+  margin-top: 8px;
+  margin-bottom: 20px;
+}
 
 .keyword-input {
   width: 100%;
-  border: 2px var(--wood) solid;
+  border: 2px var(--wood) solid; 
   outline: none;
-  margin-top: 8px;
-  margin-bottom: 20px;
-  padding: 0.5rem;
+  padding: 0.75rem 1rem; 
+  font-size: 1rem;
   color: var(--brown);
+  border-radius: 6px; 
+  box-sizing: border-box;
+}
+.keyword-search {
+  border: none;
 }
 
-/* キーワード入力欄のスタイリング */
+ /* --- ホバー・フォーカスのスタイリング --- */
+
+.input-container:hover {
+  border-color: var(--brown);
+  box-shadow: 0 0 5px rgba(139, 69, 19, 0.5);
+}
+
+/* input 自体に対するホバーとフォーカス */
+.keyword-input:focus {
+  outline: none; 
+  background-color: var(--brown); 
+  color: var(--snow); 
+}
+
+/* ★重要★ ホバー時のテキスト色を修正。背景が茶色ならテキストは白 */
 .keyword-input:hover {
   background-color: var(--brown);
-}
-/* ホバー時のテキストとプレースホルダーの色変更 */
-.keyword-input:hover {
-  color: var(--brown);
-}
-.keyword-input:hover::placeholder {
-  color: var(--snow);
+  color: var(--snow); 
 }
 
-/* フォーカス時のテキストとプレースホルダーの色変更 */
-.keyword-input:focus {
-  color: var(--snow);
-}
+/* プレースホルダーのデフォルト色 */
 .keyword-input::placeholder {
-  color: var(--snow);
+  color: #ccc; /* 通常時は薄い色 */
 }
-/* --- 2. タグのスタイリング --- */
-
-/* スクロールコンテナの設定 */
+        /* ホバー時・フォーカス時のプレースホルダーの色 */
+.keyword-input:hover::placeholder,
+.keyword-input:focus::placeholder {
+  color: var(--snow); /* 白にする */
+}
+/* タグのスタイリング */
 .tag-container-wrapper {
-    max-height: 250px; 
-    overflow-y: auto; 
-    border: none; 
-    padding: 10px;
-    margin-top: 10px;
+  max-height: 250px; 
+  overflow-y: auto; 
+  border: 1px solid #ddd; /* デフォルトの枠線を追加 */
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 10px;
+  background-color: var(--light-grey);
 }
 
-/* タグの配置 (横並び) */
 .tag-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px 15px; 
-    padding-top: 5px;
-    margin-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 15px; 
+  padding-top: 5px;
 }
 
-/* チェックボックスとラベルのスタイル */
 .tag-group label {
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-    white-space: nowrap; 
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  white-space: nowrap; 
+  cursor: pointer;
 }
 
 .tag-group input[type="checkbox"] {
-    margin-right: 5px;
+  margin-right: 5px;
+  accent-color: var(--brown); 
 }
 
+/* ボタンのスタイリング */
 .search-button{
   width: 70%;
   background-color: var(--wood);
+  color: var(--snow);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 50px; 
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
   display: block; 
-  margin: 20px auto;
+  margin: 30px auto 10px auto;
+  box-shadow: 0 4px var(--brown); 
 }
 .search-button:hover {
   background-color: var(--brown); 
-}
-
-.modal-body {
-  padding: 10px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: var(--snow);
-  border-radius: 0 0 20px 20px;
-}
-
-.input-container {
-  width: 100%;
-  border: 2px var(--wood) solid;
-  outline: none;
-  margin-top: 8px;
-  margin-bottom: 20px;
-  padding: 0.5rem;
-  color: var(--brown);
+  box-shadow: 0 2px var(--brown); 
+  transform: translateY(2px);
 }
