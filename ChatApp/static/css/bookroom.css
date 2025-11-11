@@ -145,7 +145,7 @@ background-color: transparent;
 }
 
 /* パブリックブックルームのbookroom in bookrooms の各要素に適用 */
-.memo-item-card { 
+.room-item-card { 
   background-color: var(--snow);
   border: 1px solid var(--brown);
   border-radius: 12px;
@@ -160,7 +160,7 @@ background-color: transparent;
 
 }
 /* プライベートブックルームのbookroom in bookrooms の各要素に適用 */
-.memo-item-card_private { 
+.room-item-card_private { 
   background-color: var(--lightgreen);
   border: 1px solid var(--brown);
   border-radius: 12px;
@@ -175,17 +175,17 @@ background-color: transparent;
 
 }
 /* 軽く浮き上がるエフェクト */
-.memo-item-card:hover {
+.room-item-card:hover {
   transform: translateY(-3px); 
 }
 /* タイトルと説明文がカードの残りのスペースを占める */
-.memo-content {
+.room-content {
   flex-grow: 1;
   max-width: 80%;
 }
 
  /* ブックルームのタイトル */
-.memo-title {
+.room-title {
   font-size: 1rem;
   font-weight: 600;
   margin: 0 0 5px 0;
@@ -196,14 +196,14 @@ background-color: transparent;
 }
 
  /* ブックルームの簡単な説明文 */
-.memo-description {
+.room-description {
   font-size: 0.8rem;
   color: var(--brown);
   margin: 0;
 }
 
 /* 日付とカテゴリコンテナ */
-.memo-meta { 
+.room-group { 
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -211,12 +211,12 @@ background-color: transparent;
 }
 
 /* 日付 */
-.memo-date { 
+.room-date { 
     font-size: 0.75rem;
     color: var(--brown);
 }
  /* カテゴリタグ */
-.memo-category {
+.room-category {
   font-size: 0.7rem;
   font-weight: 600;
   color: #fff;
@@ -226,19 +226,19 @@ background-color: transparent;
   white-space: nowrap;
 }
 /* カテゴリごとの色があれば追加 */
-.memo-category.fantasy { background-color: var(--brown); }
-.memo-category.magazine { background-color: var(--brown); }
-.memo-category.romance { background-color: var(--brown); }
+.room-category.fantasy { background-color: var(--brown); }
+.room-category.magazine { background-color: var(--brown); }
+.room-category.romance { background-color: var(--brown); }
 
 /* リアクション用のアイコン */
-.memo-icon { 
+.reaction-icon { 
   width: 30px;
   height: 30px;
   margin-left: 15px;
   flex-shrink: 0; 
 }
 
-.memo-icon img {
+.reaction-icon img {
   width: 100%;
   height: 100%;
   object-fit: contain; 
@@ -312,10 +312,10 @@ background-color: transparent;
     left:10%;
     width:80%;
 }
-  .memo-date { 
+  .room-date { 
     display:None;
 }
-  .memo-content {
+  .room-content {
    flex-grow: 1; 
    max-width: 70%;
 }
