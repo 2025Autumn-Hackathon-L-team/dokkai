@@ -26,6 +26,7 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.jinja_env.auto_reload = True
 app.jinja_env.cache = {}
 
+
 # ルートページのリダイレクト
 @app.route("/")
 def index():
@@ -142,6 +143,7 @@ def logout():
     session.clear()
     return redirect(url_for("login_view"))
 
+
 ############################認証関係(ここまで)####################################
 ############################ブックルーム関係（ここから）############################
 
@@ -166,6 +168,7 @@ def is_bookroom_owner(user_id, bookroom_id):
         return False
     return True
 
+
 # ログインしているuser_idを返す。テストの際は、TEST_USER_IDを格納する。
 def get_login_user_id():
     if app.debug:
@@ -174,15 +177,52 @@ def get_login_user_id():
     user_id = session.get("user_id")
     return user_id
 
+
+def bookroom_group_tags(bookroom_tag_tables):
+    bookroom_tag_dict = {}
+    current_bookroom_id = None
+    tags = []
+
+    for bookroom_tag_data in bookroom_tag_tables:
+        bookroom_id = bookroom_tag_data["bookroom_id"]
+        tag_name = bookroom_tag_data["name"]
+
+        # 同じbookroomidではないとき tagsデータ初期化 current_bookroom_idを新しいbookroomidにする
+        if current_bookroom_id is not None and bookroom_id != current_bookroom_id:
+            bookroom_tag_dict[current_bookroom_id] = tags
+            tags = []
+        tags.append(tag_name)
+        current_bookroom_id = bookroom_id
+
+    if current_bookroom_id is not None:
+        bookroom_tag_dict[current_bookroom_id] = tags
+
+    return bookroom_tag_dict
+
+
 # パブリックブックルームの一覧表示
 @app.route("/public_bookrooms", methods=["GET"])
 def public_bookrooms_view():
     user_id = get_login_user_id()
     if user_id is None:
         return redirect(url_for("login_view"))
-    
+
     # publicなブックルームのみ取得
     bookrooms = Bookroom.get_public_bookrooms()
+
+    # tagデータを取得
+    bookroom_tag_records = BookroomTag.get_bookroom_tag_records()
+    bookroom_tag_dict = {}
+    current_bookroom_id = None
+    tags = []
+
+    for bookroom_tag_record in bookroom_tag_records:
+        # もしbookroom_idが同じだったらtassにtagの名前を追加する
+        # 違ければtagsは初期化、current_bookroom_idは新しいbookroom_idを代入
+        if bookroom_tag_record["bookroom_id"] == current_bookroom_id:
+            tags.append(bookroom_tag_record["tag_id"])
+        else:
+            bookroom_tag_dict.append(tags)
 
     # ページネーション
     page = request.args.get(get_page_parameter(), type=int, default=1)
@@ -224,9 +264,11 @@ def create_public_bookroom():
     user_id = get_login_user_id()
     if user_id is None:
         return redirect(url_for("login_view"))
-    
+
     bookroom_name = request.form.get("bookroom_name")
-    bookroom = Bookroom.find_by_bookroom_name(bookroom_name=bookroom_name, is_public=True)
+    bookroom = Bookroom.find_by_bookroom_name(
+        bookroom_name=bookroom_name, is_public=True
+    )
     if bookroom is None:
         bookroom_description = request.form.get("bookroom_description")
         bookroom_id = Bookroom.create(
@@ -245,6 +287,7 @@ def create_public_bookroom():
     else:
         error = "既に同じ名前のブックルームが存在しています。"
         return render_template("error/404.html", error_message=error)
+
 
 ###########################未使用ここから####################################
 # パブリックブックルーム編集ページ表示
@@ -268,6 +311,7 @@ def show_public_bookroom(bookroom_id):
     else:
         return render_template("update-bookroom.html", bookroom=bookroom, tags=tags)
 
+
 # パブリックブックルームの編集作業
 @app.route("/public_bookrooms/update/<bookroom_id>", methods=["POST"])
 def update_public_bookroom(bookroom_id):
@@ -275,7 +319,7 @@ def update_public_bookroom(bookroom_id):
     user_id = get_login_user_id()
     if user_id is None:
         return redirect(url_for("login_view"))
-    
+
     if not is_bookroom_owner(user_id, bookroom_id):
         return redirect(url_for("public_bookrooms_view"))
 
@@ -285,8 +329,9 @@ def update_public_bookroom(bookroom_id):
 
     Bookroom.update(bookroom_id=bookroom_id, name=name, description=description)
     # エラー発生中 BookroomTag.update(bookroom_id, tag_ids)
-    
+
     return redirect(url_for("public_bookrooms_view"))
+
 
 # パブリックブックルームの削除
 @app.route("/public_bookrooms/delete/<bookroom_id>", methods=["POST"])
@@ -300,6 +345,7 @@ def delete_public_bookroom(bookroom_id):
         Bookroom.delete(bookroom_id)
 
     return redirect(url_for("public_bookrooms_view"))
+
 
 ###########################
 # プライベートブックルーム  #
@@ -317,19 +363,19 @@ def private_bookrooms_view():
 
     # ページネーション
     page = request.args.get(get_page_parameter(), type=int, default=1)
-    paginated_bookrooms = bookrooms[(page - 1)*PER_PAGE: page*PER_PAGE]
+    paginated_bookrooms = bookrooms[(page - 1) * PER_PAGE : page * PER_PAGE]
     pagination = Pagination(
         page=page,
         total=len(bookrooms),
         per_page=PER_PAGE,
-        css_framework='bootstrap5',
+        css_framework="bootstrap5",
         display_pages=True,
-        record_name='ブックルーム'
-        )
-    
+        record_name="ブックルーム",
+    )
+
     # タグテーブルに登録されているタグを取得
     tags = Tag.get_all_tags()
-    
+
     if app.debug:
         return render_template(
             "test/private_bookroom.html",
@@ -349,6 +395,7 @@ def private_bookrooms_view():
             tags=tags,
         )
 
+
 # プライベートブックルームの作成
 @app.route("/private_bookrooms", methods=["POST"])
 def create_private_bookroom():
@@ -356,9 +403,11 @@ def create_private_bookroom():
     user_id = get_login_user_id()
     if user_id is None:
         return redirect(url_for("login_view"))
-    
+
     bookroom_name = request.form.get("bookroom_name")
-    bookroom = Bookroom.find_by_bookroom_name(bookroom_name=bookroom_name, is_public=False)
+    bookroom = Bookroom.find_by_bookroom_name(
+        bookroom_name=bookroom_name, is_public=False
+    )
     if bookroom is None:
         bookroom_description = request.form.get("bookroom_description")
         bookroom_id = Bookroom.create(
@@ -368,7 +417,7 @@ def create_private_bookroom():
             is_public=False,
         )
 
-        #タグ取得
+        # タグ取得
         tag_ids = request.form.getlist("tag_ids")
         BookroomTag.create(bookroom_id, tag_ids)
 
@@ -376,6 +425,7 @@ def create_private_bookroom():
     else:
         error = "既に同じ名前のブックルームが存在しています。"
         return render_template("error/404.html", error_message=error)
+
 
 # プライベートブックルームの編集作業
 @app.route("/private_bookrooms/update/<bookroom_id>", methods=["POST"])
@@ -392,7 +442,7 @@ def update_private_bookroom(bookroom_id):
     description = request.form.get("bookroom_description")
     tag_ids = request.form.getlist("tag_ids")
 
-    Bookroom.update(bookroom_id=bookroom_id,name=name, description=description)
+    Bookroom.update(bookroom_id=bookroom_id, name=name, description=description)
     # エラー発生中BookroomTag.update(bookroom_id, tag_ids)
 
     return redirect(url_for("private_bookrooms_view"))
@@ -405,7 +455,7 @@ def delete_private_bookroom(bookroom_id):
     user_id = get_login_user_id()
     if user_id is None:
         return redirect(url_for("login_view"))
-    
+
     if not is_bookroom_owner(user_id, bookroom_id):
         flash("ブックルーム作成者のみ削除可能です")
     else:
@@ -419,6 +469,7 @@ def delete_private_bookroom(bookroom_id):
 #####################################
 #  パブリックブックルームのメッセージ   #
 #####################################
+
 
 # パブリックブックルーム詳細ページの表示
 @app.route("/public_bookrooms/<bookroom_id>/messages", methods=["GET"])
@@ -474,7 +525,7 @@ def delete_message(bookroom_id, message_id):
 # プライベートブックルーム詳細ページの表示
 @app.route("/private_bookrooms/<bookroom_id>/messages", methods=["GET"])
 def private_detail(bookroom_id):
-    #表示チェックのためデフォルトユーザを設定
+    # 表示チェックのためデフォルトユーザを設定
     user_id = session.get("user_id")
 
     if user_id is None:
@@ -486,6 +537,7 @@ def private_detail(bookroom_id):
     return render_template(
         "private_messages.html", messages=messages, bookroom=bookroom, uid=user_id
     )
+
 
 # プライベートブックルームへのメッセージの投稿
 @app.route("/private_bookrooms/<bookroom_id>/messages", methods=["POST"])
@@ -516,46 +568,62 @@ def private_delete_message(bookroom_id, message_id):
     return redirect(
         "/private_bookrooms/{bookroom_id}/messages".format(bookroom_id=bookroom_id)
     )
+
+
 ############################メッセージ関係（ここまで）############################
 ############################プロフィール画面（ここから）##########################
+
 
 # プロフィール画面の表示
 @app.route("/profile")
 def profile_view():
-    user_id=session.get("user_id")
+    user_id = session.get("user_id")
     if user_id is None:
-        return redirect(url_for('login_view'))
-    current_name=Profile.name_view(user_id)
-    current_email=Profile.email_view(user_id)
-    icon_view=Profile.icon_view(user_id)
-    messages_count=Profile.get_messages_count(user_id) 
+        return redirect(url_for("login_view"))
+    current_name = Profile.name_view(user_id)
+    current_email = Profile.email_view(user_id)
+    icon_view = Profile.icon_view(user_id)
+    messages_count = Profile.get_messages_count(user_id)
     # TODO リアクション機能実装後、リアクションの数を取得する。
-    #printはサーバーで出る値を確認。後日削除する。
-    print(f'{icon_view}はiconidです')
-    print(f'{user_id}はprofile.htmlで現在セッションを持っているユーザーです')
-    print(f'{current_name}はprofile.htmlで現在セッションを持っているユーザーのnameを表示しています')
-    print(f'{current_email}はprofile.htmlで現在セッションを持っているユーザーのemailを表示しています')
-    print(f'{messages_count}は{current_name}が投稿したメッセージの数を表しています')
-    return render_template("profile.html",icon=icon_view,uid=user_id,name=current_name,email=current_email,messages_count=messages_count)
+    # printはサーバーで出る値を確認。後日削除する。
+    print(f"{icon_view}はiconidです")
+    print(f"{user_id}はprofile.htmlで現在セッションを持っているユーザーです")
+    print(
+        f"{current_name}はprofile.htmlで現在セッションを持っているユーザーのnameを表示しています"
+    )
+    print(
+        f"{current_email}はprofile.htmlで現在セッションを持っているユーザーのemailを表示しています"
+    )
+    print(f"{messages_count}は{current_name}が投稿したメッセージの数を表しています")
+    return render_template(
+        "profile.html",
+        icon=icon_view,
+        uid=user_id,
+        name=current_name,
+        email=current_email,
+        messages_count=messages_count,
+    )
+
 
 # プロフィール画面の編集(name,email)
-@app.route("/profile/update",methods=["POST"])
+@app.route("/profile/update", methods=["POST"])
 def update_profile():
-    user_id=session.get("user_id")
+    user_id = session.get("user_id")
 
     if user_id is None:
         return redirect(url_for("login_view"))
-    
-    # TODO フロントからどう持ってくるか確認する
-    name=request.form.get("profile_name")
-    email=request.form.get("profile_email")
-    # 値確認用
-    print(f'{name}は入力されたname')
-    print(f'{email}は入力されたemail')
 
-    Profile.name_email_update(name,email,user_id)
+    # TODO フロントからどう持ってくるか確認する
+    name = request.form.get("profile_name")
+    email = request.form.get("profile_email")
+    # 値確認用
+    print(f"{name}は入力されたname")
+    print(f"{email}は入力されたemail")
+
+    Profile.name_email_update(name, email, user_id)
     # TODO: ここでsesseionの更新
-    return render_template("profile.html",uid=user_id,name=name,email=email)   
+    return render_template("profile.html", uid=user_id, name=name, email=email)
+
 
 ########プロフィール画面（ここまで）##########
 
