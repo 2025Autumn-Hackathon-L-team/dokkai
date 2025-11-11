@@ -23,14 +23,29 @@ CREATE TABLE users (
 
 -- ############################ブックルーム関係（ここから）############################
 CREATE TABLE bookrooms (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     user_id VARCHAR(255) NOT NULL,
-    name NVARCHAR(50) NOT NULL,
-    description NVARCHAR(1000),
-    is_public BOOLEAN,
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR(255),
+    is_public BOOLEAN NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY (name, is_public),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE tags (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE bookroom_tag (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    bookroom_id INT NOT NULL,
+    tag_id INT NOT NULL,
+    UNIQUE KEY (bookroom_id, tag_id),
+    FOREIGN KEY (bookroom_id) REFERENCES bookrooms(id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
 );
 
 -- 初期値を挿入
@@ -51,7 +66,7 @@ VALUES
         'dummy'
     );
 
--- その後で bookrooms
+-- bookrooms
 INSERT INTO
     bookrooms (
         user_id,
@@ -85,7 +100,24 @@ VALUES
         TRUE,
         '2020-01-01 00:00:00',
         '2020-01-01 00:00:00'
+    ),
+    (
+        '970af84c-dd40-47ff-af23-282b72b7cca8',
+        'ハリーポッターと炎のゴブレット',
+        'ゴブレットの意味を教えて',
+        FALSE,
+        '2020-01-01 00:00:00',
+        '2020-01-01 00:00:00'
     );
+
+-- tagデータ
+INSERT INTO
+    tags (name)
+VALUES
+    ('恋愛'),
+    ('SF'),
+    ('日本文学'),
+    ('ミステリー');
 
 -- ############################ブックルーム関係（ここまで）############################
 CREATE TABLE messages (
