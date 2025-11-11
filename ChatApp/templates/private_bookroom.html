@@ -10,16 +10,12 @@
     <h1>PRIVATE BOOKROOM</h1> 
   </div>
 
-  {# Category selection dropdown #}
-  <div class="category-select-wrapper">
-    <select name="category" id="category-filter">
-      <option value="">カテゴリを選択</option>
-      <option value="idea">小説</option>
-      <option value="todo">ノンフィクション</option>
-      <option value="shopping">雑誌</option>
-      <option value="uncategorized">未分類</option>
-    </select>
-  </div>
+ <div class="search-trigger-container search-form-5" id="search-button">
+    <label>
+        <input type="text" readonly name="q" placeholder="PRIVATEの中でさがす">
+    </label>
+    <button type="button" aria-label="検索"></button>
+</div>
   <div id="bookroom-list"> 
     {% for bookroom in paginated_bookrooms %}
     <div class="memo-item-card_private"> {# Card for each memo #}
@@ -44,6 +40,7 @@
       </div>
     </div>
     {% endfor %}
+    {% include 'modal/search_private.html'%}
 
     <div class="pagination-container">
       {{ pagination.info }}
@@ -74,6 +71,10 @@
 ></script>
 <script
   src="{{url_for('static',filename='js/bookroom/delete-bookroom.js')}}"
+  type="module"
+></script>
+<script
+  src="{{url_for('static',filename='js/bookroom/search.js')}}"
   type="module"
 ></script>
 {% endblock %}
