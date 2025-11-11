@@ -412,6 +412,28 @@ def delete_private_bookroom(bookroom_id):
         Bookroom.delete(bookroom_id)
     return redirect(url_for("private_bookrooms_view"))
 
+# ヒストリーブックルームの表示（仮設置）
+@app.route("/history", methods=["GET"])
+def history_view():
+    # publicなブックルームのみ取得
+    bookrooms = Bookroom.get_public_bookrooms()
+    #表示チェックのためデフォルト値を設定
+    user_id = session.get("user_id")
+
+    # ページネーション
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    paginated_bookrooms = bookrooms[(page - 1)*PER_PAGE: page*PER_PAGE]
+    pagination = Pagination(
+        page=page,
+        total=len(bookrooms),
+        per_page=PER_PAGE,
+        css_framework='bootstrap5',
+        display_pages=True,
+        record_name='ブックルーム'
+        )
+
+    return render_template("history.html",is_public=True, uid=user_id, paginated_bookrooms=paginated_bookrooms, pagination=pagination)
+
 
 ############################ブックルーム関係（ここまで）############################
 ############################メッセージ関係（ここから）############################
