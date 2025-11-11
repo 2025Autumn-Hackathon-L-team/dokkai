@@ -2,10 +2,9 @@
 
 .profile-main-container{
   display: flex;
-  padding-left: 50px;
+  /*padding-left: 50px;*/
   flex-direction:column;
-  align-items: flex-start; /*上部に寄せる*/
-  padding-top: 130px; /*ヘッダーが重なる部分を調整*/
+  align-items: center;
   background-color: #FFFACD;
   margin: 0;
   color: var(--brown);
@@ -60,10 +59,19 @@
 
 
 /* レスポンシブ */
+/* スマホ用 */
 @media screen and (max-height: 768px){
-    .profile_display_items { 
-    padding-top: 170px;
-    margin-top: 0px; 
+    .profile-display-items { 
+    padding-top: 130px;
+    margin-top: 0px;
+}
+}
+
+/* PC用 */
+@media screen and (min-width: 769px){
+    .profile-display-items { 
+    padding-top: 140px;
+    margin-top: 0px;
 }
 }
 
@@ -73,7 +81,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #FFFACD;
+  text-align: center;
 }
 
 .button-position-adjustment img{
