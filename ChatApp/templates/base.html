@@ -22,10 +22,24 @@
       href="{{ url_for('static', filename='') }}"
     />
   </head>
+  <body> 
   <body>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="flash-container">
+        {% for message in messages %}
+          <div class="flash">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</body>
+
+
     {% include 'util/sidebar.html'%} {% include 'util/mobile-header.html'%} {%
     block body %}{% endblock %} {% block script %}{% endblock %}
   <script
-      src="{{url_for('static',filename='js/sidebar.js')}}"type="text/javascript"></script>  
+      src="{{url_for('static',filename='js/sidebar.js')}}"type="text/javascript"></script> 
   </body>
 </html>
