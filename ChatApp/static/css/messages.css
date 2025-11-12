@@ -217,7 +217,11 @@
 }
 
 /* タイムスタンプ位置 */
-.timestamp-right, .timestamp-left {
+.timestamp-right {
+  bottom: 0.1em;
+  right: 0.5em; 
+}
+.timestamp-left {
   bottom: 0.1em;
   right: 0.5em; 
 }
@@ -225,9 +229,9 @@
 .my-messages .delete-form {
     position: absolute;
     right: -20px; /* 吹き出しの内側に配置 */
-    bottom: 0;
+    bottom: -5px;
     line-height: 0;
-    z-index: 5;
+    z-index: 2;
 }
 /* 相手のユーザー名と吹き出し、アクションのコンテナ */
 .message-content-wrapper {
