@@ -31,7 +31,9 @@
 #create-bookroom-modal,
 #update-bookroom-modal,
 #delete-bookroom-modal,
-#update-profile-modal {
+#search-modal,
+#update-profile-modal,
+#update-icon-modal {
   display: none;
 }
 
@@ -41,6 +43,7 @@
   margin: 20% auto;
   width: 80%;
   border: 12px solid var(--brown);
+  border-radius: 8px;
   box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
   animation-name: modalopen;
   animation-duration: 1s;
@@ -76,6 +79,7 @@
 .bookroom-form-input {
   width: 100%;
   border: 2px var(--wood) solid;
+  border-radius: 6px; 
   outline: none;
   margin-top: 8px;
   margin-bottom: 20px;
@@ -86,6 +90,7 @@
 .bookroom-form-input-wide {
   width: 100%;
   border: 2px var(--wood) solid;
+  border-radius: 6px; 
   outline: none;
   margin-top: 8px;
   margin-bottom: 20px;
@@ -146,6 +151,8 @@
 .modal-body button {
   width: 70%;
   background-color: var(--wood);
+  border-radius: 50px; 
+  box-shadow: 0 4px var(--brown); 
 }
 
 #delete-bookroom-confirmation-button {
@@ -158,6 +165,9 @@
 }
 .modal-body button:hover {
   background-color: var(--brown);
+  box-shadow: 0 2px var(--brown);
+  transform: translateY(2px); 
+
 }
 
 
@@ -167,6 +177,7 @@
   margin: 20% auto;
   width: 80%;
   border: 12px solid var(--green);
+  border-radius: 6px; 
   animation-name: modalopen;
   animation-duration: 1s;
   position: relative;
@@ -201,6 +212,7 @@
 .bookroom-form-input-private {
   width: 100%;
   background-color:var(--lightgreen);
+  border-radius: 6px; 
   margin-top: 8px;
   margin-bottom: 20px;
   padding: 0.5rem;
@@ -210,6 +222,7 @@
 .bookroom-form-input-wide-private {
   width: 100%;
   background-color:var(--lightgreen);
+  border-radius: 6px; 
   margin-top: 8px;
   margin-bottom: 20px;
   padding: 1.0rem;
@@ -254,7 +267,16 @@
 .modal-body-private button {
   width: 70%;
   background-color: var(--green);
+  border-radius: 50px; 
+  box-shadow: 0 4px var(--deep_green);
 }
+
+.modal-body-private button:hover {
+  background-color: var(--deep_green);
+  box-shadow: 0 2px var(--deep_green);
+  transform: translateY(2px); 
+}
+
 
 #delete-bookroom-confirmation-button {
   width: 100%;
@@ -264,11 +286,63 @@
   color: var(--brown);
   text-align: center;
 }
-.modal-body-private button:hover {
-  background-color: var(--deep_green);
+
+
+/*アイコン更新モーダル*/
+.modal-icons-content {
+  background-color: #FFFACD;
+  border: 12px solid var(--brown);
+  box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
+  animation-name: modalopen;
+  animation-duration: 1s;
+  position: relative;
 }
 
+.icon_modal_body {
+  padding: 10px 0;
+}
 
+.modal-icons-body {
+    padding: 0 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-content: space-around;
+    align-items: center;
+    gap: 10px;
+    color: var(--snow);
+}
+
+.icon_styled {
+  border: 0;
+  line-height: 1.5;
+  font-size: 1rem;
+  text-align: center;
+  color: white;
+  border-radius: 50px;
+  background-color: cyan;
+  height: 100px;
+  width: 100px;
+}
+
+.icon_styled:hover {
+  background-color: cornflowerblue;
+}
+
+.icon_styled:active {
+  box-shadow:
+    inset -2px -2px 3px rgb(255 255 255 / 0.6),
+    inset 2px 2px 3px rgb(0 0 0 / 0.6);
+}
+
+#modal-selecticon-title{
+    text-align: center;
+}
+
+#icon_select_description{
+    text-align: center;
+}
+
+/*アイコン更新モーダルここまで*/
 
 /* ========================================================== */
 /* レスポンシブ */

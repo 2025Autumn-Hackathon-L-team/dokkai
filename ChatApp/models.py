@@ -341,14 +341,12 @@ class Profile:
         try:
             with conn.cursor() as cur:
                 sql = "UPDATE users SET iconid=%s WHERE id=%s"
-                cur.execute(
-                    sql,
-                    (
-                        iconid,
-                        user_id,
-                    ),
-                )
-                conn.commit()
+                cur.execute(sql,(iconid,user_id,))
+                rows = cur.execute(sql, (iconid, user_id,))
+                # 更新結果チェック
+                if rows == 0:
+                    print("対象ユーザーが見つかりません")
+            conn.commit()
         except pymysql.Error as e:
             print(f"エラーが発生しています：{e}")
             abort(500)

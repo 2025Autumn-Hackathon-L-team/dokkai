@@ -65,10 +65,17 @@
 }
 
 
+
+/* ========================================================== */
 /* レスポンシブ */
-@media screen and (max-height: 768px){
-    .profile_display_items { 
+
+@media screen and (max-width: 768px) {
+  .main-container {
+    padding-left: 0px;
+  }
+}
+@media screen and (max-height: 768px){}
+  .profile_display_items { 
     padding-top: 170px;
     margin-top: 0px; 
-}
 }
