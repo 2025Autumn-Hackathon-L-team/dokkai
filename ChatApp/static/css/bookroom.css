@@ -135,7 +135,8 @@ background-color: transparent;
 /* リストのコンテナ */
 #bookroom-list { 
   margin-top: 150px;
-  padding: 15px 15px 80px; 
+  padding-left:5px;
+  padding-right: 5px; 
   display: flex;
   flex-direction: column;
   align-items: center; /* 中央寄せ */
@@ -153,9 +154,10 @@ background-color: transparent;
   padding: 15px;
   display: flex;
   flex-direction:row;
-  justify-content: space-between;
+  
   align-items: center;
   transition: transform 0.2s ease-in-out;
+  position: relative;
 
 }
 /* プライベートブックルームのbookroom in bookrooms の各要素に適用 */
@@ -168,9 +170,9 @@ background-color: transparent;
   padding: 15px;
   display: flex;
   flex-direction:row;
-  justify-content: space-between;
   align-items: center;
   transition: transform 0.2s ease-in-out;
+  position: relative;
 
 }
 /* 軽く浮き上がるエフェクト */
@@ -179,7 +181,7 @@ background-color: transparent;
 }
 /* タイトルと説明文がカードの残りのスペースを占める */
 .room-content {
-  flex-grow: 1;
+  flex-shrink: 0;
   max-width: 80%;
 }
 
@@ -206,13 +208,16 @@ background-color: transparent;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 5px;
+    gap: 10px;
+    position: absolute;
+    right: 30px;        
+    bottom: 10px; 
 }
 
 /* 日付 */
 .room-date { 
     font-size: 0.75rem;
-    color: var(--brown);
+    color: var(--brown); 
 }
  /* カテゴリタグ */
 .room-category {
@@ -223,41 +228,32 @@ background-color: transparent;
   padding: 4px 8px;
   border-radius: 12px;
   white-space: nowrap;
+  
 }
 /* カテゴリごとの色があれば追加 */
 .room-category.fantasy { background-color: var(--brown); }
 .room-category.magazine { background-color: var(--brown); }
 .room-category.romance { background-color: var(--brown); }
 
-/* リアクション用のアイコン */
-.reaction-icon { 
-  width: 30px;
-  height: 30px;
-  margin-left: 15px;
-  flex-shrink: 0; 
+.reaction-icon {
+    position: absolute; 
+    right: 5px;        
+    bottom: 10px;      
+    z-index: 5;     
 }
-
-.reaction-icon img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain; 
-}
-
 .delete-bookroom-trigger {
   background-color: transparent;
-  height: 20px;
-  width: 20px;
-  line-height: 47px;
-  padding: 0;
-  margin: 0;
-  bottom: 8px;
-  right: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    line-height: 0;
 }
 
 .delete-message-trigger img{
-  font-size: 1rem;
-  width: 30px;
-  height: 30px;
+    height: 20px;
+    opacity: 0.6;
+    transition: opacity 0.2s;
 }
 /* ================== フローティングアクションボタン (FAB) ================== */
 .create-bookroom-button { 
