@@ -1,6 +1,6 @@
 /* ブックルーム一覧画面のCSS */
 /* 全体設定 */
-.main-container {
+.main-container,.main-container_p  {
   background-color: var(--snow);
   margin: 0;
   padding: 0;
@@ -11,13 +11,12 @@
   align-items: flex-start;
   /* 上部に寄せる */
 }
-
 /* ================== ヘッダー部分 ================== */
 
-.main-container{
+.main-container, .main-container_p{
   display: flex;
   flex-direction:column;
-
+  justify-content: flex-start;
 }
 /* パブリックブックルームのヘッダー */
 .bookroom-title { 
@@ -58,8 +57,8 @@
   text-align: center;
   width: calc(100% - 50px);
 }
-/* プライベートブックルームのタイトル */
-.bookroom-title_private h1 { 
+/* パブリックブックルームのタイトル */
+.bookroom-title_private h1{ 
   font-size: 1.5rem;
   margin: 0;
   font-weight: 500;
@@ -67,6 +66,7 @@
   text-align: center;
   width: calc(100% - 50px);
 }
+
 /* カテゴリ選択ドロップダウン(使用するか未定) */
 .category-select-wrapper { 
   width: calc(100% - 60px);
@@ -135,7 +135,6 @@ background-color: transparent;
 /* リストのコンテナ */
 #bookroom-list { 
   margin-top: 150px;
-  padding-top: 0; 
   padding: 15px 15px 80px; 
   display: flex;
   flex-direction: column;
@@ -290,7 +289,7 @@ background-color: transparent;
 /* レスポンシブ */
 
 @media screen and (max-width: 768px) {
-  .main-container {
+  .main-container,.main-container_p {
     padding-left: 0px;
   }
   .bookroom-title { 
@@ -300,7 +299,12 @@ background-color: transparent;
   .bookroom-title_private { 
     position: fixed; 
     left: 0px;
-}
+} 
+  .bookroom-header { 
+    position: fixed; 
+    left: 0px;
+} 
+  #message
   .category-select-wrapper { 
     position: fixed; 
     left: 0px;

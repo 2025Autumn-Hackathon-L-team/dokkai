@@ -1,14 +1,14 @@
 {% extends 'base.html' %} {% block title %}
 <title>private-messages</title>
 {% endblock %} {% block body %}
-<div class="main-container">
+<div class="main-container_p">
 
-    <div id="bookroom-header_private">
+    <div class="bookroom-header">
       <h1>PRIVATE</h1> 
       <div class="message-group">
-      <div id ="bookroom-contents">
-      <p id="bookroom-name">{{ bookroom.name | default("ブックルームの名前") }}</p>
-        <p id="bookroom-description">{{bookroom.description | default("ブックルームの詳細") }}</p>
+      <div class ="bookroom-contents">
+      <p class="bookroom-name">{{ bookroom.name | default("ブックルームの名前") }}</p>
+        <p class="bookroom-description">{{bookroom.description | default("ブックルームの詳細") }}</p>
       </div>
       {% if bookroom.description is not none %}
       <span class="tag-category">

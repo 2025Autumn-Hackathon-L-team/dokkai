@@ -1,9 +1,8 @@
 /* 各ブックルーム詳細ページ(メッセージ画面)のCSS */
 
-
 /* ========================== ヘッダー部分 ============================= */
 
-#bookroom-header {/* パブリックメッセージ画面のヘッダー */
+.bookroom-header {/* パブリックメッセージ画面のヘッダー */
   background-color: var(--brown);
   color: var(--snow);
   height: auto;
@@ -19,11 +18,11 @@
   padding-left: 20px;
   z-index: 2;
 }
-#bookroom-header_private {/* プライベートメッセージ画面のヘッダー */
+.main-container_p .bookroom-header {/* プライベートメッセージ画面のヘッダー */
   background-color: var(--green);
   color: var(--snow);
   height: auto;
-  width: calc(100vw - 50px);
+  width: calc(100vw);
   position: fixed;
   top: 0;
   right: 0;
@@ -35,21 +34,14 @@
   padding-left: 20px;
   z-index: 2;
 }
-#bookroom-header > h1 { /* パブリックメッセージ画面のタイトル */
+.bookroom-header > h1 { 
   font-size: 1.5rem;
   font-weight: 500;
   letter-spacing: normal;
   text-align: center;
 }
 
-#bookroom-header_private > h1 { /* プライベートメッセージ画面のタイトル */
-  font-size: 1.5rem;
-  font-weight: 500;
-  letter-spacing: normal;
-  text-align: center;
-}
-
-#bookroom-contents{
+.bookroom-contents{
   display: flex;
   width:100%;
   flex-direction: column;
@@ -59,12 +51,12 @@
   margin-left: 20px; 
 }
 
-#bookroom-name {
+.bookroom-name {
   margin:0;
   font-size: 1.2rem;
 }
 
-#bookroom-description {
+.bookroom-description {
   margin:0 5 0 0;
   font-size: 12px;
   font-weight: 200;
@@ -152,7 +144,7 @@
 
 .my-messages form {
     display: flex; 
-    align-items: flex-end;
+    align-items: flex-start;
 }
 .delete-message-button {
     background: none;
@@ -324,7 +316,7 @@
   position: fixed;
   bottom: 0;
   width: calc(100vw - 50px);
-  height: 15vh;
+  height: 10vh;
   background-color: var(--snow);
   background-size: contain;
   border-top: var(--wood)3px solid;
@@ -342,7 +334,7 @@
   position: relative;
   background-color: var(--snow);
   border-radius: 8px;
-  border: var(--wood)solid 3px;
+  border: var(--wood)solid 1px;
   display: flex;
 }
 
@@ -380,7 +372,7 @@
 
 @media screen and (max-width: 639px) {
   .typing-box-wrapper,
-  #bookroom-header {
+  .bookroom-header {
     width: 100%;
   }
   #message-area {
