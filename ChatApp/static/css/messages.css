@@ -143,11 +143,7 @@
     margin-right: 8px;
     flex-shrink: 0;
 }
-/* ユーザー名と吹き出し、アクションを縦に並べるコンテナ */
-.message-content-wrapper {
-    display: flex;
-    flex-direction: column;
-}
+
 .my-messages {
   display: flex;
   flex-direction: column; 
@@ -173,10 +169,6 @@
     transition: opacity 0.2s;
 }
 
-.message-date {
-  bottom: 8px;
-  right: 8px;
-}
 .box {
   position: relative;
   width: 100%;
@@ -232,51 +224,54 @@
   white-space: nowrap;
 }
 
-/* 自分のメッセージ (右揃え) のタイムスタンプ位置 */
+/* タイムスタンプ位置 */
 .timestamp-right, .timestamp-left {
   bottom: 0.1em;
   right: 0.5em; 
 }
-/* 自分のメッセージのゴミ箱アイコン（絶対配置で幅に影響を与えない） */
+/* ゴミ箱アイコン */
 .my-messages .delete-form {
     position: absolute;
-    right: -20px;       /* 吹き出しの右端から外側に配置 */
+    right: -20px; /* 吹き出しの内側に配置 */
     bottom: 0;
     line-height: 0;
     z-index: 5;
 }
-
-.message-and-reaction-right {
+/* 相手のユーザー名と吹き出し、アクションのコンテナ */
+.message-content-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+/* 自分のメッセージとゴミ箱のコンテナ　*/
+.message-and-trash-right {
   display: flex;
   align-items: flex-end; 
   gap: 5px; 
   width: 100%; 
 }
-/* 吹き出しとアクションのコンテナ (相手のメッセージ) */
-.message-and-reaction-left {
+/* 相手のアイコンとメッセージのコンテナ */
+.icon-and-message-left {
     position: relative;
     display: flex;
     flex-direction: row;
     width: 100%;
-    align-items: flex-start; /* タイムスタンプを左に寄せるために左寄せ */
+    align-items: flex-start;
 }
 /* 吹き出しの共通スタイル */
-.message-content-box, .box-left {
+.message-content-box, .box-left, .box-right {
     padding: 8px 12px;
     border-radius: 18px;
-    line-height: 1.0;
+    line-height: 1.2;
     word-wrap: break-word;
     position: relative;
     width: 100%;
 }
-/* 自分のメッセージのアイコン（左下） */
+/* 自分のメッセージのアイコン */
 .reaction-icon-left {
-  /* アイコンにボタン機能をつける際に使用 */
   left: 0; 
 }
-/* 相手のメッセージのアイコン（右下） */
+/* 相手のメッセージのアイコン */
 .reaction-icon-right {
-  /* アイコンにボタン機能をつける際に使用 */
   right: 0; 
 }
 
@@ -288,19 +283,13 @@
 }
 .reaction-zone {
     display: flex;
-    margin-top: 10px; /* タイムスタンプとのスペース */
+    margin-top: 10px; 
     margin-left: 5vh;
-    gap: 5px; /* 各リアクションボタン間のスペース */
+    gap: 5px; 
 }
 
-/* 自分のメッセージのリアクションゾーンを右に寄せる */
-.reaction-zone-right {
-    justify-content: flex-end;
-    width: 100%;
-}
-
-/* 相手のメッセージのリアクションゾーンを左に寄せる */
-.reaction-zone-left {
+/* リアクションゾーンを左に寄せる */
+.reaction-zone-right, .reaction-zone-left{
     justify-content: flex-start;
     width: 100%;
 }
@@ -309,7 +298,7 @@
 .reaction-item {
     display: flex;
     align-items: center;
-    background-color: #f0f0f0;
+    background-color: var(--snow);
     border: 1px solid #ccc;
     border-radius: 12px;
     padding: 3px 8px;
@@ -320,13 +309,12 @@
 }
 
 .reaction-item:hover {
-    background-color: #e0e0e0;
+    background-color: var(--lightgreen);
 }
 
-/* リアクション件数のスタイル */
-.reaction-count {
-    font-weight: bold;
-    color: #333;
+/* リアクション件数 */
+.reaction-count { 
+    color: var(--brown);
     margin-left: 4px;
 }
 

@@ -26,7 +26,7 @@
       {% if messages|length > 0 %} {% for message in messages %} {% if
       message.user_id == uid %}
     <div class="my-messages">
-      <div class="message-and-reaction-right">
+      <div class="message-and-trash-right">
         <p class="box box-right">{{ message.message }}</p>
          <form class ="delete-form" action="/public_bookrooms/{{ bookroom.id }}/messages/{{ message.id }}" method="POST">
         <input type="hidden" name="_method" value="DELETE"> 
@@ -44,16 +44,13 @@
                 😂 <span class="reaction-count">2</span></button>
               <button class="reaction-item">
                 😍 <span class="reaction-count">1</span></button>
-            </div>  
-        
-  
+            </div>   
       </div> 
-    </div>
       {% else %}
     <div class="messages">
       <div class="message-content-wrapper">
         <p class="user-name">{{message.user_name | default("メッセージテーブルのユーザーネーム")}}</p>
-         <div class="message-and-reaction-left">
+         <div class="icon-and-message-left">
           <div class="user-icon"></div>
         <p class="box box-left">{{message.message| default("メッセージテーブルの内容")}}</p>
          </div> 
@@ -72,6 +69,7 @@
       <p id="no-message">まだメッセージがありません</p>
       {% endif %}
     </div>
+   </div> 
     <div class="typing-box-wrapper">
       <form class="typing-box" method="POST" name="newMessageForm">
         <textarea name="message" id="message" autofocus></textarea>
