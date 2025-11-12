@@ -28,7 +28,7 @@
     <div class="my-messages">
       <div class="message-and-reaction-right">
         <p class="box box-right">{{ message.message }}</p>
-         <form action="/public_bookrooms/{{ bookroom.id }}/messages/{{ message.id }}" method="POST">
+         <form class ="delete-form" action="/public_bookrooms/{{ bookroom.id }}/messages/{{ message.id }}" method="POST">
         <input type="hidden" name="_method" value="DELETE"> 
       
          <button type="submit" class="delete-message-button">
