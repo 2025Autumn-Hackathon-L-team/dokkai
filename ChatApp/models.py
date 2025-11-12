@@ -234,7 +234,7 @@ class BookroomTag:
                     "SELECT bt.bookroom_id, t.name "
                     "FROM bookroom_tag AS bt "
                     "INNER JOIN tags AS t ON bt.tag_id = t.id "
-                    "ORDER BY bt.bookroom_id;"
+                    "ORDER BY bt.bookroom_id, bt.id;"
                 )
                 cur.execute(sql)
                 conn.commit()
