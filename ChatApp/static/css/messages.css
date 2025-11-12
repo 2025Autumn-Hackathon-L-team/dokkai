@@ -83,7 +83,7 @@
   background-color: var(--wood);
   cursor: pointer;
 }
-.message-meta { 
+.message-group { 
     display: flex;
     flex-direction: row;
     align-items: flex-start;

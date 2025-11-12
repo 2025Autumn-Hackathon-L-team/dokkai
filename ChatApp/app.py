@@ -432,7 +432,7 @@ def history_view():
         record_name='ブックルーム'
         )
 
-    return render_template("history.html",is_public=True, uid=user_id, paginated_bookrooms=paginated_bookrooms, pagination=pagination)
+    return render_template("history_bookroom.html",is_public=True, uid=user_id, paginated_bookrooms=paginated_bookrooms, pagination=pagination)
 
 
 ############################ブックルーム関係（ここまで）############################
