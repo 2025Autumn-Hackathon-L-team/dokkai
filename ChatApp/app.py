@@ -598,6 +598,7 @@ def update_icon():
         iconid=request.form.get("icon_name")
         print(f'{iconid}は選択されたicon')
         Profile.icon_update(iconid,user_id)
+    # TODO M_iconsができたらreturn render_template("profile_view",filename=画像のパス)を渡す。
     return redirect(url_for("profile_view"))
 
 ########プロフィール画面（ここまで）##########
