@@ -575,14 +575,37 @@ def update_profile():
     # 値確認用
     print(f'{name}は入力されたname')
     print(f'{email}は入力されたemail')
+    # 空欄チェック
+    if name == "" or email == "" or password == "" :
+            flash("すべての項目を入力してください。")
+            return redirect(url_for("profile_view"))
+    # メールアドレス形式チェック
+    if re.fullmatch(EMAIL_PATTERN, email) is None:
+            flash("有効なメールアドレスを入力してください。")
+            return redirect(url_for("profile_view"))
+    # 他のユーザーが同じメールアドレスを登録していないかチェック。ただし自分が登録したメールアドレスと一致している場合はそのまま通る。
+    registered_email_user= User.find_by_email(email) 
+    registered_name_user=User.find_by_name(name)
+    if registered_email_user is not None and registered_email_user["id"] != user_id:
+        flash("入力されたメールアドレスは使用されています。")
+        flash("違うメールアドレスを入力してください。")
+        return redirect(url_for("profile_view"))
+    # 他のユーザーが同じ名前を登録していないかチェック。ただし自分が登録した名前と一致している場合はそのまま通る。
+    if registered_name_user is not None and registered_name_user["id"] != user_id:
+        flash("入力された名前は使用されています。")
+        flash("違う名前を入力してください。")
+        return redirect(url_for("profile_view"))
     hashPassword = hashlib.sha256(password.encode("utf-8")).hexdigest()
     user = User.find_by_email(current_email)
     # ログインチェック
     # TODO バリデーションチェックが必要
     if user["password"] != hashPassword:
+        flash("パスワードが正しくありません。")
         return redirect(url_for("profile_view"))  
+    # 更新処理
     else:
         Profile.name_email_update(name,email,user_id)
+        flash("プロフィールを更新しました。")
     return redirect(url_for("profile_view"))
     
 # アイコン画面の変更
@@ -598,6 +621,7 @@ def update_icon():
         iconid=request.form.get("icon_name")
         print(f'{iconid}は選択されたicon')
         Profile.icon_update(iconid,user_id)
+    # TODO M_iconsができたらreturn render_template("profile_view",filename=画像のパス)を渡す。
     return redirect(url_for("profile_view"))
 
 ########プロフィール画面（ここまで）##########
