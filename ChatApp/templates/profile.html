@@ -25,16 +25,24 @@
         </div>
         <p>ユーザアイコンは{{icon}}</p>
         <p>name</p>
-        <p class="profile-subtitle">{{name}}</p>
+        <div class="button-position-adjustment">
+          <div id="email-side-adjustment"></div>
+          <p class="profile-subtitle">{{name}}</p>
+          {# Floating Action Button #}
+          <button class="update-profile-button" id="update-profile-button" label="nameとemailの変更">
+            <img class="button-image" src="{{ url_for('static', filename='img/pen.png') }}">
+          </button>
+          {% include 'modal/update-profile.html' %} 
+        </div>
         <p>email</p>
         <div class="button-position-adjustment">
-            <div id="email-side-adjustment"></div>
-            <p class="profile-subtitle">{{email}}</p>
-            {# Floating Action Button #}
-            <button class="update-profile-button" id="update-profile-button" label="nameとemailの変更">
-              <img class="button-image" src="{{ url_for('static', filename='img/pen.png') }}">
-            </button>
-            {% include 'modal/update-profile.html' %} 
+          <div id="email-side-adjustment"></div>
+          <p class="profile-subtitle">{{email}}</p>
+          {# Floating Action Button #}
+          <button class="update-profile-button" id="update-profile-button" label="nameとemailの変更">
+            <img class="button-image" src="{{ url_for('static', filename='img/pen.png') }}">
+          </button>
+          {% include 'modal/update-profile.html' %} 
         </div>
         <p>リアクションされた数</p>
         <p class="profile-subtitle">リアクション数</p>
