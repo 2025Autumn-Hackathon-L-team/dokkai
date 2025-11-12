@@ -25,8 +25,8 @@
         <span class="title">PRIVATE</span>
       </a>
     </li>
-    <li class="list">
-      <a href="#">
+    <li class="list{% if request.endpoint == 'history_view'%} active{% endif %}">
+      <a href="{{ url_for('history_view') }}">
         <span class="icon">
              <img src="{{ url_for('static',filename='img/history.png')}}" alt="history_icon" width="24" height="24">
         </span>
