@@ -226,10 +226,10 @@ class BookroomTag:
             db_pool.release(conn)
 
     @classmethod
-    def get_bookroom_tag_records(cls):
+    def get_bookroom_tag_tables(cls):
         conn = db_pool.get_conn()
         try:
-            with conn.cursor() as cur:
+            with conn.cursor(pymysql.cursors.DictCursor) as cur:
                 sql = (
                     "SELECT bt.bookroom_id, t.name "
                     "FROM bookroom_tag AS bt "
@@ -244,8 +244,8 @@ class BookroomTag:
         finally:
             db_pool.release(conn)
 
-        bookroom_tag_records = cur.fetchall()
-        return bookroom_tag_records
+        bookroom_tag_tables = cur.fetchall()
+        return bookroom_tag_tables
 
 
 ############################ブックルーム関係（ここまで）############################

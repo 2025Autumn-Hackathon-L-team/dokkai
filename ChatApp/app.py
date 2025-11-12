@@ -178,26 +178,28 @@ def get_login_user_id():
     return user_id
 
 
-def bookroom_group_tags(bookroom_tag_tables):
-    bookroom_tag_dict = {}
-    current_bookroom_id = None
+def get_bookroom_group_tags(bookroom_tag_tables):
+    # 空のdictを作成(これにどんどん追加していく)
+    # 空のtagリストを作成（同じブックルームのタグは、1つのリストに入れる。）
+    bookroom_group_tag = {}
     tags = []
 
+    # 空の場合は空のまま返す
+    if not bookroom_tag_tables:
+        return bookroom_group_tag
+
+    previous_bookroom_id = bookroom_tag_tables[0]["bookroom_id"]
+
     for bookroom_tag_data in bookroom_tag_tables:
-        bookroom_id = bookroom_tag_data["bookroom_id"]
-        tag_name = bookroom_tag_data["name"]
-
-        # 同じbookroomidではないとき tagsデータ初期化 current_bookroom_idを新しいbookroomidにする
-        if current_bookroom_id is not None and bookroom_id != current_bookroom_id:
-            bookroom_tag_dict[current_bookroom_id] = tags
+        if bookroom_tag_data["bookroom_id"] == previous_bookroom_id:
+            tags.append(bookroom_tag_data["name"])  # タグの名前を追加格納
+        else:
+            bookroom_group_tag[previous_bookroom_id] = tags
             tags = []
-        tags.append(tag_name)
-        current_bookroom_id = bookroom_id
-
-    if current_bookroom_id is not None:
-        bookroom_tag_dict[current_bookroom_id] = tags
-
-    return bookroom_tag_dict
+            tags.append(bookroom_tag_data["name"])  # タグの名前を格納
+            previous_bookroom_id = bookroom_tag_data["bookroom_id"]
+    bookroom_group_tag[previous_bookroom_id] = tags
+    return bookroom_group_tag
 
 
 # パブリックブックルームの一覧表示
@@ -211,22 +213,28 @@ def public_bookrooms_view():
     bookrooms = Bookroom.get_public_bookrooms()
 
     # tagデータを取得
-    bookroom_tag_records = BookroomTag.get_bookroom_tag_records()
-    bookroom_tag_dict = {}
-    current_bookroom_id = None
-    tags = []
-
-    for bookroom_tag_record in bookroom_tag_records:
-        # もしbookroom_idが同じだったらtassにtagの名前を追加する
-        # 違ければtagsは初期化、current_bookroom_idは新しいbookroom_idを代入
-        if bookroom_tag_record["bookroom_id"] == current_bookroom_id:
-            tags.append(bookroom_tag_record["tag_id"])
-        else:
-            bookroom_tag_dict.append(tags)
+    # データベースからすべてのbookroom_idとタグデータをセットで取得
+    bookroom_tag_tables = BookroomTag.get_bookroom_tag_tables()
+    # 同じブックルームIDのタグデータをまとめる様にデータを変更
+    bookroom_group_tag = get_bookroom_group_tags(bookroom_tag_tables)
 
     # ページネーション
     page = request.args.get(get_page_parameter(), type=int, default=1)
     paginated_bookrooms = bookrooms[(page - 1) * PER_PAGE : page * PER_PAGE]
+
+    # ページネーション分のbookroom_idを取得
+    pagenated_bookroom_id = []
+    for bookroom in bookrooms:
+        pagenated_bookroom_id.append(bookroom["id"])
+
+    # ページネーション分のbookroom_idに該当するtagデータを格納。タグがない場合は空データを入れる
+    pagenated_bookroom_tag = {}
+    for bookroom_id in pagenated_bookroom_id:
+        if bookroom_id in bookroom_group_tag:
+            pagenated_bookroom_tag[bookroom_id] = bookroom_group_tag[bookroom_id]
+        else:
+            pagenated_bookroom_tag[bookroom_id] = []
+
     pagination = Pagination(
         page=page,
         total=len(bookrooms),
@@ -237,13 +245,14 @@ def public_bookrooms_view():
 
     # タグテーブルに登録されているタグを取得
     tags = Tag.get_all_tags()
-
+    print("pagenated_bookroom_tag =", pagenated_bookroom_tag)
     if app.debug:
         return render_template(
             "test/public_bookroom.html",
             is_public=True,
             uid=user_id,
             paginated_bookrooms=paginated_bookrooms,
+            pagenated_bookroom_tag=pagenated_bookroom_tag,
             pagination=pagination,
             tags=tags,
         )
@@ -253,6 +262,7 @@ def public_bookrooms_view():
             is_public=True,
             uid=user_id,
             paginated_bookrooms=paginated_bookrooms,
+            pagenated_bookroom_tag=pagenated_bookroom_tag,
             pagination=pagination,
             tags=tags,
         )
@@ -279,8 +289,6 @@ def create_public_bookroom():
         )
 
         tag_ids = request.form.getlist("tag_ids")
-        for tag_id in tag_ids:
-            print(f"tag_id->{tag_id}")
         BookroomTag.create(bookroom_id, tag_ids)
 
         return redirect(url_for("public_bookrooms_view"))
@@ -361,14 +369,33 @@ def private_bookrooms_view():
     # privateなブックルームのみ取得
     bookrooms = Bookroom.get_private_bookrooms(user_id)
 
+    # tagデータを取得
+    # データベースからすべてのbookroom_idとタグデータをセットで取得
+    bookroom_tag_tables = BookroomTag.get_bookroom_tag_tables()
+    # 同じブックルームIDのタグデータをまとめる様にデータを変更
+    bookroom_group_tag = get_bookroom_group_tags(bookroom_tag_tables)
+
     # ページネーション
     page = request.args.get(get_page_parameter(), type=int, default=1)
     paginated_bookrooms = bookrooms[(page - 1) * PER_PAGE : page * PER_PAGE]
+
+    # ページネーション分のbookroom_idを取得
+    pagenated_bookroom_id = []
+    for bookroom in bookrooms:
+        pagenated_bookroom_id.append(bookroom["id"])
+
+    # ページネーション分のbookroom_idに該当するtagデータを格納。タグがない場合は空データを入れる
+    pagenated_bookroom_tag = {}
+    for bookroom_id in pagenated_bookroom_id:
+        if bookroom_id in bookroom_group_tag:
+            pagenated_bookroom_tag[bookroom_id] = bookroom_group_tag[bookroom_id]
+        else:
+            pagenated_bookroom_tag[bookroom_id] = []
+
     pagination = Pagination(
         page=page,
         total=len(bookrooms),
         per_page=PER_PAGE,
-        css_framework="bootstrap5",
         display_pages=True,
         record_name="ブックルーム",
     )
@@ -382,6 +409,7 @@ def private_bookrooms_view():
             is_public=False,
             uid=user_id,
             paginated_bookrooms=paginated_bookrooms,
+            pagenated_bookroom_tag=pagenated_bookroom_tag,
             pagination=pagination,
             tags=tags,
         )
@@ -391,6 +419,7 @@ def private_bookrooms_view():
             is_public=False,
             uid=user_id,
             paginated_bookrooms=paginated_bookrooms,
+            pagenated_bookroom_tag=pagenated_bookroom_tag,
             pagination=pagination,
             tags=tags,
         )
@@ -419,6 +448,7 @@ def create_private_bookroom():
 
         # タグ取得
         tag_ids = request.form.getlist("tag_ids")
+        # タグデータをデータベースに登録
         BookroomTag.create(bookroom_id, tag_ids)
 
         return redirect(url_for("private_bookrooms_view"))
