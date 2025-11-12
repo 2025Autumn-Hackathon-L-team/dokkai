@@ -276,6 +276,11 @@ def create_public_bookroom():
         return redirect(url_for("login_view"))
 
     bookroom_name = request.form.get("bookroom_name")
+    # ブックルームの名前が入力されていない。またはスペースだけであれば、作成できないようにする
+    if len(bookroom_name.strip()) == 0:
+        flash("ブックルーム名を入力してください")
+        return redirect(url_for("create_public_bookroom"))
+    
     bookroom = Bookroom.find_by_bookroom_name(
         bookroom_name=bookroom_name, is_public=True
     )
@@ -434,6 +439,11 @@ def create_private_bookroom():
         return redirect(url_for("login_view"))
 
     bookroom_name = request.form.get("bookroom_name")
+    # ブックルームの名前が入力されていない。またはスペースだけであれば、作成できないようにする
+    if len(bookroom_name.strip()) == 0:
+        flash("ブックルーム名を入力してください")
+        return redirect(url_for("create_private_bookroom"))
+    
     bookroom = Bookroom.find_by_bookroom_name(
         bookroom_name=bookroom_name, is_public=False
     )
