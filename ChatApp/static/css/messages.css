@@ -259,11 +259,11 @@
     width: 100%;
     align-items: flex-start; /* タイムスタンプを左に寄せるために左寄せ */
 }
-/* 吹き出しの共通スタイル (固定幅100%はmessage-content-wrapperの幅300pxに依存) */
+/* 吹き出しの共通スタイル */
 .message-content-box, .box-left {
     padding: 8px 12px;
     border-radius: 18px;
-    line-height: 1.4;
+    line-height: 1.0;
     word-wrap: break-word;
     position: relative;
     width: 100%;
@@ -329,12 +329,6 @@
     margin-left: 4px;
 }
 
-/* 以前のリアクションアイコンのコンテナは非表示 */
-.reaction-icon-wrapper,
-.reaction-icon-wrapper-left,
-.reaction-icon-wrapper-right {
-    display: none;
-}
 /* ========================== メッセージ入力部分 ============================= */
 
 .typing-box-wrapper {
