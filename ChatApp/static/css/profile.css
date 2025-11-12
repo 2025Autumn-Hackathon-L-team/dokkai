@@ -1,8 +1,12 @@
 /*=========全体設定==========*/
 
+body.profile-body {
+  padding: 0;
+}
+
 .profile-main-container{
   display: flex;
-  /*padding-left: 50px;*/
+  padding-left: 50px;
   flex-direction:column;
   align-items: center;
   background-color: #FFFACD;
@@ -23,7 +27,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 15px;
+  padding: 0 0 0 50px;
   z-index: 2; /* 他の要素より手前に */
 }
 
@@ -67,6 +71,12 @@
     padding-top: 130px;
     margin-top: 0px;
 }
+}
+
+@media screen and (max-height: 768px){
+  .profile-main-container {
+    padding-left: 0;
+  }
 }
 
 /* PC用 */
@@ -113,8 +123,11 @@
   align-items: end;
 }
 
-#update-icon-button{
+.update-profile-button{
   padding: 0;
+  background-color: var(--lightgreen);
+  border-radius: 0 8px 8px 0;
+  height: 32px;
 }
 
 .button-image{
@@ -128,7 +141,3 @@
   align-items: end;
 }
 
-#update-profile-button{
-  padding: 0;
-  height: 32px;
-}

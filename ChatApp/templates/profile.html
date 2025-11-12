@@ -5,6 +5,7 @@
 {% endblock %} 
 
 {% block body %}
+<body class="profile-body">
 <div class="profile-main-container">
     <div class="profile-title">
       <h1>PROFILE</h1> 
@@ -17,7 +18,7 @@
             <div class="button-position-adjustment-space"></div>
             <div class="button-position-adjustment-space"></div>
             {# Floating Action Button #}
-            <button class="update-icon-button" id="update-icon-button" label="iconの変更">
+            <button class="update-profile-button" id="update-icon-button" label="iconの変更">
                 <img class="button-image" src="{{ url_for('static', filename='img/pen.png') }}">
             </button>
             {% include 'modal/update-icon.html' %} 
@@ -43,6 +44,7 @@
         
     </div>
 </div>
+</body>
 {% endblock %}
 
 {% block script %}
