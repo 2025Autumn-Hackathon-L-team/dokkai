@@ -2,10 +2,9 @@
 
 .profile-main-container{
   display: flex;
-  padding-left: 50px;
+  /*padding-left: 50px;*/
   flex-direction:column;
-  align-items: flex-start; /*上部に寄せる*/
-  padding-top: 130px; /*ヘッダーが重なる部分を調整*/
+  align-items: center;
   background-color: #FFFACD;
   margin: 0;
   color: var(--brown);
@@ -62,11 +61,19 @@
 
 /* ========================================================== */
 /* レスポンシブ */
+/* スマホ用 */
+@media screen and (max-height: 768px){
+    .profile-display-items { 
+    padding-top: 130px;
+    margin-top: 0px;
+}
+}
 
-@media screen and (max-width: 768px) {
-  .main-container {
-    padding-left: 0px;
-  }
+/* PC用 */
+@media screen and (min-width: 769px){
+    .profile-display-items { 
+    padding-top: 140px;
+    margin-top: 0px;
 }
 @media screen and (max-height: 768px){}
   .profile_display_items { 
@@ -74,6 +81,7 @@
     margin-top: 0px; 
 }
 
+}
 
 /*================ボディの表示部分===============*/
 
@@ -81,7 +89,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #FFFACD;
+  text-align: center;
 }
 
 .button-position-adjustment img{
@@ -129,4 +137,12 @@
 #update-profile-button{
   padding: 0;
   height: 32px;
+}
+
+.flashes {
+  margin: 0;
+  padding-inline-start: 0;
+  text-align: center;
+  font-size: 18px;
+  color: rgb(198, 8, 8);
 }

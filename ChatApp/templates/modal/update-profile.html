@@ -20,6 +20,7 @@
       <input
         type="text"
         placeholder="変更後のemailを入力してください"
+        pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
         class="bookroom-form-input"
         name="profile_email"
         required
@@ -31,6 +32,16 @@
         name="password"
         required
       />
+      {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div id="modal-flash-content">
+          <ul class="flashes">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      </div>
+    {% endif %}{% endwith %}
       <button>EDIT</button>
     </form>
   </div>

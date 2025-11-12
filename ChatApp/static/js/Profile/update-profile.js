@@ -10,6 +10,16 @@ const updateProfileButtonClose = document.getElementById(
 
 // モーダルが存在するページのみ（uidとチャンネルidが同じ時のみ）
 if (updateProfileModal) {
+   const flashContent = document.getElementById('modal-flash-content');
+
+  if (flashContent) {
+    // Flashメッセージが存在すれば、モーダルを強制的に表示する
+    // updateProfileModal.style.display = "flex"; のロジックを再利用
+    updateProfileModal.style.display = "flex";
+    
+    // 注意: updateProfileModal のIDがあなたのHTMLと一致していることを確認してください。
+    // また、HTML側にはメッセージ表示用のID: 'modal-flash-content' が必要です。
+  }
   // モーダル表示ボタンが押された時にモーダルを表示する
   updateButton.addEventListener("click", () => {
     updateProfileModal.style.display = "flex";

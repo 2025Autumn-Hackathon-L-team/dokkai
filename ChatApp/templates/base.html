@@ -24,10 +24,15 @@
       href="{{ url_for('static', filename='') }}"
     />
   </head>
+  <body> 
   <body>
+  
+</body>
+
+    {% block content %}{% endblock %}
     {% include 'util/sidebar.html'%} {% include 'util/mobile-header.html'%} {%
     block body %}{% endblock %} {% block script %}{% endblock %}
   <script
-      src="{{url_for('static',filename='js/sidebar.js')}}"type="text/javascript"></script>  
+      src="{{url_for('static',filename='js/sidebar.js')}}"type="text/javascript"></script> 
   </body>
 </html>
