@@ -280,7 +280,7 @@ def create_public_bookroom():
     if len(bookroom_name.strip()) == 0:
         flash("ブックルーム名を入力してください")
         return redirect(url_for("create_public_bookroom"))
-    
+
     bookroom = Bookroom.find_by_bookroom_name(
         bookroom_name=bookroom_name, is_public=True
     )
@@ -315,14 +315,27 @@ def show_public_bookroom(bookroom_id):
         return redirect(url_for("public_bookrooms_view"))
 
     bookroom = Bookroom.find_by_bookroom_id(bookroom_id)
-    tags = Tag.get_all_tags()
+    all_tags = Tag.get_all_tags()
+
+    selected_tag_ids = BookroomTag.get_selected_tags_from_bookroomid(bookroom_id)
+    selected_tag_ids_list = []
+    for selected_tag_id in selected_tag_ids:
+        selected_tag_ids_list.append(selected_tag_id["tag_id"])
 
     if app.debug:
         return render_template(
-            "test/update-bookroom.html", bookroom=bookroom, tags=tags
+            "test/update-bookroom.html",
+            bookroom=bookroom,
+            tags=all_tags,
+            selected_tag_ids=selected_tag_ids_list,
         )
     else:
-        return render_template("update-bookroom.html", bookroom=bookroom, tags=tags)
+        return render_template(
+            "update-bookroom.html",
+            bookroom=bookroom,
+            tags=all_tags,
+            selected_tag_ids=selected_tag_ids_list,
+        )
 
 
 # パブリックブックルームの編集作業
@@ -443,7 +456,7 @@ def create_private_bookroom():
     if len(bookroom_name.strip()) == 0:
         flash("ブックルーム名を入力してください")
         return redirect(url_for("create_private_bookroom"))
-    
+
     bookroom = Bookroom.find_by_bookroom_name(
         bookroom_name=bookroom_name, is_public=False
     )
@@ -502,27 +515,34 @@ def delete_private_bookroom(bookroom_id):
         Bookroom.delete(bookroom_id)
     return redirect(url_for("private_bookrooms_view"))
 
+
 # ヒストリーブックルームの表示（仮設置）
 @app.route("/history", methods=["GET"])
 def history_view():
     # publicなブックルームのみ取得
     bookrooms = Bookroom.get_public_bookrooms()
-    #表示チェックのためデフォルト値を設定
+    # 表示チェックのためデフォルト値を設定
     user_id = session.get("user_id")
 
     # ページネーション
     page = request.args.get(get_page_parameter(), type=int, default=1)
-    paginated_bookrooms = bookrooms[(page - 1)*PER_PAGE: page*PER_PAGE]
+    paginated_bookrooms = bookrooms[(page - 1) * PER_PAGE : page * PER_PAGE]
     pagination = Pagination(
         page=page,
         total=len(bookrooms),
         per_page=PER_PAGE,
-        css_framework='bootstrap5',
+        css_framework="bootstrap5",
         display_pages=True,
-        record_name='ブックルーム'
-        )
+        record_name="ブックルーム",
+    )
 
-    return render_template("history.html",is_public=True, uid=user_id, paginated_bookrooms=paginated_bookrooms, pagination=pagination)
+    return render_template(
+        "history.html",
+        is_public=True,
+        uid=user_id,
+        paginated_bookrooms=paginated_bookrooms,
+        pagination=pagination,
+    )
 
 
 ############################ブックルーム関係（ここまで）############################
@@ -670,42 +690,44 @@ def profile_view():
 # プロフィール画面の編集(name,email)
 @app.route("/profile/update", methods=["POST"])
 def update_profile():
-    user_id=session.get("user_id")
-    current_email=Profile.email_view(user_id)
+    user_id = session.get("user_id")
+    current_email = Profile.email_view(user_id)
 
     if user_id is None:
         return redirect(url_for("login_view"))
-    
-    name=request.form.get("profile_name")
-    email=request.form.get("profile_email")
+
+    name = request.form.get("profile_name")
+    email = request.form.get("profile_email")
     password = request.form.get("password")
     # 値確認用
-    print(f'{name}は入力されたname')
-    print(f'{email}は入力されたemail')
+    print(f"{name}は入力されたname")
+    print(f"{email}は入力されたemail")
     hashPassword = hashlib.sha256(password.encode("utf-8")).hexdigest()
     user = User.find_by_email(current_email)
     # ログインチェック
     # TODO バリデーションチェックが必要
     if user["password"] != hashPassword:
-        return redirect(url_for("profile_view"))  
+        return redirect(url_for("profile_view"))
     else:
-        Profile.name_email_update(name,email,user_id)
+        Profile.name_email_update(name, email, user_id)
     return redirect(url_for("profile_view"))
-    
+
+
 # アイコン画面の変更
-@app.route("/icons/update",methods=["POST"])
+@app.route("/icons/update", methods=["POST"])
 def update_icon():
-    user_id=session.get("user_id")
+    user_id = session.get("user_id")
     print("セッション内容:", dict(session))
     print("取得したuser_id:", session.get("user_id"))
 
     if user_id is None:
         return redirect(url_for("login_view"))
     else:
-        iconid=request.form.get("icon_name")
-        print(f'{iconid}は選択されたicon')
-        Profile.icon_update(iconid,user_id)
+        iconid = request.form.get("icon_name")
+        print(f"{iconid}は選択されたicon")
+        Profile.icon_update(iconid, user_id)
     return redirect(url_for("profile_view"))
+
 
 ########プロフィール画面（ここまで）##########
 
