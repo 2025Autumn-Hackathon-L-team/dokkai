@@ -1,24 +1,17 @@
-/* 全体設定 */
-.main-container {
-  background-color: var(--snow);
+/*=========全体設定==========*/
+
+.profile-main-container{
+  display: flex;
+  /*padding-left: 50px;*/
+  flex-direction:column;
+  align-items: center;
+  background-color: #FFFACD;
   margin: 0;
-  padding: 0;
   color: var(--brown);
   min-height: 100vh;
-  display: flex;
-  padding-left: 50px;
-  align-items: flex-start;
-  /* 上部に寄せる */
 }
 
 /* ================== ヘッダー部分 ================== */
-
-.main-container{
-  display: flex;
-  flex-direction:column;
-
-}
-
 .profile-title { /* ヘッダー */
   position: fixed; 
   top: 0px;
@@ -68,14 +61,74 @@
 
 /* ========================================================== */
 /* レスポンシブ */
-
-@media screen and (max-width: 768px) {
-  .main-container {
-    padding-left: 0px;
-  }
+/* スマホ用 */
+@media screen and (max-height: 768px){
+    .profile-display-items { 
+    padding-top: 130px;
+    margin-top: 0px;
 }
-@media screen and (max-height: 768px){}
-  .profile_display_items { 
-    padding-top: 170px;
-    margin-top: 0px; 
+}
+
+/* PC用 */
+@media screen and (min-width: 769px){
+    .profile-display-items { 
+    padding-top: 140px;
+    margin-top: 0px;
+}
+}
+
+/*================ボディの表示部分===============*/
+
+.profile-display-items{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.button-position-adjustment img{
+  max-width: none;
+}
+
+.profile-display-items p{
+  margin:5px;
+}
+
+.profile-subtitle{
+  font-size: 24px;
+}
+
+#current-profile-icon{
+  border-radius: 50%;
+}
+
+.button-position-adjustment{
+  display: flex;
+  flex-direction: row;
+}
+
+.button-position-adjustment-space{
+  width: 50px;
+  height: 40px;
+  align-items: end;
+}
+
+#update-icon-button{
+  padding: 0;
+}
+
+.button-image{
+  width: 32px;
+  height: 32px;
+}
+
+#email-side-adjustment{
+  width: 50px;
+  height: 40px;
+  align-items: end;
+}
+
+#update-profile-button{
+  padding: 0;
+  height: 32px;
 }

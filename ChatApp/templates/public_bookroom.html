@@ -9,34 +9,29 @@
   <div class="bookroom-title">
     <h1>PUBLIC BOOKROOM</h1> 
   </div>
-
-  {# Category selection dropdown #}
-  <div class="category-select-wrapper">
-    <select name="category" id="category-filter">
-      <option value="">カテゴリを選択</option>
-      <option value="idea">小説</option>
-      <option value="todo">ノンフィクション</option>
-      <option value="shopping">雑誌</option>
-      <option value="uncategorized">未分類</option>
-    </select>
-  </div>
+  <div class="search-trigger-container search-form-5" id="search-button">
+    <label>
+        <input type="text" readonly name="q" placeholder="PUBLICの中でさがす">
+    </label>
+    <button type="button" aria-label="検索"></button>
+</div>
 
   <div id="bookroom-list"> 
     {% for bookroom in paginated_bookrooms %}
-    <div class="memo-item-card"> {# Card for each memo #}
-      <div class="memo-content">
+    <div class="room-item-card"> {# Card for each memo #}
+      <div class="room-content">
         <a href="{{ url_for('detail', bookroom_id=bookroom.id) }}" class="bookroom-to-message">
-        <h3 class="memo-title">{{ bookroom.name }}</h3>
-        <p class="memo-description">{{ bookroom.description }}</p>
+        <h3 class="room-title">{{ bookroom.name }}</h3>
+        <p class="room-description">{{ bookroom.description }}</p>
       </a>
       </div>
-      <div class="memo-meta">
-        <span class="memo-date">{{bookroom.created_at}}</span>
-        <span class="memo-category {{ bookroom.category_tag | default('uncategorized') }}">
+      <div class="room-group">
+        <span class="room-date">{{bookroom.created_at}}</span>
+        <span class="room-category {{ bookroom.category_tag | default('uncategorized') }}">
           {{ bookroom.category | default('未分類') }}
         </span>
       </div>
-      <div class="memo-icon">
+      <div class="reaction-icon">
         {% if session.get('user_id') == bookroom.user_id %}
          <button class="delete-bookroom-trigger" data-bookroom-id="{{ bookroom.id }}">
         <img src="{{ url_for('static', filename='img/trash-can.png') }}" alt="アイコン" >
@@ -45,6 +40,7 @@
       </div>
     </div>
     {% endfor %}
+    {% include 'modal/search_public.html'%}
 
     <div class="pagination-container">
       {{ pagination.info }}
@@ -75,6 +71,10 @@
 ></script>
 <script
   src="{{url_for('static',filename='js/bookroom/delete-bookroom.js')}}"
+  type="module"
+></script>
+<script
+  src="{{url_for('static',filename='js/bookroom/search.js')}}"
   type="module"
 ></script>
 {% endblock %}

@@ -5,41 +5,42 @@
 {% endblock %} 
 
 {% block body %}
-<div class="main_container">
+<div class="profile-main-container">
     <div class="profile-title">
       <h1>PROFILE</h1> 
       <div id ="profile-contents">
       </div>
     </div>
-    <div class="profile_display_items">
-        <div>
-            <p>ユーザアイコンは{{icon}}</p>
+    <div class="profile-display-items">
+        <img src="{{ url_for('static', filename='img/profile.png')}}" alt="デフォルトのユーザーアイコン" id="current-profile-icon" width="130" height="130">
+        <div class="button-position-adjustment">
+            <div class="button-position-adjustment-space"></div>
+            <div class="button-position-adjustment-space"></div>
+            {# Floating Action Button #}
+            <button class="update-icon-button" id="update-icon-button" label="iconの変更">
+                <img class="button-image" src="{{ url_for('static', filename='img/pen.png') }}">
+            </button>
+            {% include 'modal/update-icon.html' %} 
         </div>
-        {# Floating Action Button #}
-        <button class="update-icon-button" id="update-icon-button" label="iconの変更">
-            アイコンを変更する
-        </button>
-        {% include 'modal/update-icon.html' %} 
-        <div>
-            <p>{{uid}}がログインしています</p>
+        <p>ユーザアイコンは{{icon}}</p>
+        <p>name</p>
+        <p class="profile-subtitle">{{name}}</p>
+        <p>email</p>
+        <div class="button-position-adjustment">
+            <div id="email-side-adjustment"></div>
+            <p class="profile-subtitle">{{email}}</p>
+            {# Floating Action Button #}
+            <button class="update-profile-button" id="update-profile-button" label="nameとemailの変更">
+              <img class="button-image" src="{{ url_for('static', filename='img/pen.png') }}">
+            </button>
+            {% include 'modal/update-profile.html' %} 
         </div>
-        <div>
-            <p>nameは{{name}}</p>
+        <p>リアクションされた数</p>
+        <p class="profile-subtitle">リアクション数</p>
+        <p>投稿した数</p>
+        <p class="profile-subtitle">{{messages_count}}</p>
         </div>
-        <div>
-            <p>emailは{{email}}</p>
-        </div>
-        <div>
-            <p>リアクションテーブルができたら、リアクション数を表示</p>
-        </div>
-        <div>
-            <p>messages_countは{{messages_count}}</p>
-        </div>
-        {# Floating Action Button #}
-        <button class="update-profile-button" id="update-profile-button" label="nameとemailの変更">
-            EDIT
-        </button>
-        {% include 'modal/update-profile.html' %} 
+        
     </div>
 </div>
 {% endblock %}
