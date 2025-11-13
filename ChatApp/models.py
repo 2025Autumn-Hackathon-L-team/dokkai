@@ -91,7 +91,6 @@ class Bookroom:
             abort(500)
         finally:
             db_pool.release(conn)
-    
 
     @classmethod
     def get_public_bookrooms(cls):
@@ -107,15 +106,15 @@ class Bookroom:
             abort(500)
         finally:
             db_pool.release(conn)
-    
-    @classmethod # <-- @classmethod を追加
-    def get_private_bookrooms(cls, user_id):  #<-- user_idを引数に追加
+
+    @classmethod  # <-- @classmethod を追加
+    def get_private_bookrooms(cls, user_id):  # <-- user_idを引数に追加
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = "SELECT * FROM bookrooms WHERE user_id=%s AND is_public=FALSE;" 
+                sql = "SELECT * FROM bookrooms WHERE user_id=%s AND is_public=FALSE;"
                 cur.execute(sql, (user_id,))
-                private_bookrooms = cur.fetchall() 
+                private_bookrooms = cur.fetchall()
                 return private_bookrooms
         except pymysql.Error as e:
             print(f"エラーが発生しています:{e}")
@@ -153,7 +152,14 @@ class Bookroom:
         try:
             with conn.cursor() as cur:
                 sql = "UPDATE bookrooms SET name=%s, description=%s WHERE id=%s"
-                cur.execute(sql, (name, description, bookroom_id,))
+                cur.execute(
+                    sql,
+                    (
+                        name,
+                        description,
+                        bookroom_id,
+                    ),
+                )
                 conn.commit()
         except pymysql.Error as e:
             print(f"エラーが発生しています：{e}")
@@ -193,6 +199,7 @@ class Tag:
         finally:
             db_pool.release(conn)
 
+
 ############ブックルームタグ############
 class BookroomTag:
     @classmethod
@@ -201,8 +208,16 @@ class BookroomTag:
         try:
             with conn.cursor() as cur:
                 for tag_id in tag_ids:
-                    sql = ("INSERT INTO bookroom_tag(bookroom_id, tag_id) VALUES(%s, %s);")
-                    cur.execute(sql,(bookroom_id, tag_id,))
+                    sql = (
+                        "INSERT INTO bookroom_tag(bookroom_id, tag_id) VALUES(%s, %s);"
+                    )
+                    cur.execute(
+                        sql,
+                        (
+                            bookroom_id,
+                            tag_id,
+                        ),
+                    )
                     conn.commit()
         except pymysql.Error as e:
             print(f"エラーが発生しています：{e}")
@@ -210,7 +225,27 @@ class BookroomTag:
         finally:
             db_pool.release(conn)
 
+    @classmethod
+    def get_bookroom_tag_tables(cls):
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor(pymysql.cursors.DictCursor) as cur:
+                sql = (
+                    "SELECT bt.bookroom_id, t.name "
+                    "FROM bookroom_tag AS bt "
+                    "INNER JOIN tags AS t ON bt.tag_id = t.id "
+                    "ORDER BY bt.bookroom_id, bt.id;"
+                )
+                cur.execute(sql)
+                conn.commit()
+        except pymysql.Error as e:
+            print(f"エラーが発生しています：{e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
 
+        bookroom_tag_tables = cur.fetchall()
+        return bookroom_tag_tables
 
 
 ############################ブックルーム関係（ここまで）############################
@@ -302,8 +337,8 @@ class Profile:
 
     # アイコンの変更
     @classmethod
-    def icon_update(cls,iconid,user_id):
-        conn= db_pool.get_conn()
+    def icon_update(cls, iconid, user_id):
+        conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
                 sql = "UPDATE users SET iconid=%s WHERE id=%s"
@@ -318,15 +353,15 @@ class Profile:
             abort(500)
         finally:
             db_pool.release(conn)
-    
+
     # nameの表示
     @classmethod
-    def name_view(cls,user_id):
-        conn =db_pool.get_conn()
+    def name_view(cls, user_id):
+        conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
                 sql = "SELECT name FROM users where id = %s"
-                cur.execute(sql,(user_id,))
+                cur.execute(sql, (user_id,))
                 user = cur.fetchone()
                 return user["name"]
         except pymysql.Error as e:
@@ -337,28 +372,35 @@ class Profile:
 
     # emailの表示
     @classmethod
-    def email_view(cls,user_id):
-        conn =db_pool.get_conn()
+    def email_view(cls, user_id):
+        conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
                 sql = "SELECT email FROM users where id = %s"
-                cur.execute(sql,(user_id,))
+                cur.execute(sql, (user_id,))
                 user = cur.fetchone()
                 return user["email"]
         except pymysql.Error as e:
-            print(f'エラーが発生しています：{e}')
+            print(f"エラーが発生しています：{e}")
             abort(500)
         finally:
             db_pool.release(conn)
 
     # nameとemailの変更
     @classmethod
-    def name_email_update(cls,name,email,user_id):
+    def name_email_update(cls, name, email, user_id):
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
                 sql = "UPDATE users SET name=%s, email=%s WHERE id=%s;"
-                cur.execute(sql,(name, email, user_id,))
+                cur.execute(
+                    sql,
+                    (
+                        name,
+                        email,
+                        user_id,
+                    ),
+                )
                 conn.commit()
         except pymysql.Error as e:
             print(f"エラーが発生しています：{e}")

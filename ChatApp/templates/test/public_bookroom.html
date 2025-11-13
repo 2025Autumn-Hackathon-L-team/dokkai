@@ -56,6 +56,7 @@
         <div class="col">チャンネル名</div>
         <div class="col">チャンネル説明</div>
         <div class="col">チャンネルID</div>
+        <div class="col">タグ</div>
         <div class="col">作成日時</div>
         <div class="col">更新日時</div>
         <div class="col">削除</div>
@@ -69,6 +70,11 @@
         <div class="col">{{bookroom.name}}</div>
         <div class="col">{{bookroom.description}}</div>
         <div class="col">{{bookroom.id}}</div>
+        <div class="col">
+          {% for tag in pagenated_bookroom_tag[bookroom.id] %}
+            <li>{{tag}}</li>
+          {% endfor %}
+        </div>
         <div class="col">{{bookroom.created_at}}</div>
         <div class="col">{{bookroom.updated_at}}</div>
         <div class="col">
