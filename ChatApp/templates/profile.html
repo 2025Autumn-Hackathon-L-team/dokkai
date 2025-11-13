@@ -46,9 +46,6 @@
 {% endblock %}
 
 {% block script %}
-<script type="text/javascript">
-  const uid = {{ uid|default("null")|tojson }};
-</script>
 <script
   src="{{url_for('static',filename='js/profile/update-icon.js')}}"
   type="module"
