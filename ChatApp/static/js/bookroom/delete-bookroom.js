@@ -4,6 +4,11 @@ const deleteBookroomModal = document.getElementById("delete-bookroom-modal");
 const deletePageButtonClose = document.getElementById("delete-page-close-button");
 const deleteBookroomForm = document.getElementById("deleteBookroomForm"); 
 const flashContent = document.getElementById('modal-flash-content');
+if (flashContent) {
+    window.setTimeout(function(){
+    flashContent.remove();
+  }, 4000);
+}
 
 /* パブリックフラグがtrueかどうかでprefixを変更する*/
 const addressChecker = typeof IS_PUBRIC !== 'undefined' && IS_PUBRIC
@@ -21,11 +26,6 @@ if (deleteBookroomModal && deleteBookroomForm) {
               deleteBookroomModal.style.display = "flex";
           }});
   });
-  if (flashContent) {
-    window.setTimeout(function(){
-    flashContent.remove();
-  }, 4000);
-}
   if (deletePageButtonClose) {
     deletePageButtonClose.addEventListener("click", () => {
       deleteBookroomModal.style.display = "none";

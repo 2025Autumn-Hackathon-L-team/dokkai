@@ -6,16 +6,13 @@ const updateButton = document.getElementById("update-profile-button");
 const updateProfileModal = document.getElementById("update-profile-modal");
 const updateProfileButtonClose = document.getElementById("update-profile-close-button");
 const flashContent = document.getElementById('modal-flash-content');
-
-if (updateProfileModal) {
-
-  if (flashContent) {
-    updateProfileModal.style.display = "flex";
+if (flashContent) {
     window.setTimeout(function(){
     flashContent.remove();
   }, 4000);
-  }
-  
+}
+
+if (updateProfileModal) {
   // モーダル表示ボタンが押された時にモーダルを表示する
   updateButton.addEventListener("click", () => {
     updateProfileModal.style.display = "flex";
