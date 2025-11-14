@@ -247,6 +247,22 @@ class BookroomTag:
         bookroom_tag_tables = cur.fetchall()
         return bookroom_tag_tables
 
+    @classmethod
+    def get_selected_tags_from_bookroomid(cls, bookroom_id):
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor(pymysql.cursors.DictCursor) as cur:
+                sql = "SELECT tag_id FROM bookroom_tag WHERE bookroom_id=%s ORDER BY tag_id;"
+                cur.execute(sql, (bookroom_id,))
+                conn.commit()
+                selected_tag_id = cur.fetchall()
+                return selected_tag_id
+        except pymysql.Error as e:
+            print(f"エラーが発生しています：{e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
+
 
 ############################ブックルーム関係（ここまで）############################
 
@@ -342,8 +358,20 @@ class Profile:
         try:
             with conn.cursor() as cur:
                 sql = "UPDATE users SET iconid=%s WHERE id=%s"
-                cur.execute(sql,(iconid,user_id,))
-                rows = cur.execute(sql, (iconid, user_id,))
+                cur.execute(
+                    sql,
+                    (
+                        iconid,
+                        user_id,
+                    ),
+                )
+                rows = cur.execute(
+                    sql,
+                    (
+                        iconid,
+                        user_id,
+                    ),
+                )
                 # 更新結果チェック
                 if rows == 0:
                     print("対象ユーザーが見つかりません")
