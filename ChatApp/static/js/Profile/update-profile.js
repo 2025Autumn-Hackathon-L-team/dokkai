@@ -4,13 +4,10 @@
 
 const updateButton = document.getElementById("update-profile-button");
 const updateProfileModal = document.getElementById("update-profile-modal");
-const updateProfileButtonClose = document.getElementById(
-  "update-profile-close-button"
-);
-
+const updateProfileButtonClose = document.getElementById("update-profile-close-button");
+const flashContent = document.getElementById('modal-flash-content');
 
 if (updateProfileModal) {
-   const flashContent = document.getElementById('modal-flash-content');
 
   if (flashContent) {
     updateProfileModal.style.display = "flex";

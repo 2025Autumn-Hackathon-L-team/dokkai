@@ -2,15 +2,20 @@
 
   const searchBookroomModal = document.getElementById("search-modal");
   const searchPageButtonClose = document.getElementById("search-page-close-button");
-
   const searchBookroomButton = document.getElementById("search-button");
   const keywordModalInput = document.getElementById("keyword");
+  const flashContent = document.getElementById('modal-flash-content');
+
 
   // モーダル表示ボタンが押された時にモーダルを表示する
   searchBookroomButton.addEventListener("click", () => {
     searchBookroomModal.style.display = "flex";
   });
-
+  if (flashContent) {
+    window.setTimeout(function(){
+    flashContent.remove();
+  }, 4000);
+}
   // モーダル内のXボタンが押された時にモーダルを非表示にする
   searchPageButtonClose.addEventListener("click", () => {
     searchBookroomModal.style.display = "none";

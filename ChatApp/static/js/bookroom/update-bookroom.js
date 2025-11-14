@@ -2,9 +2,8 @@
 
 const updateButton = document.getElementById("update-bookroom-button");
 const updateBookroomModal = document.getElementById("update-bookroom-modal");
-const updatePageButtonClose = document.getElementById(
-  "update-page-close-button"
-);
+const updatePageButtonClose = document.getElementById("update-page-close-button");
+const flashContent = document.getElementById('modal-flash-content');
 
 // モーダルが存在するページのみ（uidとチャンネルidが同じ時のみ）
 if (updateBookroomModal) {
@@ -12,7 +11,11 @@ if (updateBookroomModal) {
   updateButton.addEventListener("click", () => {
     updateBookroomModal.style.display = "flex";
   });
-
+if (flashContent) {
+    window.setTimeout(function(){
+    flashContent.remove();
+  }, 4000);
+}
   // モーダル内のXボタンが押された時にモーダルを非表示にする
   updatePageButtonClose.addEventListener("click", () => {
     updateBookroomModal.style.display = "none";
