@@ -6,8 +6,16 @@
   const createBookroomButton = document.getElementById("create-bookroom-button");
 
   // モーダル表示ボタンが押された時にモーダルを表示する
+
+  if (creeateBookroomModal){
   createBookroomButton.addEventListener("click", () => {
+    const flashContent = document.getElementById('modal-flash-content');
+    if (flashContent) {
     createBookroomModal.style.display = "flex";
+    window.setTimeout(function(){
+    flashContent.remove();
+  }, 4000);
+  }
   });
 
   // モーダル内のXボタンが押された時にモーダルを非表示にする
@@ -17,7 +25,7 @@
 
   // 画面のどこかが押された時にモーダルを非表示にする
   addEventListener("click", (e) => {
-    if (e.target == createBookroomModal) {
+    if (e.target === createBookroomModal) {
       createBookroomModal.style.display = "none";
     }
   });
@@ -52,3 +60,4 @@
       }
     }
   }
+}
