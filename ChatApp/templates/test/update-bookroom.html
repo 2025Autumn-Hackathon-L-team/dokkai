@@ -15,19 +15,27 @@
     <form method="POST">
       <div class="mb-3">
         <label for="exampleFormControlInput1" class="form-label">チャンネル名</label>
-        <input type="text" name="bookroom_name" class="form-control" id="bookroom_name" />
+        <input type="text" name="bookroom_name" class="form-control" id="bookroom_name" value="{{ bookroom.name }}"/>
       </div>
       <div class="mb-3">
         <label for="exampleFormControlTextarea1" class="form-label">チャンネル説明</label>
-        <textarea class="form-control" name="bookroom_description" id="exampleFormControlTextarea1" rows="3"></textarea>
+        <textarea class="form-control" name="bookroom_description" id="exampleFormControlTextarea1" rows="3">{{ bookroom.description }}</textarea>
       </div>
 
       {% for tag in tags %}
-      <label>
-         <input type="checkbox" name="tag_ids" value="{{ tag.id }}">
-        {{ tag.name }}
-      </label>
+        {% if tag.id in selected_tag_ids %}
+          <label>
+            <input type="checkbox" name="tag_ids" value="{{ tag.id }}" checked>
+              {{ tag.name }}
+          </label>
+        {% else %}
+          <label>
+            <input type="checkbox" name="tag_ids" value="{{ tag.id }}">
+              {{ tag.name }}
+          </label>
+        {% endif %}
       {% endfor %}
+
 
       <button type="submit" class="btn btn-primary">変更</button>
     </form>
