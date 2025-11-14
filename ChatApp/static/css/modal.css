@@ -32,7 +32,8 @@
 #update-bookroom-modal,
 #delete-bookroom-modal,
 #search-modal,
-#update-profile-modal,
+#update-profile-name-modal,
+#update-profile-email-modal,
 #update-icon-modal {
   display: none;
 }

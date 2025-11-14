@@ -29,20 +29,20 @@
           <div id="email-side-adjustment"></div>
           <p class="profile-subtitle">{{name}}</p>
           {# Floating Action Button #}
-          <button class="update-profile-button" id="update-profile-button" label="nameとemailの変更">
+          <button class="update-profile-button" id="update-name-button" label="nameの変更">
             <img class="button-image" src="{{ url_for('static', filename='img/pen.png') }}">
           </button>
-          {% include 'modal/update-profile.html' %} 
+          {% include 'modal/update-profile-name.html' %} 
         </div>
         <p>email</p>
         <div class="button-position-adjustment">
           <div id="email-side-adjustment"></div>
           <p class="profile-subtitle">{{email}}</p>
           {# Floating Action Button #}
-          <button class="update-profile-button" id="update-profile-button" label="nameとemailの変更">
+          <button class="update-profile-button" id="update-email-button" label="emailの変更">
             <img class="button-image" src="{{ url_for('static', filename='img/pen.png') }}">
           </button>
-          {% include 'modal/update-profile.html' %} 
+          {% include 'modal/update-profile-email.html' %} 
         </div>
         <p>リアクションされた数</p>
         <p class="profile-subtitle">リアクション数</p>
@@ -64,7 +64,11 @@
   type="module"
 ></script>
 <script
-  src="{{url_for('static',filename='js/profile/update-profile.js')}}"
+  src="{{url_for('static',filename='js/profile/update-profile-name.js')}}"
+  type="module"
+></script>
+<script
+  src="{{url_for('static',filename='js/profile/update-profile-email.js')}}"
   type="module"
 ></script>
 {% endblock %}
