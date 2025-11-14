@@ -16,9 +16,13 @@ if (updateProfileModal) {
     // Flashメッセージが存在すれば、モーダルを強制的に表示する
     // updateProfileModal.style.display = "flex"; のロジックを再利用
     updateProfileModal.style.display = "flex";
-    
-    // 注意: updateProfileModal のIDがあなたのHTMLと一致していることを確認してください。
-    // また、HTML側にはメッセージ表示用のID: 'modal-flash-content' が必要です。
+    window.setTimeout(function(){
+    flashContent.remove();
+  }, 4000);
+  }
+    window.setTimeout(function(){
+    flashContent.remove();
+  }, 4000);
   }
   // モーダル表示ボタンが押された時にモーダルを表示する
   updateButton.addEventListener("click", () => {
@@ -36,7 +40,7 @@ if (updateProfileModal) {
       updateProfileModal.style.display = "none";
     }
   });
-}
+
 
 // これはprofileにあった方がいいか？
 // update-channel-modalが表示されている時に Ctrl/Command + Enter で送信
