@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, session, request, flash
 from flask_paginate import Pagination, get_page_parameter
 from datetime import timedelta
+from zoneinfo import ZoneInfo
 import hashlib
 import uuid
 import re
@@ -202,6 +203,16 @@ def get_bookroom_group_tags(bookroom_tag_tables):
     return bookroom_group_tag
 
 
+# 日本時間に変更
+def change_jst(utc_time):
+    utc = ZoneInfo("UTC")
+    jst = ZoneInfo("Asia/Tokyo")
+    utc_time = utc_time.replace(tzinfo=utc)
+    if utc_time is None:
+        utc_time = utc_time.replace(tzinfo=utc)
+    return utc_time.astimezone(jst)
+
+
 # パブリックブックルームの一覧表示
 @app.route("/public_bookrooms", methods=["GET"])
 def public_bookrooms_view():
@@ -246,6 +257,12 @@ def public_bookrooms_view():
     # タグテーブルに登録されているタグを取得
     tags = Tag.get_all_tags()
     print("pagenated_bookroom_tag =", pagenated_bookroom_tag)
+
+    # 時間をJSTに変更
+    for bookroom in paginated_bookrooms:
+        bookroom["created_at"] = change_jst(bookroom["created_at"])
+        bookroom["updated_at"] = change_jst(bookroom["updated_at"])
+
     if app.debug:
         return render_template(
             "test/public_bookroom.html",
@@ -417,6 +434,10 @@ def private_bookrooms_view():
         display_pages=True,
         record_name="ブックルーム",
     )
+
+    for bookroom in paginated_bookrooms:
+        bookroom["created_at"] = change_jst(bookroom["created_at"])
+        bookroom["updated_at"] = change_jst(bookroom["updated_at"])
 
     # タグテーブルに登録されているタグを取得
     tags = Tag.get_all_tags()
