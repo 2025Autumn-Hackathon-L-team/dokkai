@@ -17,14 +17,16 @@
         name="profile_name"
         required
       />
-    {% with messages = get_flashed_messages() %}
+     {% with messages = get_flashed_messages(category_filter=["name_flash"]) %}
     {% if messages %}
-      <div id="modal-flash-content">
+      <div id="name-modal-flash-content">
           <ul class="flashes">
             {% for message in messages %}
             <li>{{ message }}</li>
         {% endfor %}
         </ul>
+      </div>
+    {% endif %}{% endwith %}
       <button>EDIT</button>
     </form>
   </div>

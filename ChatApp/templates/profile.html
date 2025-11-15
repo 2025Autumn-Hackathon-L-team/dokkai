@@ -74,6 +74,7 @@
     </div>
 </div>
 </body>
+
 {% endblock %}
 
 {% block script %}
@@ -91,3 +92,15 @@
 ></script>
 {% endblock %}
 
+<div id="name-display-container">
+    <span class="label">name</span>
+    <div class="edit-area">
+        <p id="name-value">book5</p>
+        <span class="edit-icon">✏️</span>
+    </div>
+    
+    <form id="name-edit-form" class="edit-form-hidden">
+        <input type="text" value="book5" name="profile_name">
+        <button type="submit">保存</button>
+    </form>
+</div>

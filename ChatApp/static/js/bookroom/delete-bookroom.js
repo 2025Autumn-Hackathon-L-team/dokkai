@@ -11,7 +11,7 @@ if (flashContent) {
   }, 4000);
 }
 
-/* パブリックフラグがtrueかどうかでprefixを変更する*/
+/* パブリックフラグがtrueかどうかでaddressCheckerを変更する*/
 const addressChecker = typeof IS_PUBRIC !== 'undefined' && IS_PUBRIC
     ? '/public_bookrooms'
     : '/private_bookrooms';

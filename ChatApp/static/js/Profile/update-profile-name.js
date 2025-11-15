@@ -5,12 +5,12 @@
 const updateButton = document.getElementById("update-name-button");
 const updateProfileNameModal = document.getElementById("update-profile-name-modal");
 const updateProfileNameButtonClose = document.getElementById("update-name-close-button");
-const flashContent = document.getElementById('modal-flash-content');
+const flashContentName = document.getElementById('name-modal-flash-content');
 
-if (flashContent && updateProfileModal) {
-    updateProfileModal.style.display = "flex";   
+if (flashContentName && updateProfileNameModal) {
+    updateProfileNameModal.style.display = "flex";   
     window.setTimeout(function(){
-    flashContent.remove();
+    flashContentName.remove();
   }, 4000);
 }  
 

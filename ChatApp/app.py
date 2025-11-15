@@ -698,18 +698,18 @@ def update_name():
     print(f'{name}は入力されたname')
     # 空欄チェック
     if name == "":
-            flash("すべての項目を入力してください。")
+            flash("すべての項目を入力してください。", "name_flash")
             return redirect(url_for("profile_view"))
     # 他のユーザーが同じ名前を登録していないかチェック。ただし自分が登録した名前と一致している場合はそのまま通る。
     registered_name_user=User.find_by_name(name)
     if registered_name_user is not None and registered_name_user["id"] != user_id:
-        flash("入力された名前は使用されています。")
-        flash("違う名前を入力してください。")
+        flash("入力された名前は使用されています。", "name_flash")
+        flash("違う名前を入力してください。", "name_flash")
         return redirect(url_for("profile_view"))
     # 更新処理
     else:
         Profile.name_update(name,user_id)
-        flash("プロフィールを更新しました。")
+        flash("プロフィールを更新しました。", "name_flash")
     return redirect(url_for("profile_view"))
 
 # プロフィール画面の編集(email)
@@ -727,28 +727,28 @@ def update_email():
     print(f'{email}は入力されたemail')
     # 空欄チェック
     if email == "" or password == "" :
-            flash("すべての項目を入力してください。")
+            flash("すべての項目を入力してください。", "email_flash")
             return redirect(url_for("profile_view"))
     # メールアドレス形式チェック
     if re.fullmatch(EMAIL_PATTERN, email) is None:
-        flash("有効なメールアドレスを入力してください。")
+        flash("有効なメールアドレスを入力してください。", "email_flash")
         return redirect(url_for("profile_view"))
     # 他のユーザーが同じメールアドレスを登録していないかチェック。ただし自分が登録したメールアドレスと一致している場合はそのまま通る。
     registered_email_user= User.find_by_email(email) 
     if registered_email_user is not None and registered_email_user["id"] != user_id:
-        flash("入力されたメールアドレスは使用されています。")
-        flash("違うメールアドレスを入力してください。")
+        flash("入力されたメールアドレスは使用されています。", "email_flash")
+        flash("違うメールアドレスを入力してください。", "email_flash")
         return redirect(url_for("profile_view"))
     hashPassword = hashlib.sha256(password.encode("utf-8")).hexdigest()
     user = User.find_by_email(current_email)
     # ログインチェック
     if user["password"] != hashPassword:
-        flash("パスワードが正しくありません。")
+        flash("パスワードが正しくありません。", "email_flash")
         return redirect(url_for("profile_view"))
     # 更新処理
     else:
         Profile.email_update(email,user_id)
-        flash("プロフィールを更新しました。")
+        flash("プロフィールを更新しました。", "email_flash")
     return redirect(url_for("profile_view"))
 
 
