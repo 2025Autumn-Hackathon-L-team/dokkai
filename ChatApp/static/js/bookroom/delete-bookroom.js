@@ -5,6 +5,7 @@ const deletePageButtonClose = document.getElementById("delete-page-close-button"
 const deleteBookroomForm = document.getElementById("deleteBookroomForm"); 
 const flashContent = document.getElementById('modal-flash-content');
 if (flashContent) {
+    deleteBookroomModal.style.display = "flex";
     window.setTimeout(function(){
     flashContent.remove();
   }, 4000);

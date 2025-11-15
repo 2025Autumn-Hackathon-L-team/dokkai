@@ -5,6 +5,7 @@ const updateBookroomModal = document.getElementById("update-bookroom-modal");
 const updatePageButtonClose = document.getElementById("update-page-close-button");
 const flashContent = document.getElementById('modal-flash-content');
 if (flashContent) {
+    updateBookroomModal.style.display = "flex";
     window.setTimeout(function(){
     flashContent.remove();
   }, 4000);
