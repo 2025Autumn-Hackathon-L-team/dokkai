@@ -3,9 +3,10 @@
   const createBookroomModal = document.getElementById("create-bookroom-modal");
   const addPageButtonClose = document.getElementById("add-page-close-button");
   const createBookroomButton = document.getElementById("create-bookroom-button");
-  
   const flashContent = document.getElementById('modal-flash-content');
+
   if (flashContent) {
+    createBookroomModal.style.display = "flex"; 
     window.setTimeout(function(){
     flashContent.remove();
   }, 4000);

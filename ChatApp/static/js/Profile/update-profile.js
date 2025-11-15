@@ -8,8 +8,7 @@ const updateProfileButtonClose = document.getElementById("update-profile-close-b
 const flashContent = document.getElementById('modal-flash-content');
 
 if (flashContent && updateProfileModal) {
-        updateProfileModal.style.display = "flex";
-    
+    updateProfileModal.style.display = "flex";   
     window.setTimeout(function(){
     flashContent.remove();
   }, 4000);
