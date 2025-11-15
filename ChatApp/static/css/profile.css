@@ -10,7 +10,7 @@ body.profile-body {
   /*padding-left: 50px;*/
   flex-direction:column;
   align-items: center;
-  background-color: #FFFACD;
+  background-color: white;
   margin: 0;
   color: var(--brown);
   min-height: 100svh;
@@ -72,7 +72,39 @@ body.profile-body {
   padding-top: 110px;
 }
 
+.under-icon-position-adjustment{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.reactions-messages-bettween-position-adjustment{
+ width: 50px; 
+}
+
+.name-position-adjustment{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.button-position{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 300px;
+}
+
 .button-position-adjustment img{
+  max-width: none;
+}
+
+.name-position-adjustment img{
+  max-width: none;
+}
+
+.email-position-adjustment img{
   max-width: none;
 }
 
@@ -91,6 +123,8 @@ body.profile-body {
 .button-position-adjustment{
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+  width: 300px;
 }
 
 .button-position-adjustment-space{
@@ -103,12 +137,18 @@ body.profile-body {
   padding: 0;
   background-color: var(--lightgreen);
   border-radius: 0 8px 8px 0;
-  height: 32px;
+  height: 20px;
+  width: 20px;
 }
 
 .button-image{
-  width: 32px;
-  height: 32px;
+  width: 20px;
+  height: 20px;
+}
+
+#name-side-adjustment{
+  width: 300px;
+  text-align: left;
 }
 
 #email-side-adjustment{
@@ -171,3 +211,4 @@ body.profile-body {
     padding-top: 100px;
 }
 }
+
