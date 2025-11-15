@@ -505,7 +505,7 @@ def create_private_bookroom():
 
 
 # プライベートブックルームの編集作業
-@app.route("/private_bookroomss/update/<bookroom_id>", methods=["POST"])
+@app.route("/private_bookrooms/update/<bookroom_id>", methods=["POST"])
 def update_private_bookroom(bookroom_id):
     # ログインしているかのチェック
     user_id = get_login_user_id()
