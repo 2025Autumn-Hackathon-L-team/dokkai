@@ -25,19 +25,16 @@
     />
   </head>
   <body> 
-  <body>
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      <div class="flash-container">
-        {% for message in messages %}
-          <div class="flash">{{ message }}</div>
-        {% endfor %}
-      </div>
-    {% endif %}
-  {% endwith %}
-  {% block content %}{% endblock %}
-</body>
-
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="flash-container">
+          {% for message in messages %}
+            <div class="flash">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
 
     {% include 'util/sidebar.html'%} {% include 'util/mobile-header.html'%} {%
     block body %}{% endblock %} {% block script %}{% endblock %}
