@@ -281,9 +281,7 @@ def create_public_bookroom():
         flash("ブックルーム名を入力してください")
         return redirect(url_for("create_public_bookroom"))
 
-    bookroom = Bookroom.find_by_bookroom_name(
-        bookroom_name=bookroom_name, is_public=True
-    )
+    bookroom = Bookroom.find_by_public_bookroom_name(bookroom_name=bookroom_name)
     if bookroom is None:
         bookroom_description = request.form.get("bookroom_description")
         bookroom_id = Bookroom.create(
@@ -457,8 +455,8 @@ def create_private_bookroom():
         flash("ブックルーム名を入力してください")
         return redirect(url_for("create_private_bookroom"))
 
-    bookroom = Bookroom.find_by_bookroom_name(
-        bookroom_name=bookroom_name, is_public=False
+    bookroom = Bookroom.find_by_private_bookroom_name(
+        bookroom_name=bookroom_name, user_id=user_id
     )
     if bookroom is None:
         bookroom_description = request.form.get("bookroom_description")
@@ -687,51 +685,69 @@ def profile_view():
     )
 
 
-# プロフィール画面の編集(name,email)
-@app.route("/profile/update", methods=["POST"])
-def update_profile():
-    user_id = session.get("user_id")
-    current_email = Profile.email_view(user_id)
+# プロフィール画面の編集(name)
+@app.route("/name/update",methods=["POST"])
+def update_name():
+    user_id=session.get("user_id")
 
     if user_id is None:
         return redirect(url_for("login_view"))
+    
+    name=request.form.get("profile_name")
+    # 値確認用
+    print(f'{name}は入力されたname')
+    # 空欄チェック
+    if name == "":
+            flash("すべての項目を入力してください。")
+            return redirect(url_for("profile_view"))
+    # 他のユーザーが同じ名前を登録していないかチェック。ただし自分が登録した名前と一致している場合はそのまま通る。
+    registered_name_user=User.find_by_name(name)
+    if registered_name_user is not None and registered_name_user["id"] != user_id:
+        flash("入力された名前は使用されています。")
+        flash("違う名前を入力してください。")
+        return redirect(url_for("profile_view"))
+    # 更新処理
+    else:
+        Profile.name_update(name,user_id)
+        flash("プロフィールを更新しました。")
+    return redirect(url_for("profile_view"))
 
-    name = request.form.get("profile_name")
-    email = request.form.get("profile_email")
+# プロフィール画面の編集(email)
+@app.route("/email/update",methods=["POST"])
+def update_email():
+    user_id=session.get("user_id")
+    current_email=Profile.email_view(user_id)
+
+    if user_id is None:
+        return redirect(url_for("login_view"))
+    
+    email=request.form.get("profile_email")
     password = request.form.get("password")
     # 値確認用
-    print(f"{name}は入力されたname")
-    print(f"{email}は入力されたemail")
+    print(f'{email}は入力されたemail')
     # 空欄チェック
-    if name == "" or email == "" or password == "":
-        flash("すべての項目を入力してください。")
-        return redirect(url_for("profile_view"))
+    if email == "" or password == "" :
+            flash("すべての項目を入力してください。")
+            return redirect(url_for("profile_view"))
     # メールアドレス形式チェック
     if re.fullmatch(EMAIL_PATTERN, email) is None:
         flash("有効なメールアドレスを入力してください。")
         return redirect(url_for("profile_view"))
     # 他のユーザーが同じメールアドレスを登録していないかチェック。ただし自分が登録したメールアドレスと一致している場合はそのまま通る。
-    registered_email_user = User.find_by_email(email)
-    registered_name_user = User.find_by_name(name)
+    registered_email_user= User.find_by_email(email) 
     if registered_email_user is not None and registered_email_user["id"] != user_id:
         flash("入力されたメールアドレスは使用されています。")
         flash("違うメールアドレスを入力してください。")
         return redirect(url_for("profile_view"))
-    # 他のユーザーが同じ名前を登録していないかチェック。ただし自分が登録した名前と一致している場合はそのまま通る。
-    if registered_name_user is not None and registered_name_user["id"] != user_id:
-        flash("入力された名前は使用されています。")
-        flash("違う名前を入力してください。")
-        return redirect(url_for("profile_view"))
     hashPassword = hashlib.sha256(password.encode("utf-8")).hexdigest()
     user = User.find_by_email(current_email)
     # ログインチェック
-    # TODO バリデーションチェックが必要
     if user["password"] != hashPassword:
         flash("パスワードが正しくありません。")
         return redirect(url_for("profile_view"))
     # 更新処理
     else:
-        Profile.name_email_update(name, email, user_id)
+        Profile.email_update(email,user_id)
         flash("プロフィールを更新しました。")
     return redirect(url_for("profile_view"))
 

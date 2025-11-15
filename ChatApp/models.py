@@ -63,11 +63,11 @@ class User:
 # ブックルームクラス
 class Bookroom:
     @classmethod
-    def find_by_bookroom_name(cls, bookroom_name, is_public=None):
+    def find_by_public_bookroom_name(cls, bookroom_name):
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = "SELECT * FROM bookrooms WHERE name=%s AND is_public=%s"
+                sql = "SELECT * FROM bookrooms WHERE name=%s AND is_public=TRUE"
                 cur.execute(sql, (bookroom_name, is_public))
                 bookroom = cur.fetchone()
                 return bookroom
@@ -76,6 +76,23 @@ class Bookroom:
             abort(500)
         finally:
             db_pool.release(conn)
+
+    # private bookroomかつ同じユーザで同じチャンネル名がないかを確認
+    @classmethod    
+    def find_by_private_bookroom_name(cls, bookroom_name, user_id):
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                sql = "SELECT * FROM bookrooms WHERE name=%s AND is_public=FALSE AND user_id=%s"
+                cur.execute(sql, (bookroom_name, user_id))
+                bookroom = cur.fetchone()
+                return bookroom
+        except pymysql.Error as e:
+            print(f"エラーが発生しています：{e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
+
 
     @classmethod
     def find_by_bookroom_id(cls, bookroom_id):
@@ -350,38 +367,7 @@ class Profile:
             abort(500)
         finally:
             db_pool.release(conn)
-
-    # アイコンの変更
-    @classmethod
-    def icon_update(cls, iconid, user_id):
-        conn = db_pool.get_conn()
-        try:
-            with conn.cursor() as cur:
-                sql = "UPDATE users SET iconid=%s WHERE id=%s"
-                cur.execute(
-                    sql,
-                    (
-                        iconid,
-                        user_id,
-                    ),
-                )
-                rows = cur.execute(
-                    sql,
-                    (
-                        iconid,
-                        user_id,
-                    ),
-                )
-                # 更新結果チェック
-                if rows == 0:
-                    print("対象ユーザーが見つかりません")
-            conn.commit()
-        except pymysql.Error as e:
-            print(f"エラーが発生しています：{e}")
-            abort(500)
-        finally:
-            db_pool.release(conn)
-
+    
     # nameの表示
     @classmethod
     def name_view(cls, user_id):
@@ -413,22 +399,51 @@ class Profile:
             abort(500)
         finally:
             db_pool.release(conn)
-
-    # nameとemailの変更
+   
+    # アイコンの変更
     @classmethod
-    def name_email_update(cls, name, email, user_id):
+    def icon_update(cls,iconid,user_id):
+        conn= db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                sql = "UPDATE users SET iconid=%s WHERE id=%s"
+                cur.execute(sql,(iconid,user_id,))
+                rows = cur.execute(sql, (iconid, user_id,))
+                # 更新結果チェック
+                if rows == 0:
+                    print("対象ユーザーが見つかりません")
+            conn.commit()
+        except pymysql.Error as e:
+            print(f"エラーが発生しています：{e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
+
+
+    # nameの変更
+    @classmethod
+    def name_update(cls,name,user_id):
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = "UPDATE users SET name=%s, email=%s WHERE id=%s;"
-                cur.execute(
-                    sql,
-                    (
-                        name,
-                        email,
-                        user_id,
-                    ),
-                )
+                sql = "UPDATE users SET name=%s WHERE id=%s;"
+                cur.execute(sql,(name, user_id,))
+                conn.commit()
+        except pymysql.Error as e:
+            print(f"エラーが発生しています：{e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
+
+
+    # emailの変更
+    @classmethod
+    def email_update(cls,email,user_id):
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                sql = "UPDATE users SET email=%s WHERE id=%s;"
+                cur.execute(sql,(email, user_id,))
                 conn.commit()
         except pymysql.Error as e:
             print(f"エラーが発生しています：{e}")

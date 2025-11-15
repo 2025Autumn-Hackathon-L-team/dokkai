@@ -110,3 +110,10 @@ button.wood:hover {
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
   z-index: 9999;
 }
+.flashes {
+  margin: 0;
+  padding-inline-start: 0;
+  text-align: center;
+  font-size: 18px;
+  color: rgb(198, 8, 8);
+}

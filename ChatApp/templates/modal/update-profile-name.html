@@ -1,0 +1,31 @@
+<div id="update-profile-name-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5>EDIT NAME</h5>
+      <span class="modalClose" id="update-name-close-button">×</span>
+    </div>
+    <form
+      name="updateName"
+      class="modal-body"
+      action="/name/update"
+      method="POST"
+    >
+      <input
+        type="text"
+        placeholder="変更後のnameを入力してください"
+        class="bookroom-form-input"
+        name="profile_name"
+        required
+      />
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div id="modal-flash-content">
+          <ul class="flashes">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      <button>EDIT</button>
+    </form>
+  </div>
+</div>
