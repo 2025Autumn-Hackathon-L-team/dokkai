@@ -1,22 +1,15 @@
-<div id="update-profile-modal" class="modal">
+<div id="update-profile-email-modal" class="modal">
   <div class="modal-content">
     <div class="modal-header">
-      <h5>EDIT PROFILE</h5>
-      <span class="modalClose" id="update-profile-close-button">×</span>
+      <h5>EDIT EMAIL</h5>
+      <span class="modalClose" id="update-email-close-button">×</span>
     </div>
     <form
-      name="updateProfile"
+      name="updateProfileEmail"
       class="modal-body"
-      action="/profile/update"
+      action="/email/update"
       method="POST"
     >
-      <input
-        type="text"
-        placeholder="変更後のnameを入力してください"
-        class="bookroom-form-input"
-        name="profile_name"
-        required
-      />
       <input
         type="text"
         placeholder="変更後のemailを入力してください"
@@ -26,7 +19,7 @@
         required
       />
       <input
-        type="text"
+        type="password"
         placeholder="passwordを入力してください"
         class="bookroom-form-input"
         name="password"
