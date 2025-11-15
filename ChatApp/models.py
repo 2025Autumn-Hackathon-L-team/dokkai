@@ -113,7 +113,7 @@ class Bookroom:
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = "SELECT * FROM bookrooms WHERE is_public=TRUE;"
+                sql = "SELECT * FROM bookrooms WHERE is_public=TRUE ORDER BY updated_at DESC;"
                 cur.execute(sql)
                 public_bookrooms = cur.fetchall()
                 return public_bookrooms
@@ -128,7 +128,7 @@ class Bookroom:
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = "SELECT * FROM bookrooms WHERE user_id=%s AND is_public=FALSE;"
+                sql = "SELECT * FROM bookrooms WHERE user_id=%s AND is_public=FALSE ORDER BY updated_at DESC;"
                 cur.execute(sql, (user_id,))
                 private_bookrooms = cur.fetchall()
                 return private_bookrooms
