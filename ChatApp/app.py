@@ -281,9 +281,7 @@ def create_public_bookroom():
         flash("ブックルーム名を入力してください")
         return redirect(url_for("create_public_bookroom"))
 
-    bookroom = Bookroom.find_by_bookroom_name(
-        bookroom_name=bookroom_name, is_public=True
-    )
+    bookroom = Bookroom.find_by_public_bookroom_name(bookroom_name=bookroom_name)
     if bookroom is None:
         bookroom_description = request.form.get("bookroom_description")
         bookroom_id = Bookroom.create(
@@ -457,8 +455,8 @@ def create_private_bookroom():
         flash("ブックルーム名を入力してください")
         return redirect(url_for("create_private_bookroom"))
 
-    bookroom = Bookroom.find_by_bookroom_name(
-        bookroom_name=bookroom_name, is_public=False
+    bookroom = Bookroom.find_by_private_bookroom_name(
+        bookroom_name=bookroom_name, user_id=user_id
     )
     if bookroom is None:
         bookroom_description = request.form.get("bookroom_description")

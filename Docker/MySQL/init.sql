@@ -30,7 +30,7 @@ CREATE TABLE bookrooms (
     is_public BOOLEAN NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    UNIQUE KEY (name, is_public),
+    UNIQUE KEY (name, is_public, user_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
