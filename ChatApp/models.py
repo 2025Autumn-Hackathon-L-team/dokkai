@@ -63,12 +63,28 @@ class User:
 # ブックルームクラス
 class Bookroom:
     @classmethod
-    def find_by_bookroom_name(cls, bookroom_name, is_public=None):
+    def find_by_public_bookroom_name(cls, bookroom_name):
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = "SELECT * FROM bookrooms WHERE name=%s AND is_public=%s"
-                cur.execute(sql, (bookroom_name, is_public))
+                sql = "SELECT * FROM bookrooms WHERE name=%s AND is_public=TRUE"
+                cur.execute(sql, (bookroom_name,))
+                bookroom = cur.fetchone()
+                return bookroom
+        except pymysql.Error as e:
+            print(f"エラーが発生しています：{e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
+
+    # private bookroomかつ同じユーザで同じチャンネル名がないかを確認
+    @classmethod
+    def find_by_private_bookroom_name(cls, bookroom_name, user_id):
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                sql = "SELECT * FROM bookrooms WHERE name=%s AND is_public=FALSE AND user_id=%s"
+                cur.execute(sql, (bookroom_name, user_id))
                 bookroom = cur.fetchone()
                 return bookroom
         except pymysql.Error as e:
@@ -97,7 +113,7 @@ class Bookroom:
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = "SELECT * FROM bookrooms WHERE is_public=TRUE;"
+                sql = "SELECT * FROM bookrooms WHERE is_public=TRUE ORDER BY updated_at DESC;"
                 cur.execute(sql)
                 public_bookrooms = cur.fetchall()
                 return public_bookrooms
@@ -112,7 +128,7 @@ class Bookroom:
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = "SELECT * FROM bookrooms WHERE user_id=%s AND is_public=FALSE;"
+                sql = "SELECT * FROM bookrooms WHERE user_id=%s AND is_public=FALSE ORDER BY updated_at DESC;"
                 cur.execute(sql, (user_id,))
                 private_bookrooms = cur.fetchall()
                 return private_bookrooms
