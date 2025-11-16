@@ -134,7 +134,7 @@ CREATE TABLE messages (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id VARCHAR(255) NOT NULL,
     bookroom_id INT NOT NULL,
-    content VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
@@ -142,3 +142,28 @@ CREATE TABLE messages (
 );
 
 -- ###########################メッセージ関係（ここまで）############################
+CREATE TABLE reactions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    reaction_type VARCHAR(50) NOT NULL,
+    reaction_name VARCHAR(255) NOT NULL
+); 
+-- ###########################リアクションマスタ（ここまで）############################
+CREATE TABLE message_reaction(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    message_id INT NOT NULL,
+    user_id VARCHAR(255) NOT NULL,
+    reaction_id INT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uniq_reaction (message_id, user_id),
+    FOREIGN KEY (message_id) REFERENCES messages(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (reaction_id) REFERENCES reactions(id)
+); 
+-- ###########################リアクション・メッセージ トランザクション（ここまで）############################
+-- リアクション初期値の導入
+INSERT INTO reactions (reaction_type, reaction_name) VALUES
+('👍', 'like'),
+('❤', 'heart'),
+('😢', 'cry'),
+('🙏', 'thanks');
+-- リアクション初期値の導入(ここまで)
