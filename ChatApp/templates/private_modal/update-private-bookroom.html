@@ -12,6 +12,7 @@
     >
       <input
         type="text"
+        value="{{ bookroom.name }}"
         placeholder="今読んでいる本のタイトルなどのテーマを入力"
         class="bookroom-form-input-private"
         name="bookroom_name"
@@ -19,11 +20,22 @@
       />
       <input
         type="text"
+        value="{{ bookroom.description }}"
         placeholder="BOOKROOMの詳細文を入力
 (例: 今月の課題図書！など)"
         class="bookroom-form-input-private"
         name="bookroom_description"
       />
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div id="modal-flash-content">
+          <ul class="flashes">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      </div>
+    {% endif %}{% endwith %}
       <button>EDIT</button>
     </form>
   </div>

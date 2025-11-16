@@ -4,10 +4,15 @@
 
 const updateButton = document.getElementById("update-email-button");
 const updateProfileEmailModal = document.getElementById("update-profile-email-modal");
-const updateProfileEmailButtonClose = document.getElementById(
-  "update-email-close-button"
-);
+const updateProfileEmailButtonClose = document.getElementById("update-email-close-button");
+const flashContentEmail = document.getElementById('email-modal-flash-content');
 
+if (flashContentEmail && updateProfileEmailModal) {
+    updateProfileEmailModal.style.display = "flex";   
+    window.setTimeout(function(){
+    flashContentEmail.remove();
+  }, 4000);
+}  
 // モーダルが存在するページのみ（uidとチャンネルidが同じ時のみ）
 if (updateProfileEmailModal) {
   // モーダル表示ボタンが押された時にモーダルを表示する

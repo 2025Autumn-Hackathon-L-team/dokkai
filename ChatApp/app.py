@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, session, request, flash
 from flask_paginate import Pagination, get_page_parameter
 from datetime import timedelta
+from zoneinfo import ZoneInfo
 import hashlib
 import uuid
 import re
@@ -204,6 +205,16 @@ def get_bookroom_group_tags(bookroom_tag_tables):
     return bookroom_group_tag
 
 
+# 日本時間に変更
+def change_jst(utc_time):
+    utc = ZoneInfo("UTC")
+    jst = ZoneInfo("Asia/Tokyo")
+    utc_time = utc_time.replace(tzinfo=utc)
+    if utc_time is None:
+        utc_time = utc_time.replace(tzinfo=utc)
+    return utc_time.astimezone(jst)
+
+
 # パブリックブックルームの一覧表示
 @app.route("/public_bookrooms", methods=["GET"])
 def public_bookrooms_view():
@@ -248,6 +259,12 @@ def public_bookrooms_view():
     # タグテーブルに登録されているタグを取得
     tags = Tag.get_all_tags()
     print("pagenated_bookroom_tag =", pagenated_bookroom_tag)
+
+    # 時間をJSTに変更
+    for bookroom in paginated_bookrooms:
+        bookroom["created_at"] = change_jst(bookroom["created_at"])
+        bookroom["updated_at"] = change_jst(bookroom["updated_at"])
+
     if app.debug:
         return render_template(
             "test/public_bookroom.html",
@@ -323,38 +340,41 @@ def create_public_bookroom():
 
 ###########################未使用ここから####################################
 # パブリックブックルーム編集ページ表示
-@app.route("/public_bookrooms/update/<bookroom_id>", methods=["GET"])
-def show_public_bookroom(bookroom_id):
 
-    user_id = get_login_user_id()
-    if user_id is None:
-        return redirect(url_for("login_view"))
+if app.debug:
 
-    if not is_bookroom_owner(user_id, bookroom_id):
-        return redirect(url_for("public_bookrooms_view"))
+    @app.route("/public_bookrooms/update/<bookroom_id>", methods=["POST"])
+    def edit_bookroom(bookroom_id):
+        # ログイン確認
+        user_id = get_login_user_id()
+        if user_id is None:
+            return redirect(url_for("login_view"))
 
-    bookroom = Bookroom.find_by_bookroom_id(bookroom_id)
-    all_tags = Tag.get_all_tags()
+        # 編集権限確認
+        if not is_bookroom_owner(user_id, bookroom_id):
+            return redirect(url_for("public_bookrooms_view"))
 
-    selected_tag_ids = BookroomTag.get_selected_tags_from_bookroomid(bookroom_id)
-    selected_tag_ids_list = []
-    for selected_tag_id in selected_tag_ids:
-        selected_tag_ids_list.append(selected_tag_id["tag_id"])
+        bookroom = Bookroom.find_by_bookroom_id(bookroom_id)
+        all_tags = Tag.get_all_tags()
 
-    if app.debug:
+        selected_tag_ids = BookroomTag.get_selected_tags_from_bookroomid(bookroom_id)
+        selected_tag_ids_list = []
+        for selected_tag_id in selected_tag_ids:
+            selected_tag_ids_list.append(selected_tag_id["tag_id"])
+
+        # 日本時間に変更(編集のページでは表示しないが念のため)
+        bookroom["created_at"] = change_jst(bookroom["created_at"])
+        bookroom["updated_at"] = change_jst(bookroom["updated_at"])
+
         return render_template(
             "test/update-bookroom.html",
             bookroom=bookroom,
             tags=all_tags,
             selected_tag_ids=selected_tag_ids_list,
         )
-    else:
-        return render_template(
-            "update-bookroom.html",
-            bookroom=bookroom,
-            tags=all_tags,
-            selected_tag_ids=selected_tag_ids_list,
-        )
+
+
+###########################未使用ここまで####################################
 
 
 # パブリックブックルームの編集作業
@@ -391,7 +411,7 @@ def update_public_bookroom(bookroom_id):
     Bookroom.update(bookroom_id=bookroom_id, name=bookroom_name, description=description)
     # エラー発生中 BookroomTag.update(bookroom_id, tag_ids)
 
-    return redirect(url_for("public_bookrooms_view"))
+    return redirect(url_for("detail", bookroom_id=bookroom_id))
 
 
 # パブリックブックルームの削除
@@ -452,6 +472,10 @@ def private_bookrooms_view():
         display_pages=True,
         record_name="ブックルーム",
     )
+
+    for bookroom in paginated_bookrooms:
+        bookroom["created_at"] = change_jst(bookroom["created_at"])
+        bookroom["updated_at"] = change_jst(bookroom["updated_at"])
 
     # タグテーブルに登録されているタグを取得
     tags = Tag.get_all_tags()
@@ -634,8 +658,23 @@ def detail(bookroom_id):
     bookroom = Bookroom.find_by_bookroom_id(bookroom_id)
     messages = Message.get_all(bookroom_id)
 
+    # ブックルーム名編集のため追記ここから
+    all_tags = Tag.get_all_tags()
+
+    selected_tag_ids = BookroomTag.get_selected_tags_from_bookroomid(bookroom_id)
+    selected_tag_ids_list = []
+    for selected_tag_id in selected_tag_ids:
+        selected_tag_ids_list.append(selected_tag_id["tag_id"])
+
+    # ブックルーム名編集のため追記ここまで
+
     return render_template(
-        "public_messages.html", messages=messages, bookroom=bookroom, uid=user_id
+        "public_messages.html",
+        messages=messages,
+        bookroom=bookroom,
+        uid=user_id,
+        tags=all_tags,
+        selected_tag_ids=selected_tag_ids_list,
     )
 
 
@@ -685,8 +724,23 @@ def private_detail(bookroom_id):
     bookroom = Bookroom.find_by_bookroom_id(bookroom_id)
     messages = Message.get_all(bookroom_id)
 
+    # ブックルーム名編集のため追記ここから
+    all_tags = Tag.get_all_tags()
+
+    selected_tag_ids = BookroomTag.get_selected_tags_from_bookroomid(bookroom_id)
+    selected_tag_ids_list = []
+    for selected_tag_id in selected_tag_ids:
+        selected_tag_ids_list.append(selected_tag_id["tag_id"])
+
+    # ブックルーム名編集のため追記ここまで
+
     return render_template(
-        "private_messages.html", messages=messages, bookroom=bookroom, uid=user_id
+        "private_messages.html",
+        messages=messages,
+        bookroom=bookroom,
+        uid=user_id,
+        tags=all_tags,
+        selected_tag_ids=selected_tag_ids_list,
     )
 
 
@@ -701,6 +755,13 @@ def private_create_message(bookroom_id):
 
     if message:
         Message.create(user_id, bookroom_id, message)
+
+    # ブックルーム名編集作業
+    if is_bookroom_owner(user_id, bookroom_id):
+        name = request.form.get("bookroom_name")
+        description = request.form.get("bookroom_description")
+        tag_ids = request.form.getlist("tag_ids")
+        Bookroom.update(bookroom_id=bookroom_id, name=name, description=description)
 
     return redirect(
         "/private_bookrooms/{bookroom_id}/messages".format(bookroom_id=bookroom_id)
@@ -769,18 +830,18 @@ def update_name():
     print(f'{name}は入力されたname')
     # 空欄チェック
     if name == "":
-            flash("すべての項目を入力してください。")
+            flash("すべての項目を入力してください。", "name_flash")
             return redirect(url_for("profile_view"))
     # 他のユーザーが同じ名前を登録していないかチェック。ただし自分が登録した名前と一致している場合はそのまま通る。
     registered_name_user=User.find_by_name(name)
     if registered_name_user is not None and registered_name_user["id"] != user_id:
-        flash("入力された名前は使用されています。")
-        flash("違う名前を入力してください。")
+        flash("入力された名前は使用されています。", "name_flash")
+        flash("違う名前を入力してください。", "name_flash")
         return redirect(url_for("profile_view"))
     # 更新処理
     else:
         Profile.name_update(name,user_id)
-        flash("プロフィールを更新しました。")
+        flash("プロフィールを更新しました。", "name_flash")
     return redirect(url_for("profile_view"))
 
 # プロフィール画面の編集(email)
@@ -798,28 +859,28 @@ def update_email():
     print(f'{email}は入力されたemail')
     # 空欄チェック
     if email == "" or password == "" :
-            flash("すべての項目を入力してください。")
+            flash("すべての項目を入力してください。", "email_flash")
             return redirect(url_for("profile_view"))
     # メールアドレス形式チェック
     if re.fullmatch(EMAIL_PATTERN, email) is None:
-        flash("有効なメールアドレスを入力してください。")
+        flash("有効なメールアドレスを入力してください。", "email_flash")
         return redirect(url_for("profile_view"))
     # 他のユーザーが同じメールアドレスを登録していないかチェック。ただし自分が登録したメールアドレスと一致している場合はそのまま通る。
     registered_email_user= User.find_by_email(email) 
     if registered_email_user is not None and registered_email_user["id"] != user_id:
-        flash("入力されたメールアドレスは使用されています。")
-        flash("違うメールアドレスを入力してください。")
+        flash("入力されたメールアドレスは使用されています。", "email_flash")
+        flash("違うメールアドレスを入力してください。", "email_flash")
         return redirect(url_for("profile_view"))
     hashPassword = hashlib.sha256(password.encode("utf-8")).hexdigest()
     user = User.find_by_email(current_email)
     # ログインチェック
     if user["password"] != hashPassword:
-        flash("パスワードが正しくありません。")
+        flash("パスワードが正しくありません。", "email_flash")
         return redirect(url_for("profile_view"))
     # 更新処理
     else:
         Profile.email_update(email,user_id)
-        flash("プロフィールを更新しました。")
+        flash("プロフィールを更新しました。", "email_flash")
     return redirect(url_for("profile_view"))
 
 
