@@ -5,7 +5,7 @@
       <span class="modalClose" id="update-name-close-button">×</span>
     </div>
     <form
-      name="updateNmae"
+      name="updateName"
       class="modal-body"
       action="/name/update"
       method="POST"
@@ -17,6 +17,16 @@
         name="profile_name"
         required
       />
+     {% with messages = get_flashed_messages(category_filter=["name_flash"]) %}
+    {% if messages %}
+      <div id="name-modal-flash-content">
+          <ul class="flashes">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      </div>
+    {% endif %}{% endwith %}
       <button>EDIT</button>
     </form>
   </div>

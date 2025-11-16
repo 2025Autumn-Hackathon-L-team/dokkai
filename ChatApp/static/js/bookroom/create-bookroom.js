@@ -2,14 +2,21 @@
 
   const createBookroomModal = document.getElementById("create-bookroom-modal");
   const addPageButtonClose = document.getElementById("add-page-close-button");
-
   const createBookroomButton = document.getElementById("create-bookroom-button");
+  const flashContent = document.getElementById('modal-flash-content');
 
+  if (flashContent) {
+    createBookroomModal.style.display = "flex"; 
+    window.setTimeout(function(){
+    flashContent.remove();
+  }, 4000);
+}
   // モーダル表示ボタンが押された時にモーダルを表示する
+
   createBookroomButton.addEventListener("click", () => {
     createBookroomModal.style.display = "flex";
-  });
-
+  }
+  );
   // モーダル内のXボタンが押された時にモーダルを非表示にする
   addPageButtonClose.addEventListener("click", () => {
     createBookroomModal.style.display = "none";
@@ -17,7 +24,7 @@
 
   // 画面のどこかが押された時にモーダルを非表示にする
   addEventListener("click", (e) => {
-    if (e.target == createBookroomModal) {
+    if (e.target === createBookroomModal) {
       createBookroomModal.style.display = "none";
     }
   });

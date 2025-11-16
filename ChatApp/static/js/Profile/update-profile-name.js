@@ -4,9 +4,15 @@
 
 const updateButton = document.getElementById("update-name-button");
 const updateProfileNameModal = document.getElementById("update-profile-name-modal");
-const updateProfileNameButtonClose = document.getElementById(
-  "update-name-close-button"
-);
+const updateProfileNameButtonClose = document.getElementById("update-name-close-button");
+const flashContentName = document.getElementById('name-modal-flash-content');
+
+if (flashContentName && updateProfileNameModal) {
+    updateProfileNameModal.style.display = "flex";   
+    window.setTimeout(function(){
+    flashContentName.remove();
+  }, 4000);
+}  
 
 // モーダルが存在するページのみ（uidとチャンネルidが同じ時のみ）
 if (updateProfileNameModal) {
