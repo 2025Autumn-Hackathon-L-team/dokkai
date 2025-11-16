@@ -27,7 +27,7 @@
       </a>
       </div>
       <div class="room-group">
-        <span class="room-date">{{bookroom.created_at}}</span>
+        <span class="room-date">{{ bookroom.updated_at.strftime('%Y/%m/%d %H:%M') }}</span>
         <span class="room-category {{ bookroom.category_tag | default('uncategorized') }}">
           {{ bookroom.category | default('未分類') }}
         </span>
