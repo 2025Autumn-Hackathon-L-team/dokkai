@@ -160,7 +160,7 @@ CREATE TABLE message_reaction(
     FOREIGN KEY (reaction_id) REFERENCES reactions(id)
 ); 
 -- ###########################リアクション・メッセージ トランザクション（ここまで）############################
---リアクション初期値の導入
+-- リアクション初期値の導入
 INSERT INTO reactions (reaction_type, reaction_name) VALUES
 ('👍', 'like'),
 ('❤', 'heart'),
