@@ -297,13 +297,13 @@ def create_public_bookroom():
     bookroom_name = request.form.get("bookroom_name")
     # ブックルームの名前が入力されていない。またはスペースだけであれば、作成できないようにする
     if len(bookroom_name.strip()) == 0:
-        flash("ブックルーム名を入力してください")
+        flash("ブックルーム名を入力してください","createbookroom_flash")
         return redirect(url_for("create_public_bookroom"))
     
     # ブックルームの名前がMAX_LENGTH_BOOKROOM_NAMEの数（自由に設定可能）を超えていたらバリデーション
     if len(bookroom_name)>MAX_LENGTH_BOOKROOM_NAME:
-            flash("入力可能文字数をオーバーしました")
-            flash("BOOKROOMのテーマは100文字以内で入力してください")
+            flash("入力可能文字数をオーバーしました","createbookroom_flash")
+            flash("BOOKROOMのテーマは100文字以内で入力してください","createbookroom_flash")
             return redirect(url_for("public_bookrooms_view")) # TODO 遷移先これでいいか確認
 
     bookroom = Bookroom.find_by_public_bookroom_name(
@@ -312,15 +312,15 @@ def create_public_bookroom():
 
     # 他のユーザーが同じ名前を登録していないかチェック。
     if bookroom != None:
-        flash("入力されたBOOKROOMのテーマは使用されています。")
+        flash("入力されたBOOKROOMのテーマは使用されています。","createbookroom_flash")
         return redirect(url_for("public_bookrooms_view")) # TODO 遷移先これでいいか確認
     
     if bookroom is None:
         bookroom_description = request.form.get("bookroom_description")
         # ブックルームの説明欄がMAX_LENGTH_BOOKROOM_DESCRIPTIONの数（自由に設定可能）を超えていたらバリデーション
         if len(bookroom_description)>MAX_LENGTH_BOOKROOM_DESCRIPTION:
-            flash("入力可能文字数をオーバーしました")
-            flash("BOOKROOMの紹介文は256文字以内で入力してください")
+            flash("入力可能文字数をオーバーしました","createbookroom_flash")
+            flash("BOOKROOMの紹介文は256文字以内で入力してください","createbookroom_flash")
             return redirect(url_for("public_bookrooms_view")) # TODO 遷移先これでいいか確認
         bookroom_id = Bookroom.create(
             user_id=user_id,
@@ -394,17 +394,17 @@ def update_public_bookroom(bookroom_id):
     # 他のユーザーが同じ名前を登録していないかチェック。ただし自分が登録したブックルーム名を編集せずにそのまま更新する場合はそのまま通る。
     exiting_bookroom_name=Bookroom.find_by_public_bookroom_name(bookroom_name=bookroom_name)
     if exiting_bookroom_name is not None and str(exiting_bookroom_name["id"]) != str(bookroom_id):
-        flash("入力されたBOOKROOMのテーマは使用されています。")
+        flash("入力されたBOOKROOMのテーマは使用されています。","updatebookroom_flash")
         return redirect(url_for("detail", bookroom_id=bookroom_id)) # TODO 遷移先これでいいか確認
     # ブックルームの名前がMAX_LENGTH_BOOKROOM_NAMEの数（自由に設定可能）を超えていたらバリデーション
     if len(bookroom_name)>MAX_LENGTH_BOOKROOM_NAME:
         flash("入力可能文字数をオーバーしました")
-        flash("BOOKROOMのテーマは100文字以内で入力してください")
+        flash("BOOKROOMのテーマは100文字以内で入力してください","updatebookroom_flash")
         return redirect(url_for("detail", bookroom_id=bookroom_id)) # TODO 遷移先これでいいか確認
     # ブックルームの説明欄がMAX_LENGTH_BOOKROOM_DESCRIPTIONの数（自由に設定可能）を超えていたらバリデーション
     if len(description)>MAX_LENGTH_BOOKROOM_DESCRIPTION:
         flash("入力可能文字数をオーバーしました")
-        flash("BOOKROOMの紹介文は256文字以内で入力してください")
+        flash("BOOKROOMの紹介文は256文字以内で入力してください","updatebookroom_flash")
         return redirect(url_for("public_bookrooms_view")) # TODO 遷移先これでいいか確認
 
     
@@ -513,13 +513,13 @@ def create_private_bookroom():
     bookroom_name = request.form.get("bookroom_name")
     # ブックルームの名前が入力されていない。またはスペースだけであれば、作成できないようにする
     if len(bookroom_name.strip()) == 0:
-        flash("ブックルーム名を入力してください")
-        return redirect(url_for("create_private_bookroom"))
+        flash("ブックルーム名を入力してください","createbookroom_flash")
+        return redirect(url_for("create_private_bookroom","createbookroom_flash"))
     
     # ブックルームの名前がMAX_LENGTH_BOOKROOM_NAMEの数（自由に設定可能）を超えていたらバリデーション
     if len(bookroom_name)>MAX_LENGTH_BOOKROOM_NAME:
-            flash("入力可能文字数をオーバーしました")
-            flash("BOOKROOMのテーマは100文字以内で入力してください")
+            flash("入力可能文字数をオーバーしました","createbookroom_flash")
+            flash("BOOKROOMのテーマは100文字以内で入力してください","createbookroom_flash")
             return redirect(url_for("private_bookrooms_view")) # TODO 遷移先これでいいか確認
 
     bookroom = Bookroom.find_by_private_bookroom_name(
@@ -528,15 +528,15 @@ def create_private_bookroom():
 
     # プライベートブックルームの中で同じ名前を登録していないかチェック。
     if bookroom != None:
-        flash("入力されたBOOKROOMのテーマは使用されています。")
+        flash("入力されたBOOKROOMのテーマは使用されています。","createbookroom_flash")
         return redirect(url_for("private_bookrooms_view")) # TODO 遷移先これでいいか確認
 
     if bookroom is None:
         bookroom_description = request.form.get("bookroom_description")
         # ブックルームの説明欄がMAX_LENGTH_BOOKROOM_DESCRIPTIONの数（自由に設定可能）を超えていたらバリデーション
         if len(bookroom_description)>MAX_LENGTH_BOOKROOM_DESCRIPTION:
-            flash("入力可能文字数をオーバーしました")
-            flash("BOOKROOMの紹介文は256文字以内で入力してください")
+            flash("入力可能文字数をオーバーしました","createbookroom_flash")
+            flash("BOOKROOMの紹介文は256文字以内で入力してください","createbookroom_flash")
             return redirect(url_for("private_bookrooms_view")) # TODO 遷移先これでいいか確認
         bookroom_id = Bookroom.create(
             user_id=user_id,
@@ -574,18 +574,18 @@ def update_private_bookroom(bookroom_id):
     # プライベートブックルームの中で同じ名前を登録していないかチェック。ただし自分が登録したブックルーム名を編集せずにそのまま更新する場合はそのまま通る。
     exiting_bookroom_name=Bookroom.find_by_private_bookroom_name(bookroom_name=name, user_id=user_id)
     if exiting_bookroom_name is not None and str(exiting_bookroom_name["id"]) != str(bookroom_id):
-        flash("入力されたBOOKROOMのテーマは使用されています。")
+        flash("入力されたBOOKROOMのテーマは使用されています。","updatebookroom_flash")
         return redirect(url_for("private_detail", bookroom_id=bookroom_id)) # TODO 遷移先これでいいか確認
     
     # ブックルームの名前がMAX_LENGTH_BOOKROOM_NAMEの数（自由に設定可能）を超えていたらバリデーション
     if len(name)>MAX_LENGTH_BOOKROOM_NAME:
-        flash("入力可能文字数をオーバーしました")
-        flash("BOOKROOMのテーマは100文字以内で入力してください")
+        flash("入力可能文字数をオーバーしました","updatebookroom_flash")
+        flash("BOOKROOMのテーマは100文字以内で入力してください","updatebookroom_flash")
         return redirect(url_for("private_detail", bookroom_id=bookroom_id)) # TODO 遷移先これでいいか確認
     # ブックルームの説明欄がMAX_LENGTH_BOOKROOM_DESCRIPTIONの数（自由に設定可能）を超えていたらバリデーション
     if len(description)>MAX_LENGTH_BOOKROOM_DESCRIPTION:
-        flash("入力可能文字数をオーバーしました")
-        flash("BOOKROOMの紹介文は256文字以内で入力してください")
+        flash("入力可能文字数をオーバーしました","updatebookroom_flash")
+        flash("BOOKROOMの紹介文は256文字以内で入力してください","updatebookroom_flash")
         return redirect(url_for("private_detail", bookroom_id=bookroom_id)) # TODO 遷移先これでいいか確認
 
     Bookroom.update(bookroom_id=bookroom_id, name=name, description=description)

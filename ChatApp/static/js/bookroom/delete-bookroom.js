@@ -3,13 +3,14 @@ const deleteButtons = document.querySelectorAll(".delete-bookroom-trigger");
 const deleteBookroomModal = document.getElementById("delete-bookroom-modal");
 const deletePageButtonClose = document.getElementById("delete-page-close-button");
 const deleteBookroomForm = document.getElementById("deleteBookroomForm"); 
-const flashContent = document.getElementById('modal-flash-content');
+/*const flashContent = document.getElementById('modal-flash-content');
 if (flashContent) {
     deleteBookroomModal.style.display = "flex";
     window.setTimeout(function(){
     flashContent.remove();
   }, 4000);
-}
+}*/
+
 
 /* パブリックフラグがtrueかどうかでaddressCheckerを変更する*/
 const addressChecker = typeof IS_PUBRIC !== 'undefined' && IS_PUBRIC
