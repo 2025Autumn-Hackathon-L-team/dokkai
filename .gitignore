@@ -218,3 +218,6 @@ __marimo__/
 
 # docker
 docker-compose.override.yml
+
+# hidden file
+**/.DS_Store
