@@ -18,7 +18,7 @@
         required
       />
      {% with messages = get_flashed_messages(category_filter=["name_flash"]) %}
-    {% if messages %}
+     {% if messages %}
       <div id="name-modal-flash-content">
           <ul class="flashes">
             {% for message in messages %}

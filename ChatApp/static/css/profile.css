@@ -156,7 +156,9 @@ body.profile-body {
   height: 40px;
   align-items: end;
 }
-
+.hidden-flash {
+    display: none;
+}
 /* ========================================================== */
 /* レスポンシブ */
 /* スマホ用 */

@@ -841,14 +841,13 @@ def update_name():
     # 更新処理
     else:
         Profile.name_update(name,user_id)
-        flash("プロフィールを更新しました。", "name_flash")
+        flash("プロフィールを更新しました。", "success_flash")
     return redirect(url_for("profile_view"))
 
 # プロフィール画面の編集(email)
 @app.route("/email/update",methods=["POST"])
 def update_email():
     user_id=session.get("user_id")
-    current_email=Profile.email_view(user_id)
 
     if user_id is None:
         return redirect(url_for("login_view"))
@@ -865,24 +864,6 @@ def update_email():
     if re.fullmatch(EMAIL_PATTERN, email) is None:
         flash("有効なメールアドレスを入力してください。", "email_flash")
         return redirect(url_for("profile_view"))
-    # 他のユーザーが同じメールアドレスを登録していないかチェック。ただし自分が登録したメールアドレスと一致している場合はそのまま通る。
-    registered_email_user= User.find_by_email(email) 
-    if registered_email_user is not None and registered_email_user["id"] != user_id:
-        flash("入力されたメールアドレスは使用されています。", "email_flash")
-        flash("違うメールアドレスを入力してください。", "email_flash")
-        return redirect(url_for("profile_view"))
-    hashPassword = hashlib.sha256(password.encode("utf-8")).hexdigest()
-    user = User.find_by_email(current_email)
-    # ログインチェック
-    if user["password"] != hashPassword:
-        flash("パスワードが正しくありません。", "email_flash")
-        return redirect(url_for("profile_view"))
-    # 更新処理
-    else:
-        Profile.email_update(email,user_id)
-        flash("プロフィールを更新しました。", "email_flash")
-    return redirect(url_for("profile_view"))
-
 
 # アイコン画面の変更
 @app.route("/icons/update", methods=["POST"])
