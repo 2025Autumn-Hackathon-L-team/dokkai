@@ -51,7 +51,9 @@
       <div class="message-content-wrapper">
         <p class="user-name">{{message.user_name | default("メッセージテーブルのユーザーネーム")}}</p>
          <div class="icon-and-message-left">
-          <div class="user-icon"></div>
+          <div class="user-icon">
+            <img src="{{ url_for('static', filename='img/icon_rabbit.png')}}" alt="デフォルトのユーザーアイコン" id="current-profile-icon">
+          </div>
         <p class="box box-left">{{message.message| default("メッセージテーブルの内容")}}</p>
          </div> 
           <span class="timestamp timestamp-left">2025/10/28 16:54</span>
