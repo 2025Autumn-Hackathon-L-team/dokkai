@@ -343,7 +343,7 @@ def create_public_bookroom():
 
 if app.debug:
 
-    @app.route("/public_bookrooms/update/<bookroom_id>", methods=["POST"])
+    @app.route("/public_bookrooms/update/<bookroom_id>", methods=["GET"])
     def edit_bookroom(bookroom_id):
         # ログイン確認
         user_id = get_login_user_id()
@@ -389,8 +389,8 @@ def update_public_bookroom(bookroom_id):
         return redirect(url_for("public_bookrooms_view"))
 
     bookroom_name = request.form.get("bookroom_name")
-    tag_ids = request.form.getlist("tag_ids")
     description = request.form.get("bookroom_description")
+
     # 他のユーザーが同じ名前を登録していないかチェック。ただし自分が登録したブックルーム名を編集せずにそのまま更新する場合はそのまま通る。
     exiting_bookroom_name=Bookroom.find_by_public_bookroom_name(bookroom_name=bookroom_name)
     if exiting_bookroom_name is not None and str(exiting_bookroom_name["id"]) != str(bookroom_id):
@@ -409,9 +409,15 @@ def update_public_bookroom(bookroom_id):
 
     
     Bookroom.update(bookroom_id=bookroom_id, name=bookroom_name, description=description)
-    # エラー発生中 BookroomTag.update(bookroom_id, tag_ids)
 
-    return redirect(url_for("detail", bookroom_id=bookroom_id))
+    tag_ids = request.form.getlist("tag_ids")
+    BookroomTag.delete_bookroomtag_by_bookroomid(bookroom_id)
+    BookroomTag.create(bookroom_id, tag_ids)
+
+    if app.debug:
+        return redirect(url_for("public_bookrooms_view", bookroom_id=bookroom_id))
+    else:
+        return redirect(url_for("detail", bookroom_id=bookroom_id))
 
 
 # パブリックブックルームの削除
@@ -569,7 +575,6 @@ def update_private_bookroom(bookroom_id):
 
     name = request.form.get("bookroom_name")
     description = request.form.get("bookroom_description")
-    tag_ids = request.form.getlist("tag_ids")
 
     # プライベートブックルームの中で同じ名前を登録していないかチェック。ただし自分が登録したブックルーム名を編集せずにそのまま更新する場合はそのまま通る。
     exiting_bookroom_name=Bookroom.find_by_private_bookroom_name(bookroom_name=name, user_id=user_id)
@@ -589,7 +594,10 @@ def update_private_bookroom(bookroom_id):
         return redirect(url_for("private_detail", bookroom_id=bookroom_id)) # TODO 遷移先これでいいか確認
 
     Bookroom.update(bookroom_id=bookroom_id, name=name, description=description)
-    # エラー発生中BookroomTag.update(bookroom_id, tag_ids)
+
+    tag_ids = request.form.getlist("tag_ids")
+    BookroomTag.delete_bookroomtag_by_bookroomid(bookroom_id)
+    BookroomTag.create(bookroom_id, tag_ids)
 
     return redirect(url_for("private_bookrooms_view"))
 
