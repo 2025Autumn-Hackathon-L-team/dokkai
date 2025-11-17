@@ -4,7 +4,9 @@ DROP USER 'testuser';
 
 CREATE USER 'testuser' IDENTIFIED BY 'testuser';
 
-CREATE DATABASE chatapp;
+CREATE DATABASE chatapp
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
 
 USE chatapp;
 
@@ -16,7 +18,7 @@ CREATE TABLE users (
     name VARCHAR(255) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    iconid VARCHAR(255),
+    iconid INT,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -167,3 +169,19 @@ INSERT INTO reactions (reaction_type, reaction_name) VALUES
 ('😢', 'cry'),
 ('🙏', 'thanks');
 -- リアクション初期値の導入(ここまで)
+CREATE TABLE icons(
+    id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    icon_name VARCHAR(255) NOT NULL ,
+    icon_image VARCHAR(255) NOT NULL
+);
+-- アイコンマスタ（ここまで）
+INSERT INTO icons (icon_name, icon_image) VALUES
+('fox_icon', '/static/img/icons/fox.jpg');
+-- アイコンサンプル画像（ここまで）
+ALTER TABLE users
+ADD CONSTRAINT fk_users_iconid
+FOREIGN KEY (iconid)
+    REFERENCES icons(id)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE;
+-- ユーザーテーブルに外部キー制約を追加(ここまで)
