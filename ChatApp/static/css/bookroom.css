@@ -154,7 +154,6 @@ background-color: transparent;
   padding: 15px;
   display: flex;
   flex-direction:row;
-  
   align-items: center;
   transition: transform 0.2s ease-in-out;
   position: relative;
@@ -207,11 +206,13 @@ background-color: transparent;
 .room-group { 
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+    justify-content: space-between; /* タグ要素が空でも、日付を上部に固定 */  
+    align-items: flex-end; /* 右寄せ */
+    gap: 10px; 
     position: absolute;
-    right: 30px;        
-    bottom: 10px; 
+    right: 30px; 
+    top: 10px;        
+    bottom: 10px;   
 }
 
 /* 日付 */
@@ -230,6 +231,11 @@ background-color: transparent;
   white-space: nowrap;
   
 }
+/* モバイル版のカテゴリタグを非表示にする */
+.tag-data.mobileonly {
+  display:none;
+}
+
 /* カテゴリごとの色があれば追加 */
 .room-category.fantasy { background-color: var(--brown); }
 .room-category.magazine { background-color: var(--brown); }
@@ -315,11 +321,25 @@ background-color: transparent;
   .room-date { 
     display:None;
 }
+  .tag-data.desktoponly {
+    display: none;
+}
+  .tag-data.mobileonly {
+    display: flex; 
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 5px; 
+    justify-content: flex-start;
+    }
+  .room-group {
+    justify-content: flex-end; 
+}
   .room-content {
    flex-grow: 1; 
-   max-width: 70%;
+   max-width: 90%;
 }
 }
+
 @media screen and (max-height: 768px){
     #bookroom-list { 
     padding-top: 170px;
