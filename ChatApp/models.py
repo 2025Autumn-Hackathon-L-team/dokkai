@@ -354,20 +354,30 @@ class Profile:
     # アイコンの表示
     # TODO M_iconsテーブルができたら、iconidでなく画像のパスを返す形に変える
     @classmethod
-    def icon_view(cls, iconid):
+    def icon_view(cls, user_id):
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = "SELECT iconid FROM users WHERE id=%s"
-                cur.execute(sql, (iconid,))
-                user_icon = cur.fetchone()
-                return user_icon["iconid"]
+                sql = """
+                SELECT icons.icon_image 
+                FROM users
+                LEFT JOIN icons ON users.iconid = icons.id
+                WHERE users.id = %s
+                """
+                cur.execute(sql, (user_id,))
+                result = cur.fetchone()
+
+                if result is None or result["icon_image"] is None:
+                    return "/static/img/icon_rabbit.png"
+                
+                return result["icon_image"]
+            
         except pymysql.Error as e:
-            print(f"エラーが発生しています：{e}")
+            print(f"エラーが発生しています : {e}")
             abort(500)
+        
         finally:
             db_pool.release(conn)
-    
     # nameの表示
     @classmethod
     def name_view(cls, user_id):
@@ -408,10 +418,7 @@ class Profile:
             with conn.cursor() as cur:
                 sql = "UPDATE users SET iconid=%s WHERE id=%s"
                 cur.execute(sql,(iconid,user_id,))
-                rows = cur.execute(sql, (iconid, user_id,))
-                # 更新結果チェック
-                if rows == 0:
-                    print("対象ユーザーが見つかりません")
+            
             conn.commit()
         except pymysql.Error as e:
             print(f"エラーが発生しています：{e}")
