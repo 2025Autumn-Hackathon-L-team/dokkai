@@ -268,7 +268,13 @@ class BookroomTag:
         conn = db_pool.get_conn()
         try:
             with conn.cursor(pymysql.cursors.DictCursor) as cur:
-                sql = "SELECT tag_id FROM bookroom_tag WHERE bookroom_id=%s ORDER BY tag_id;"
+                sql = (
+                    "SELECT bt.bookroom_id, t.name "
+                    "FROM bookroom_tag AS bt "
+                    "INNER JOIN tags AS t ON bt.tag_id = t.id "
+                    "WHERE bookroom_id=%s"
+                    "ORDER BY bt.bookroom_id, bt.id;"
+                )
                 cur.execute(sql, (bookroom_id,))
                 conn.commit()
                 selected_tag_id = cur.fetchall()

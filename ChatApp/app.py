@@ -357,10 +357,7 @@ if app.debug:
         bookroom = Bookroom.find_by_bookroom_id(bookroom_id)
         all_tags = Tag.get_all_tags()
 
-        selected_tag_ids = BookroomTag.get_selected_tags_from_bookroomid(bookroom_id)
-        selected_tag_ids_list = []
-        for selected_tag_id in selected_tag_ids:
-            selected_tag_ids_list.append(selected_tag_id["tag_id"])
+        selected_tags = BookroomTag.get_selected_tags_from_bookroomid(bookroom_id)
 
         # 日本時間に変更(編集のページでは表示しないが念のため)
         bookroom["created_at"] = change_jst(bookroom["created_at"])
@@ -370,7 +367,7 @@ if app.debug:
             "test/update-bookroom.html",
             bookroom=bookroom,
             tags=all_tags,
-            selected_tag_ids=selected_tag_ids_list,
+            selected_tags=selected_tags,
         )
 
 
@@ -599,7 +596,10 @@ def update_private_bookroom(bookroom_id):
     BookroomTag.delete_bookroomtag_by_bookroomid(bookroom_id)
     BookroomTag.create(bookroom_id, tag_ids)
 
-    return redirect(url_for("private_bookrooms_view"))
+    if app.debug:
+        return redirect(url_for("private_bookrooms_view", bookroom_id=bookroom_id))
+    else:
+        return redirect(url_for("private_detail", bookroom_id=bookroom_id))
 
 
 # プライベートブックルームの削除
@@ -668,12 +668,7 @@ def detail(bookroom_id):
 
     # 現在登録されているブックルーム名表示のため追記ここから
     all_tags = Tag.get_all_tags()
-
-    selected_tag_ids = BookroomTag.get_selected_tags_from_bookroomid(bookroom_id)
-    selected_tag_ids_list = []
-    for selected_tag_id in selected_tag_ids:
-        selected_tag_ids_list.append(selected_tag_id["tag_id"])
-
+    selected_tags = BookroomTag.get_selected_tags_from_bookroomid(bookroom_id)
     # ブックルーム名編集のため追記ここまで
 
     return render_template(
@@ -682,7 +677,7 @@ def detail(bookroom_id):
         bookroom=bookroom,
         uid=user_id,
         tags=all_tags,
-        selected_tag_ids=selected_tag_ids_list,
+        selected_tags=selected_tags,
     )
 
 
@@ -734,12 +729,7 @@ def private_detail(bookroom_id):
 
     # ブックルーム名編集のため追記ここから
     all_tags = Tag.get_all_tags()
-
-    selected_tag_ids = BookroomTag.get_selected_tags_from_bookroomid(bookroom_id)
-    selected_tag_ids_list = []
-    for selected_tag_id in selected_tag_ids:
-        selected_tag_ids_list.append(selected_tag_id["tag_id"])
-
+    selected_tags = BookroomTag.get_selected_tags_from_bookroomid(bookroom_id)
     # ブックルーム名編集のため追記ここまで
 
     return render_template(
@@ -748,7 +738,7 @@ def private_detail(bookroom_id):
         bookroom=bookroom,
         uid=user_id,
         tags=all_tags,
-        selected_tag_ids=selected_tag_ids_list,
+        selected_tags=selected_tags,
     )
 
 

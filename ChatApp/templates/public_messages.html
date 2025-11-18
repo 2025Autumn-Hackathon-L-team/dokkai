@@ -11,9 +11,11 @@
         <p class="bookroom-description">{{bookroom.description | default("ブックルームの詳細") }}</p>
       </div>
       {% if bookroom.description is not none %}
-      <span class="tag-category">
-          仮タグ
-        </span>
+      {% if selected_tags is not none %}
+        {% for tag in selected_tags %}
+          <span class="tag-category"> {{ tag.name }} </span>
+        {% endfor %}
+      {% endif %}
       
      {% endif %}{% if bookroom.user_id == uid %}
       <button class="update-bookroom-button" id="update-bookroom-button">

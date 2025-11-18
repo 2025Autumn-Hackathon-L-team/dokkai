@@ -129,6 +129,15 @@ VALUES
     ('翻訳'),
     ('イラスト多め');
 
+-- ブックルームタグ初期データ
+INSERT INTO
+    bookroom_tag (bookroom_id, tag_id)
+VALUES
+(1, 1), (1, 2), (1,3), (1, 4), (1, 5),
+(2, 6), (2, 7), (2,8),
+(3, 1), (3, 3), (3,5), (3, 7);
+
+
 -- ############################ブックルーム関係（ここまで）############################
 CREATE TABLE messages (
     id INT AUTO_INCREMENT PRIMARY KEY,
