@@ -666,7 +666,7 @@ def detail(bookroom_id):
     bookroom = Bookroom.find_by_bookroom_id(bookroom_id)
     messages = Message.get_all(bookroom_id)
 
-    # ブックルーム名編集のため追記ここから
+    # 現在登録されているブックルーム名表示のため追記ここから
     all_tags = Tag.get_all_tags()
 
     selected_tag_ids = BookroomTag.get_selected_tags_from_bookroomid(bookroom_id)
@@ -763,13 +763,6 @@ def private_create_message(bookroom_id):
 
     if message:
         Message.create(user_id, bookroom_id, message)
-
-    # ブックルーム名編集作業
-    if is_bookroom_owner(user_id, bookroom_id):
-        name = request.form.get("bookroom_name")
-        description = request.form.get("bookroom_description")
-        tag_ids = request.form.getlist("tag_ids")
-        Bookroom.update(bookroom_id=bookroom_id, name=name, description=description)
 
     return redirect(
         "/private_bookrooms/{bookroom_id}/messages".format(bookroom_id=bookroom_id)
