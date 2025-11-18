@@ -279,6 +279,36 @@ class BookroomTag:
         finally:
             db_pool.release(conn)
 
+#############ヒストリー#############
+# UNIONでbookroomの全てのカラムを返す。bookromm_idだけの集合を作る。チャンネル名は重複しない設定。
+class History:
+    @classmethod
+    def history(user_id):
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                sql = """
+                    SELECT DISTINCT b.*
+                    FROM bookrooms AS b
+                    WHERE b.id IN (
+                        SELECT m.bookroom_id
+                        FROM messages AS m
+                        WHERE m.user_id = %s
+                        UNION
+                        SELECT m2.bookroom_id
+                        FROM message_reaction AS mr
+                        JOIN messages AS m2 ON mr.message_id = m2.id
+                        WHERE mr.user_id = %s
+                    );
+                """
+                cur.execute(sql, (user_id, user_id))
+                history = cur.fetchall()
+                return history
+        except pymysql.Error as e:
+            print(f"エラーが発生しています:) {e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
 
 ############################ブックルーム関係（ここまで）############################
 
