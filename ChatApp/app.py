@@ -841,7 +841,7 @@ def update_name():
     # 更新処理
     else:
         Profile.name_update(name,user_id)
-        flash("プロフィールを更新しました。", "name_flash")
+        flash("プロフィールを更新しました。", "success_flash")
     return redirect(url_for("profile_view"))
 
 # プロフィール画面の編集(email)
@@ -880,7 +880,7 @@ def update_email():
     # 更新処理
     else:
         Profile.email_update(email,user_id)
-        flash("プロフィールを更新しました。", "email_flash")
+        flash("プロフィールを更新しました。", "success_flash")
     return redirect(url_for("profile_view"))
 
 

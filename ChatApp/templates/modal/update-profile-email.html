@@ -16,6 +16,7 @@
         pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
         class="bookroom-form-input"
         name="profile_email"
+        value="{{ email }}"
         required
       />
       <input
@@ -23,6 +24,7 @@
         placeholder="passwordを入力してください"
         class="bookroom-form-input"
         name="password"
+        value=""
         required
       />
      {% with messages = get_flashed_messages(category_filter=["email_flash"]) %}
