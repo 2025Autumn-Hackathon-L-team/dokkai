@@ -204,6 +204,12 @@ def get_bookroom_group_tags(bookroom_tag_tables):
     bookroom_group_tag[previous_bookroom_id] = tags
     return bookroom_group_tag
 
+def get_tag_id_list_from_tag_talbe(tag_table):
+    tag_ids_list = []
+    for tag_data in tag_table:
+        tag_ids_list.append(tag_data["id"])
+    return tag_ids_list
+
 
 # 日本時間に変更
 def change_jst(utc_time):
@@ -358,6 +364,7 @@ if app.debug:
         all_tags = Tag.get_all_tags()
 
         selected_tags = BookroomTag.get_selected_tags_from_bookroomid(bookroom_id)
+        selected_tag_ids = get_tag_id_list_from_tag_talbe(selected_tags)
 
         # 日本時間に変更(編集のページでは表示しないが念のため)
         bookroom["created_at"] = change_jst(bookroom["created_at"])
@@ -367,7 +374,7 @@ if app.debug:
             "test/update-bookroom.html",
             bookroom=bookroom,
             tags=all_tags,
-            selected_tags=selected_tags,
+            selected_tag_ids=selected_tag_ids,
         )
 
 

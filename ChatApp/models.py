@@ -269,7 +269,7 @@ class BookroomTag:
         try:
             with conn.cursor(pymysql.cursors.DictCursor) as cur:
                 sql = (
-                    "SELECT bt.bookroom_id, t.name "
+                    "SELECT t.id, t.name "
                     "FROM bookroom_tag AS bt "
                     "INNER JOIN tags AS t ON bt.tag_id = t.id "
                     "WHERE bookroom_id=%s"

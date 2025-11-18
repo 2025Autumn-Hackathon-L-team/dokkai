@@ -23,7 +23,7 @@
       </div>
 
       {% for tag in tags %}
-        {% if tag.id in selected_tags.tag_id %}
+        {% if tag.id in selected_tag_ids %}
           <label>
             <input type="checkbox" name="tag_ids" value="{{ tag.id }}" checked>
               {{ tag.name }}
