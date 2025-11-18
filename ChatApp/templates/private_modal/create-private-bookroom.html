@@ -18,13 +18,33 @@
         name="bookroom_name"
         required
       />
-      <input
-        type="text"
+      <textarea class="bookroom-form-input-wide-private"
         placeholder="BOOKROOMの詳細文を入力
 (例: 今月の課題図書！など)"
         class="bookroom-form-input-wide-private"
-        name="bookroom_description"
-      />
+        name="bookroom_description"></textarea>
+        
+      <div class="tag-search">
+            <h5> タグを設定する</h5>
+            <div class="tag-container-wrapper"> 
+                <div class="tag-group">
+                    <label><input type="checkbox" name="tag_id[]" value=""> 文学・小説</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> ビジネス</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> 歴史</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> 科学</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> コミック</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> 暮らし</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> 料理</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> 単行本</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> 文庫本</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> 雑誌</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> 受賞作</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> 新刊</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> 翻訳</label>
+                    <label><input type="checkbox" name="tag_id[]" value=""> イラスト多め</label>
+                </div>
+            </div>
+        </div>
     {% with messages = get_flashed_messages(category_filter=["createbookroom_flash"]) %}
     {% if messages %}
       <div id="modal-flash-content">
