@@ -15,10 +15,11 @@
         placeholder="変更後のnameを入力してください"
         class="bookroom-form-input"
         name="profile_name"
+        value="{{ name }}"
         required
       />
      {% with messages = get_flashed_messages(category_filter=["name_flash"]) %}
-    {% if messages %}
+     {% if messages %}
       <div id="name-modal-flash-content">
           <ul class="flashes">
             {% for message in messages %}

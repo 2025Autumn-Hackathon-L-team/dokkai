@@ -315,24 +315,24 @@
 
 .icon_styled {
   border: 0;
-  line-height: 1.5;
-  font-size: 1rem;
-  text-align: center;
-  color: white;
-  border-radius: 50px;
-  background-color: cyan;
+  background-color: #C0C0C0;
   height: 100px;
   width: 100px;
+  padding: 0;
+  border-radius: 50px;
+  overflow: hidden;
 }
 
-.icon_styled:hover {
-  background-color: cornflowerblue;
+.icon-image{
+  border-radius: 50px;
+  height: 100px;
+  width: 100px;
+  object-fit: cover;
+  transition: filter 0.3s;
 }
 
-.icon_styled:active {
-  box-shadow:
-    inset -2px -2px 3px rgb(255 255 255 / 0.6),
-    inset 2px 2px 3px rgb(0 0 0 / 0.6);
+.icon_styled:hover .icon-image {
+  filter: brightness(70%);
 }
 
 #modal-selecticon-title{

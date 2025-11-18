@@ -7,7 +7,7 @@
     <form name="deleteBookroomForm" id="deleteBookroomForm" class="modal-body-private" action="" method="POST">
       <p>DELETEボタンを押すとブックルームが消えます</p>
       <p>本当によろしいですか？</p>
-    {% with messages = get_flashed_messages() %}
+    <!--{% with messages = get_flashed_messages() %}
     {% if messages %}
       <div id="modal-flash-content">
           <ul class="flashes">
@@ -16,7 +16,7 @@
         {% endfor %}
         </ul>
       </div>
-    {% endif %}{% endwith %}
+    {% endif %}{% endwith %}-->
       <button id="delete-bookroom-confirmation-button"class="button">DELETE</button>
     </form>
   </div>

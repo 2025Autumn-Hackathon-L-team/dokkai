@@ -86,7 +86,7 @@
         </div>
         <div class="col">
         {% if session.get('user_id') == bookroom.user_id %}
-            <form action="{{ url_for('show_public_bookroom', bookroom_id=bookroom.id) }}" method="get">
+            <form action="{{ url_for('edit_bookroom', bookroom_id=bookroom.id) }}" method="get">
               <button type="submit" class="btn">編集</button>
             </form>
         {% endif %}
