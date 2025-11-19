@@ -335,10 +335,12 @@ class Message:
                     SELECT m.id, 
                     u.id AS user_id,
                     u.name AS user_name,
-                    m.content AS message 
+                    m.content AS message,
+                    COALESCE(i.icon_image, '/static/img/icons/icon_rabbit.png') AS icon_image
                     FROM messages AS m 
                     INNER JOIN users AS u ON m.user_id = u.id 
-                    WHERE m.bookroom_id = %s 
+                    LEFT JOIN icons AS i ON u.iconid = i.id
+                    WHERE m.bookroom_id = %s
                     ORDER BY m.id ASC;
                 """
                 cur.execute(sql, (bookroom_id,))
@@ -387,7 +389,7 @@ class Profile:
                 result = cur.fetchone()
 
                 if result is None or result["icon_image"] is None:
-                    return "/static/img/icon_rabbit.png"
+                    return "/static/img/icons/icon_rabbit.png"
                 
                 return result["icon_image"]
             
@@ -437,13 +439,7 @@ class Profile:
         try:
             with conn.cursor() as cur:
                 sql = "UPDATE users SET iconid=%s WHERE id=%s"
-                cur.execute(
-                    sql,
-                    (
-                        iconid,
-                        user_id,
-                    ),
-                )
+
                 rows = cur.execute(
                     sql,
                     (
@@ -538,3 +534,38 @@ class Profile:
 
 
 ############################プロフィール画面関係（ここまで）###########################
+############################アイコン画面関係（ここから）###########################
+class Icon:
+    @classmethod
+    def get_all(cls):
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor(pymysql.cursors.DictCursor) as cur:
+                sql = "SELECT * FROM icons ORDER BY id;"
+                cur.execute(sql)
+                icons = cur.fetchall()
+                return icons
+        except pymysql.Error as e:
+            print(f'エラーが発生しています:{e}')
+            abort(500)
+        finally:
+            db_pool.release(conn)
+
+    @classmethod
+    def find_id(cls, icon_id):
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor(pymysql.cursors.DictCursor) as cur:
+                sql = "SELECT * FROM icons WHERE id=%s;"
+                cur.execute(sql, (icon_id,))
+                icon = cur.fetchone()   
+                return icon
+        except pymysql.Error as e:
+            print(f'エラーが発生しています:{e}')
+            abort(500)
+        finally:
+            db_pool.release(conn)
+
+
+        
+

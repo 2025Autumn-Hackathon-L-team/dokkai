@@ -185,7 +185,18 @@ CREATE TABLE icons(
 );
 -- アイコンマスタ（ここまで）
 INSERT INTO icons (icon_name, icon_image) VALUES
-('fox_icon', '/static/img/icons/fox.jpg');
+('book', '/static/img/icons/icon_book.png'),
+('rabbit', '/static/img/icons/icon_rabbit.png'),
+('coffee', '/static/img/icons/icon_withcoffe.png'),
+('animals', '/static/img/icons/icon_animals.png'),
+('readbookwomen', '/static/img/icons/icon_readbookwomen.png'),
+('human', '/static/img/icons/icon_human.png'),
+('dog', '/static/img/icons/icon_dog.png'),
+('cutegirl', '/static/img/icons/icon_cutegirl.png'),
+('readbook', '/static/img/icons/icon_readbook.png'),
+('cat', '/static/img/icons/icon_cat.png'),
+('ringo', '/static/img/icons/icon_ringo.png'),
+('simplegirl', '/static/img/icons/icon_simplegirl.png');
 -- アイコンサンプル画像（ここまで）
 ALTER TABLE users
 ADD CONSTRAINT fk_users_iconid
