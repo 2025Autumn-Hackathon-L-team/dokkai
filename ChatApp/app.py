@@ -337,10 +337,8 @@ def create_public_bookroom():
         tag_ids = request.form.getlist("tag_ids")
         # タグ数の上限チェック
         if len(tag_ids) > MAX_TAGS:
-            print(f"選択したタグの個数：{len(tag_ids)}")
             flash(f"タグは最大{MAX_TAGS}個までです。","createbookroom_flash")
             return redirect(url_for("public_bookrooms_view"))
-        print(f"選択したタグの個数：{len(tag_ids)}")
 
         bookroom_id = Bookroom.create(
             user_id=user_id,
@@ -426,13 +424,11 @@ def update_public_bookroom(bookroom_id):
     # タグ関連
     tag_ids = request.form.getlist("tag_ids")
     if len(tag_ids) > MAX_TAGS:
-        print(f"選択したタグの個数：{len(tag_ids)}")
         flash(f"タグは最大{MAX_TAGS}個までです。", "updatebookroom_flash")
         if app.debug:
             return redirect(url_for("edit_bookroom", bookroom_id=bookroom_id))
         else:
             return redirect(url_for("detail", bookroom_id=bookroom_id))
-    print(f"選択したタグの個数：{len(tag_ids)}")
     
     Bookroom.update(bookroom_id=bookroom_id, name=bookroom_name, description=description)
     BookroomTag.delete_bookroomtag_by_bookroomid(bookroom_id)
@@ -568,10 +564,8 @@ def create_private_bookroom():
         # タグ関連
         tag_ids = request.form.getlist("tag_ids")
         if len(tag_ids) > MAX_TAGS:
-            print(f"選択したタグの個数：{len(tag_ids)}")
             flash(f"タグは最大{MAX_TAGS}個までです。", "createbookroom_flash")
             return redirect(url_for("private_bookrooms_view"))
-        print(f"選択したタグの個数：{len(tag_ids)}")
 
         bookroom_id = Bookroom.create(
             user_id=user_id,
@@ -623,10 +617,8 @@ def update_private_bookroom(bookroom_id):
     # タグ関連
     tag_ids = request.form.getlist("tag_ids")
     if len(tag_ids) > MAX_TAGS:
-        print(f"選択したタグの個数：{len(tag_ids)}")
         flash(f"タグは最大{MAX_TAGS}個までです。","updatebookroom_flash")
         return redirect(url_for("private_detail", bookroom_id=bookroom_id))
-    print(f"選択したタグの個数：{len(tag_ids)}")
 
     Bookroom.update(bookroom_id=bookroom_id, name=name, description=description)  
     BookroomTag.delete_bookroomtag_by_bookroomid(bookroom_id)
