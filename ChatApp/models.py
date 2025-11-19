@@ -288,20 +288,57 @@ class History:
         try:
             with conn.cursor() as cur:
                 sql = """
-                    SELECT DISTINCT b.*
-                    FROM bookrooms AS b
-                    WHERE b.id IN (
-                        SELECT m.bookroom_id
-                        FROM messages AS m
-                        WHERE m.user_id = %s
-                        UNION
-                        SELECT m2.bookroom_id
-                        FROM message_reaction AS mr
-                        JOIN messages AS m2 ON mr.message_id = m2.id
-                        WHERE mr.user_id = %s
-                    );
+                    SELECT 
+                        b.id,
+                        b.name,
+                        b.description,
+                        b.is_public,
+                        ua.last_updated_at -- ユーザーが最後にメッセージかリアクションを投稿した時間
+                    FROM 
+                        bookrooms AS b
+                    -- ユーザーが投稿したmessageとreaction_messageの表をLEFT JOINする
+                    LEFT JOIN (
+                        SELECT -- LEFT JOINしたいカラム
+                            bookroom_id,
+                            MAX(updated_at) AS last_updated_at
+                        FROM (
+                            -- ユーザーのmessagesの投稿
+                            SELECT 
+                                m.bookroom_id,
+                                m.updated_at
+                            FROM messages AS m
+                            WHERE m.user_id = %s
+
+                            UNION ALL -- messagesとreaction_messageの全ての行（bookroom_idが重複している）をくっつける
+                            -- ユーザーのreactinの投稿(message→bookroom_idへ辿る)
+                            SELECT 
+                                m2.bookroom_id,
+                                mr.created_at
+                            FROM message_reaction AS mr
+                            JOIN messages AS m2 ON mr.message_id = m2.id -- UNIONは同じカラム名だとエラーになるから、messageの別名はm2とする
+                            WHERE mr.user_id = %s
+                        ) AS all_updates
+                        GROUP BY bookroom_id -- bookroomテーブルとくっつける時、結合元のb.idは一意であるからグループ化してまとめる
+                    ) AS ua ON b.id = ua.bookroom_id
+                    -- ユーザーを指定
+                    WHERE 
+                        b.id IN (
+                            SELECT bookroom_id FROM (
+                                SELECT m.bookroom_id
+                                FROM messages AS m
+                                WHERE m.user_id = %s
+
+                                UNION ALL
+
+                                SELECT m2.bookroom_id
+                                FROM message_reaction AS mr
+                                JOIN messages AS m2 ON mr.message_id = m2.id
+                                WHERE mr.user_id = %s
+                            ) AS t 
+                        -- 更新が新しい順にする
+                        )ORDER BY ua.last_updated_at DESC;
                 """
-                cur.execute(sql, (user_id, user_id))
+                cur.execute(sql, (user_id, user_id, user_id, user_id))
                 history = cur.fetchall()
                 return history
         except pymysql.Error as e:
