@@ -4,7 +4,9 @@ DROP USER 'testuser';
 
 CREATE USER 'testuser' IDENTIFIED BY 'testuser';
 
-CREATE DATABASE chatapp;
+CREATE DATABASE chatapp
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
 
 USE chatapp;
 
@@ -16,7 +18,7 @@ CREATE TABLE users (
     name VARCHAR(255) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    iconid VARCHAR(255),
+    iconid INT,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -176,3 +178,30 @@ INSERT INTO reactions (reaction_type, reaction_name) VALUES
 ('😢', 'cry'),
 ('🙏', 'thanks');
 -- リアクション初期値の導入(ここまで)
+CREATE TABLE icons(
+    id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    icon_name VARCHAR(255) NOT NULL ,
+    icon_image VARCHAR(255) NOT NULL
+);
+-- アイコンマスタ（ここまで）
+INSERT INTO icons (icon_name, icon_image) VALUES
+('book', '/static/img/icons/icon_book.png'),
+('rabbit', '/static/img/icons/icon_rabbit.png'),
+('coffee', '/static/img/icons/icon_withcoffe.png'),
+('animals', '/static/img/icons/icon_animals.png'),
+('readbookwomen', '/static/img/icons/icon_readbookwomen.png'),
+('human', '/static/img/icons/icon_human.png'),
+('dog', '/static/img/icons/icon_dog.png'),
+('cutegirl', '/static/img/icons/icon_cutegirl.png'),
+('readbook', '/static/img/icons/icon_readbook.png'),
+('cat', '/static/img/icons/icon_cat.png'),
+('ringo', '/static/img/icons/icon_ringo.png'),
+('simplegirl', '/static/img/icons/icon_simplegirl.png');
+-- アイコンサンプル画像（ここまで）
+ALTER TABLE users
+ADD CONSTRAINT fk_users_iconid
+FOREIGN KEY (iconid)
+    REFERENCES icons(id)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE;
+-- ユーザーテーブルに外部キー制約を追加(ここまで)

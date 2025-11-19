@@ -7,7 +7,7 @@ import uuid
 import re
 import os
 
-from models import User, Bookroom, Message, Profile, Tag, BookroomTag
+from models import User, Bookroom, Message, Profile, Tag, BookroomTag, Icon
 
 ############################認証関係(ここから)####################################
 EMAIL_PATTERN = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
@@ -794,6 +794,7 @@ def profile_view():
     current_email = Profile.email_view(user_id)
     icon_view = Profile.icon_view(user_id)
     messages_count = Profile.get_messages_count(user_id)
+    icons = Icon.get_all()
     # TODO リアクション機能実装後、リアクションの数を取得する。
     # printはサーバーで出る値を確認。後日削除する。
     print(f"{icon_view}はiconidです")
@@ -812,6 +813,7 @@ def profile_view():
         name=current_name,
         email=current_email,
         messages_count=messages_count,
+        icons = icons,
     )
 
 
