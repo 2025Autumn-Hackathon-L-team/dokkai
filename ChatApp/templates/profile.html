@@ -14,7 +14,7 @@
     </div>
     <div class="profile-display-items">
         <!--アイコンの表示-->
-        <img src="{{ url_for('static', filename='img/icon_rabbit.png')}}" alt="デフォルトのユーザーアイコン" id="current-profile-icon" width="130" height="130">
+        <img src="{{icon}}" alt="ユーザーアイコン" id="current-profile-icon" width="130" height="130">
         <div class="button-position-adjustment">
             <div class="button-position-adjustment-space"></div>
             {# Floating Action Button #}
@@ -23,6 +23,18 @@
             </button>
             {% include 'modal/update-icon.html' %} 
         </div>
+      <!-- バリデーションチェック成功時のメッセージ表示-->
+    {% with messages = get_flashed_messages(category_filter=["success_flash"]) %}
+    {% if messages %}
+      <div id="success-flash-message" class="flash-success">
+          <ul class="flashes">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+    {% endwith %}
         <!--リアクション数とメッセージ投稿数の表示-->
         <div class="under-icon-position-adjustment">
           <div>
@@ -76,7 +88,6 @@
 </body>
 
 {% endblock %}
-
 {% block script %}
 <script
   src="{{url_for('static',filename='js/profile/update-icon.js')}}"
@@ -90,17 +101,18 @@
   src="{{url_for('static',filename='js/profile/update-profile-email.js')}}"
   type="module"
 ></script>
+<!--全てのBodyが読み込まれた後に成功flashメッセージを読み込む処理-->
+<script>
+    do  cument.addEventListener('DOMContentLoaded', function() {
+        const successMessage = document.getElementById('success-flash-message');
+        if (successMessage) {
+            successMessage.style.display = 'block';
+            successMessage.classList.remove('hidden-flash');
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+                successMessage.classList.add('hidden-flash');
+            }, 4000);
+        }
+    });
+</script>
 {% endblock %}
-
-<div id="name-display-container">
-    <span class="label">name</span>
-    <div class="edit-area">
-        <p id="name-value">book5</p>
-        <span class="edit-icon">✏️</span>
-    </div>
-    
-    <form id="name-edit-form" class="edit-form-hidden">
-        <input type="text" value="book5" name="profile_name">
-        <button type="submit">保存</button>
-    </form>
-</div>

@@ -56,6 +56,13 @@ form {
   color: var(--snow); 
 }
 
+.tag-search{
+  color:var(--brown);
+}
+.tag-search h5 {
+  margin-top: 10px; 
+  margin-bottom: 5px; 
+}
 .tag-container-wrapper {
   max-height: 250px; 
   overflow-y: auto; 
@@ -75,8 +82,9 @@ form {
 
 .tag-group label {
   display: flex;
+  color:var(--brown);
   align-items: center;
-  font-size: 14px;
+  font-size: 1rem;
   white-space: nowrap; 
   cursor: pointer;
 }

@@ -94,19 +94,19 @@
   border-radius: 6px; 
   outline: none;
   margin-top: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   padding: 1.0rem;
   color: var(--brown);
 }
 
 .bookroom-form-input::placeholder {
   color: var(--gray);
-  font-size: 10px;
+  font-size: 0.8rem;
 }
 
 .bookroom-form-input-wide::placeholder {
   color: var(--gray);
-  font-size: 10px; 
+  font-size: 0.8rem; 
   overflow-wrap: anywhere;
 }
 
@@ -153,7 +153,8 @@
   width: 70%;
   background-color: var(--wood);
   border-radius: 50px; 
-  box-shadow: 0 4px var(--brown); 
+  box-shadow: 0 4px var(--brown);
+  margin-top:20px;
 }
 
 #delete-bookroom-confirmation-button {
@@ -231,11 +232,11 @@
 }
 .bookroom-form-input-private::placeholder {
   color: var(--brown);
-  font-size: 10px;
+  font-size: 0.8rem;
 }
 .bookroom-form-input-wide-private::placeholder {
   color: var(--brown);
-  font-size: 10px; 
+  font-size: 0.8rem; 
   overflow-wrap: anywhere;
 }
 .bookroom-form-input-private:focus::placeholder {
@@ -270,6 +271,7 @@
   background-color: var(--green);
   border-radius: 50px; 
   box-shadow: 0 4px var(--deep_green);
+  margin-top: 20px;
 }
 
 .modal-body-private button:hover {
@@ -345,7 +347,6 @@
 }
 
 /*アイコン更新モーダルここまで*/
-
 /* ========================================================== */
 /* レスポンシブ */
 

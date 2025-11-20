@@ -11,9 +11,11 @@
         <p class="bookroom-description">{{bookroom.description | default("ブックルームの詳細") }}</p>
       </div>
       {% if bookroom.description is not none %}
-      <span class="tag-category">
-          仮タグ
-        </span>
+        {% if selected_tags is not none %}
+          {% for tag in selected_tags %}
+            <span class="tag-category"> {{ tag.name }} </span>
+          {% endfor %}
+        {% endif %}
       
      {% endif %}{% if bookroom.user_id == uid %}
       <button class="update-bookroom-button" id="update-bookroom-button">
@@ -45,8 +47,8 @@
       <div class="message-content-wrapper">
         <p class="user-name">{{message.user_name | default("メッセージテーブルのユーザーネーム")}}</p>
          <div class="icon-and-message-left">
-          <div class="user-icon"></div>
-        <p class="box box-left">{{message.message| default("メッセージテーブルの内容")}}</p>
+          <img class="user-icon" src="{{message.icon_image}}" alt="ユーザーアイコン">
+          <p class="box box-left">{{message.message| default("メッセージテーブルの内容")}}</p>
          </div> 
           <span class="timestamp timestamp-left">2025/10/28 16:54</span>
             <div class="reaction-zone reaction-zone-left">

@@ -9,62 +9,12 @@
             <p>変更したいアイコンをクリックしてください</p>
         </div>
         <form class="modal-icons-body" name="updateIcon" action="/icons/update" method="POST">
-            <button class="icon_styled" id="icon1" type="submit" value="iconid1" name="icon_name">
-              <img class="icon-image" src="{{ url_for('static', filename='img/icon_book.png') }}" alt="icon">
-            </button>
-            <button class="icon_styled" type="submit" value="iconid2" name="icon_name">
-              <img class="icon-image" src="{{ url_for('static', filename='img/icon_rabbit.png') }}" alt="icon">
-            </button>
-            <button class="icon_styled" type="submit" value="iconid3" name="icon_name">
-              <img class="icon-image" src="{{ url_for('static', filename='img/icon_withcoffe.png') }}" alt="icon">
-            </button>
-            <button class="icon_styled" type="submit" value="iconid4" name="icon_name">
-              <img class="icon-image" src="{{ url_for('static', filename='img/icon_animals.png') }}" alt="icon">
-            </button>
-            <button class="icon_styled" type="submit" value="iconid5" name="icon_name">
-              <img class="icon-image" src="{{ url_for('static', filename='img/icon_readbookwomen.png') }}" alt="icon">
-            </button>
-            <button class="icon_styled" type="submit" value="iconid6" name="icon_name">
-              <img class="icon-image" src="{{ url_for('static', filename='img/icon_human.png') }}" alt="icon">
-            </button>
-            <button class="icon_styled" type="submit" value="iconid7" name="icon_name">
-              <img class="icon-image" src="{{ url_for('static', filename='img/icon_dog.png') }}" alt="icon">
-            </button>
-            <button class="icon_styled" type="submit" value="iconid8" name="icon_name">
-              <img class="icon-image" src="{{ url_for('static', filename='img/icon_cutegirl.png') }}" alt="icon">
-            </button>
-            <button class="icon_styled" type="submit" value="iconid9" name="icon_name">
-              <img class="icon-image" src="{{ url_for('static', filename='img/icon_readbook.png') }}" alt="icon">
-            </button>
-            <button class="icon_styled" type="submit" value="iconid10" name="icon_name">
-              <img class="icon-image" src="{{ url_for('static', filename='img/icon_cat.png') }}" alt="icon">
-            </button>
-            <button class="icon_styled" type="submit" value="iconid11" name="icon_name">
-              <img class="icon-image" src="{{ url_for('static', filename='img/icon_ringo.png') }}" alt="icon">
-            </button>
-            <button class="icon_styled" type="submit" value="iconid12" name="icon_name">
-              <img class="icon-image" src="{{ url_for('static', filename='img/icon_simplegirl.png') }}" alt="icon">
-            </button>
-            <button class="icon_styled" type="submit" value="iconid13" name="icon_name">
-              <img class="icon-image" src="{{ url_for('static', filename='img/icon_lake.png') }}" alt="icon">
-            </button>
-            <button class="icon_styled" type="submit" value="iconid14" name="icon_name">
-              <img class="icon-image" src="{{ url_for('static', filename='img/icon_gentleman.png') }}" alt="icon">
-            </button>
-            <button class="icon_styled" type="submit" value="iconid15" name="icon_name">
-              <img class="icon-image" src="{{ url_for('static', filename='img/icon_sea.png') }}" alt="icon">
-            </button>
-            <button class="icon_styled" type="submit" value="iconid16" name="icon_name">
-              <img class="icon-image" src="{{ url_for('static', filename='img/icon_sky.png') }}" alt="icon">
-            </button>
-            <button class="icon_styled" type="submit" value="iconid17" name="icon_name">
-              <img class="icon-image" src="{{ url_for('static', filename='img/icon_book&coffee.png') }}" alt="icon">
-            </button>
-            </button>
-            <button class="icon_styled" type="submit" value="iconid18" name="icon_name">
-              <img class="icon-image" src="{{ url_for('static', filename='img/icon_mountain.png') }}" alt="icon">
-            </button>
-        </form> 
+        {% for icon in icons %}
+          <button class="icon_styled" type="submit" name="icon_name" value="{{ icon.id }}">
+            <img class="icon-image" src="{{ icon.icon_image }}" alt="{{ icon.icon_name }}">
+          </button>
+        {% endfor %}
+      </form>
     </div>
   </div>
 </div>
