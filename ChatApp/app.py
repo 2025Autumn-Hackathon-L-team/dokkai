@@ -17,9 +17,6 @@ MAX_LENGTH_BOOKROOM_DESCRIPTION = 250
 MAX_TAGS = 5
 PER_PAGE = 5  # 1ページに表示するブックルームの数
 
-# ユーザーIDを仮で作成
-TEST_USER_ID = "970af84c-dd40-47ff-af23-282b72b7cca8"
-
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", uuid.uuid4().hex)
 app.permanent_session_lifetime = timedelta(days=SESSION_DAYS)
@@ -172,7 +169,7 @@ def is_bookroom_owner(user_id, bookroom_id):
     return True
 
 
-# ログインしているuser_idを返す。テストの際は、TEST_USER_IDを格納する。
+# ログインしているuser_idを返す。
 def get_login_user_id():
     user_id = session.get("user_id")
     return user_id
@@ -230,6 +227,14 @@ def change_jst(utc_time):
     return utc_time.astimezone(jst)
 
 
+def remove_duplicate_bookroomids(bookroom_ids_dict):
+    # dictionary型になっているので、idだけのデータにする
+    bookroom_ids_list = []
+    for bookroom_id in bookroom_ids_dict:
+        bookroom_ids_list.append(bookroom_id["bookroom_id"])
+    return list(set(bookroom_ids_list))
+
+
 # パブリックブックルームの一覧表示
 @app.route("/public_bookrooms", methods=["GET"])
 def public_bookrooms_view():
@@ -237,8 +242,21 @@ def public_bookrooms_view():
     if user_id is None:
         return redirect(url_for("login_view"))
 
-    # publicなブックルームのみ取得
-    bookrooms = Bookroom.get_public_bookrooms()
+    keyword = request.args.get("keyword")
+    search_tag_ids = request.args.getlist("search_tag_ids")
+
+    # タグ指定があった場合
+    if len(search_tag_ids) > 0:
+        # かぶっているデータを削除
+        search_bookroom_ids = remove_duplicate_bookroomids(
+            BookroomTag.get_bookroomids_from_tagids(search_tag_ids)
+        )
+        bookrooms = Bookroom.get_public_bookrooms_from_bookroomid(search_bookroom_ids)
+
+    else:
+        # 何も指定がない場合
+        # publicなブックルームのみ取得
+        bookrooms = Bookroom.get_public_bookrooms()
 
     # tagデータを取得
     # データベースからすべてのbookroom_idとタグデータをセットで取得
