@@ -43,12 +43,11 @@
 
 .bookroom-contents{
   display: flex;
-  width:100%;
   flex-direction: column;
-  align-items: center;
-  justify-content: center; 
   gap: 0.8rem; 
-  margin-left: 20px; 
+  margin:0;
+  max-width: 200vh;
+  flex-wrap: wrap;
 }
 
 .bookroom-name {
@@ -65,24 +64,33 @@
 
 #update-bookroom-button {
     background-color: var(--wood);
+    box-shadow: 0 4px var(--lightgray);
     border-radius: 50%;
-    width: 10vh; 
-    height: 6vh;
+    width: 40px; 
+    height: 40px;
     padding: 0.2em 0.6em;
-    margin-left: auto
+    margin-left: auto;
+    position: absolute; 
+    right: 100px;     
+    bottom: 10px;
 }
 #update-bookroom-button:hover {
   background-color: var(--wood);
+  box-shadow: 0 2px var(--light-gray);
+  transform: translateY(2px); 
   cursor: pointer;
 }
+
 .message-group { 
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: center;
     gap: 5px;
+    width:100%;
 }
 
-.tag-category { 
+.tag-category-message { 
   font-size: 0.7rem;
   font-weight: 600;
   color: var(--brown);
@@ -91,14 +99,13 @@
   border-radius: 12px;
   white-space: nowrap;
   margin-top:10px;
-  margin-left: 20px;
-  margin-right:20px;
 }
+
 
 /* ========================== メッセージ表示エリア ============================= */
 
 #message-area {
-  min-height: 77vh;
+  
   width: 100%;
   padding-top: 20vh;
   padding-left:5px;
@@ -373,24 +380,37 @@
 
 
 /* ========================== レスポンシブ ============================= */
-
 @media screen and (max-width: 639px) {
+   #message-area {
+  padding-top: 25vh;
+}
   .typing-box-wrapper,
   .bookroom-header {
     width: 100%;
   }
-  #message-area {
-  padding-top: 20vh;
+  .message-group { 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
 }
+  .tag-list-container { 
+   display:flex; 
+   flex-direction: row;
+   margin-bottom: 10px;
+}
+
   #update-bookroom-button {
-    width: 30%; 
-    height: 30%;
-    padding: 0.2em 0.6em;
-    margin: 40px 0 0 0 ;
-}
+    right: 10px;     
+    bottom: 10px;
+} 
 }
 @media only screen and (min-width: 640px) {
   .box {
     width: 100%;
   }
+  
+  
+  
+
 }

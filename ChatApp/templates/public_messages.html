@@ -12,17 +12,18 @@
       </div>
       {% if bookroom.description is not none %}
       {% if selected_tags is not none %}
+      <div class="tag-list-container">
         {% for tag in selected_tags %}
-          <span class="tag-category"> {{ tag.name }} </span>
+          <span class="tag-category-message"> {{ tag.name }} </span>
         {% endfor %}
+        </div>
       {% endif %}
-      
-     {% endif %}{% if bookroom.user_id == uid %}
+      </div>
+    {% endif %}{% if bookroom.user_id == uid %}
       <button class="update-bookroom-button" id="update-bookroom-button">
         <img src="{{ url_for('static', filename='img/pen.png') }}" alt="アイコン" >
       </button>
-     {% include 'modal/update-bookroom.html' %} {% endif %}
-      </div>
+     {% include 'modal/update-bookroom.html' %} {% endif %} 
     </div>  
     <div id="message-area">
       {% if messages|length > 0 %} {% for message in messages %} {% if
