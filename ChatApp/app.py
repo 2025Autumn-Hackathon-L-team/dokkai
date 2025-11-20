@@ -7,7 +7,7 @@ import uuid
 import re
 import os
 
-from models import User, Bookroom, Message, Profile, Tag, BookroomTag
+from models import User, Bookroom, Message, Profile, Tag, BookroomTag, History
 
 ############################認証関係(ここから)####################################
 EMAIL_PATTERN = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
@@ -612,13 +612,16 @@ def delete_private_bookroom(bookroom_id):
 ###########################
 # ヒストリーブックルーム  #
 ###########################
-# ヒストリーブックルームの表示（仮設置）
+# ヒストリーブックルームの表示
 @app.route("/history", methods=["GET"])
 def history_view():
-    # publicなブックルームのみ取得
-    bookrooms = Bookroom.get_public_bookrooms()
-    # 表示チェックのためデフォルト値を設定
-    user_id = session.get("user_id")
+    user_id = get_login_user_id()
+    print(f'{user_id}はuser_id')    
+    if user_id is None:
+        return redirect(url_for("login_view"))
+    
+    bookrooms = History.history(user_id)
+    print(f'{bookrooms}はbookrooms')
 
     # ページネーション
     page = request.args.get(get_page_parameter(), type=int, default=1)

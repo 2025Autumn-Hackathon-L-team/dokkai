@@ -280,10 +280,10 @@ class BookroomTag:
             db_pool.release(conn)
 
 #############ヒストリー#############
-# UNIONでbookroomの全てのカラムを返す。bookromm_idだけの集合を作る。チャンネル名は重複しない設定。
+# bookroom_idだけの集合を作る。チャンネル名は重複しない設定。
 class History:
     @classmethod
-    def history(user_id):
+    def history(cls, user_id):
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
