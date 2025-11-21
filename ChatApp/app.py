@@ -226,14 +226,6 @@ def change_jst(utc_time):
         utc_time = utc_time.replace(tzinfo=utc)
     return utc_time.astimezone(jst)
 
-
-def remove_duplicate_bookroomids(bookroom_ids_dict):
-    # dictionary型になっているので、idだけのデータにする
-    bookroom_ids_list = []
-    for bookroom_id in bookroom_ids_dict:
-        bookroom_ids_list.append(bookroom_id["bookroom_id"])
-    return list(set(bookroom_ids_list))
-
 def change_list_from_dict(dict_datas, key_name):
     list = []
     for data in dict_datas:
@@ -258,7 +250,7 @@ def public_bookrooms_view():
     # タグ指定があった場合、該当するブックルームIDを抽出
     if len(search_tag_ids) > 0:
         # タグを満たすブックルームを抽出（だぶりあり）
-        search_bookroom_ids_dict = BookroomTag.get_bookroomids_from_tagids(search_tag_ids)
+        search_bookroom_ids_dict = BookroomTag.get_public_bookroomids_from_tagids(search_tag_ids)
         # dictionaryデータをリスト型に変更（だぶりあり）
         search_bookroom_ids_list = change_list_from_dict(search_bookroom_ids_dict, "bookroom_id")
         #だぶりをなくす
@@ -461,9 +453,40 @@ def private_bookrooms_view():
     user_id = get_login_user_id()
     if user_id is None:
         return redirect(url_for("login_view"))
+    
+    #####検索機能#####
+    keyword = request.args.get("keyword")
+    search_tag_ids = request.args.getlist("search_tag_ids")
+    print(keyword)
+    for tag in search_tag_ids:
+        print(tag)
 
-    # privateなブックルームのみ取得
-    bookrooms = Bookroom.get_private_bookrooms(user_id)
+    # キーワード検索があった場合、該当するブックルームIDを抽出
+    if keyword is not None:
+        keyword_bookroom_ids_dict = Bookroom.get_private_bookrooms_include_keyword(keyword, user_id)
+        keyword_bookroom_ids_list = change_list_from_dict(keyword_bookroom_ids_dict, "id")
+
+    # タグ指定があった場合、該当するブックルームIDを抽出
+    if len(search_tag_ids) > 0:
+        # タグを満たすブックルームを抽出（だぶりあり）
+        search_bookroom_ids_dict = BookroomTag.get_private_bookroomids_from_tagids(search_tag_ids, user_id)
+        # dictionaryデータをリスト型に変更（だぶりあり）
+        search_bookroom_ids_list = change_list_from_dict(search_bookroom_ids_dict, "bookroom_id")
+        #だぶりをなくす
+        search_bookroom_ids_single_list = list(set(search_bookroom_ids_list))
+
+    # それぞれの場合のブックルームを抽出
+    if (keyword is not None) & (len(search_tag_ids) > 0):
+        search_list = list(set(keyword_bookroom_ids_list) & set(search_bookroom_ids_single_list))
+        bookrooms = Bookroom.get_private_bookrooms_from_bookroomid(search_list)
+    elif (keyword is not None) & (len(search_tag_ids) == 0):
+        bookrooms = Bookroom.get_private_bookrooms_from_bookroomid(keyword_bookroom_ids_list)
+    elif (keyword is None) & (len(search_tag_ids) > 0):
+        bookrooms = Bookroom.get_private_bookrooms_from_bookroomid(search_bookroom_ids_single_list)
+    else:
+        # 何も指定がない場合
+        # privateブックルームを全て取得
+        bookrooms = Bookroom.get_private_bookrooms(user_id)
 
     # tagデータを取得
     # データベースからすべてのbookroom_idとタグデータをセットで取得
