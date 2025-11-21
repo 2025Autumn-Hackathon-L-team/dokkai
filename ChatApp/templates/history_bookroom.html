@@ -18,7 +18,9 @@
   
 
   <div id="bookroom-list"> 
-    {% for bookroom in paginated_bookrooms %}
+    {% for date, rooms in groups.items() %}
+    <h3>{{ date }}</h3>
+    {% for bookroom in rooms %}
     <div class="room-item-card"> {# Card for each memo #}
       <div class="room-content">
         <a href="{{ url_for('detail', bookroom_id=bookroom.id) }}" class="bookroom-to-message">
@@ -35,6 +37,7 @@
       <div class="reaction-icon">
       </div>
     </div>
+    {% endfor %}
     {% endfor %}
     {% include 'modal/search_history.html'%}
     

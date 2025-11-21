@@ -671,12 +671,19 @@ def history_view():
         record_name="ブックルーム",
     )
 
+    # 日付ごとにグループ化
+    groups = {}
+    for item in paginated_bookrooms:
+        date = item["last_updated_at"].date()
+        groups.setdefault(date,[]).append(item)
+
     return render_template(
         "history_bookroom.html",
         is_public=True,
         uid=user_id,
         paginated_bookrooms=paginated_bookrooms,
         pagination=pagination,
+        groups=groups
     )
 
 
