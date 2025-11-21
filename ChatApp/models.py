@@ -346,15 +346,15 @@ class History:
                             SELECT bookroom_id FROM (
                                 SELECT m.bookroom_id
                                 FROM messages AS m
-                                WHERE m.user_id = %s
+                                WHERE m.user_id = %s AND b.is_public=1
 
                                 UNION ALL
 
                                 SELECT m2.bookroom_id
                                 FROM message_reaction AS mr
                                 JOIN messages AS m2 ON mr.message_id = m2.id
-                                WHERE mr.user_id = %s
-                            ) AS t 
+                                WHERE mr.user_id = %s AND b.is_public=1
+                            ) AS t
                         -- 更新が新しい順にする
                         )ORDER BY ua.last_updated_at DESC;
                 """
