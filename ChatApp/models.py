@@ -122,6 +122,23 @@ class Bookroom:
             abort(500)
         finally:
             db_pool.release(conn)
+    
+    @classmethod
+    def get_public_bookrooms_include_keyword(cls, keyword):
+        keyword_wild = f"%{keyword}%"
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                sql = "SELECT id FROM bookrooms WHERE is_public=TRUE " \
+                      "AND (name LIKE %s OR description LIKE %s) ORDER BY updated_at DESC;"
+                cur.execute(sql, (keyword_wild,keyword_wild,))
+                private_bookrooms = cur.fetchall()
+                return private_bookrooms
+        except pymysql.Error as e:
+            print(f"エラーが発生しています:{e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
 
     @classmethod
     def get_public_bookrooms_from_bookroomid(cls, bookroom_ids):
