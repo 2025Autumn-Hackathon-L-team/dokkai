@@ -337,6 +337,7 @@ class History:
                     GROUP BY bookroom_id -- 複数回同じチャンネルに投稿していた場合、すべての場合が取得されているので、bookroom_idにグループ化する。
                 ) AS hist
                 ON b.id = hist.bookroom_id
+                WHERE b.is_public=1 -- publicのみ表示
                 ORDER BY hist.last_updated_at DESC; -- 最新投稿順に並び替え
                 """
                 cur.execute(sql, (user_id, user_id))
