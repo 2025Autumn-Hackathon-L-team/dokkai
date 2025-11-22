@@ -18,7 +18,7 @@
 
   <div id="bookroom-list">
   {% if groups|length == 0 %}
-    <p>メッセージを送ったり、リアクションをしたPUBLIC BOOKROOMはありません。</p>
+    <p>参加履歴はありません。</p>
   {% else %}
     {% for date, rooms in groups.items() %}
       <h3>{{ date }}</h3>
