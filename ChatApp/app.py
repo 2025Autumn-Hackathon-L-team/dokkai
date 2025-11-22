@@ -7,14 +7,14 @@ import uuid
 import re
 import os
 
-from models import User, Bookroom, Message, Profile, Tag, BookroomTag
+from models import User, Bookroom, Message, Profile, Tag, BookroomTag, Icon
 
 ############################認証関係(ここから)####################################
 EMAIL_PATTERN = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 SESSION_DAYS = 30
 MAX_LENGTH_BOOKROOM_NAME=100
 MAX_LENGTH_BOOKROOM_DESCRIPTION=250
-
+MAX_TAGS = 5
 PER_PAGE = 5  # 1ページに表示するブックルームの数
 
 # ユーザーIDを仮で作成
@@ -210,6 +210,16 @@ def get_tag_id_list_from_tag_talbe(tag_table):
         tag_ids_list.append(tag_data["id"])
     return tag_ids_list
 
+# ページネーション分のbookroom_idに該当するtagデータを格納。タグがない場合は空データを入れる
+def get_pagenated_bookroom_tag(bookroom_group_tag, pagenated_bookroom_id):
+    pagenated_bookroom_tag = {}
+    for bookroom_id in pagenated_bookroom_id:
+        if bookroom_id in bookroom_group_tag:
+            pagenated_bookroom_tag[bookroom_id] = bookroom_group_tag[bookroom_id]
+        else:
+            pagenated_bookroom_tag[bookroom_id] = []
+    return pagenated_bookroom_tag
+
 
 # 日本時間に変更
 def change_jst(utc_time):
@@ -243,16 +253,11 @@ def public_bookrooms_view():
 
     # ページネーション分のbookroom_idを取得
     pagenated_bookroom_id = []
-    for bookroom in bookrooms:
+    for bookroom in paginated_bookrooms:
         pagenated_bookroom_id.append(bookroom["id"])
 
     # ページネーション分のbookroom_idに該当するtagデータを格納。タグがない場合は空データを入れる
-    pagenated_bookroom_tag = {}
-    for bookroom_id in pagenated_bookroom_id:
-        if bookroom_id in bookroom_group_tag:
-            pagenated_bookroom_tag[bookroom_id] = bookroom_group_tag[bookroom_id]
-        else:
-            pagenated_bookroom_tag[bookroom_id] = []
+    pagenated_bookroom_tag = get_pagenated_bookroom_tag(bookroom_group_tag, pagenated_bookroom_id)
 
     pagination = Pagination(
         page=page,
@@ -264,7 +269,6 @@ def public_bookrooms_view():
 
     # タグテーブルに登録されているタグを取得
     tags = Tag.get_all_tags()
-    print("pagenated_bookroom_tag =", pagenated_bookroom_tag)
 
     # 時間をJSTに変更
     for bookroom in paginated_bookrooms:
@@ -328,14 +332,20 @@ def create_public_bookroom():
             flash("入力可能文字数をオーバーしました","createbookroom_flash")
             flash("BOOKROOMの紹介文は256文字以内で入力してください","createbookroom_flash")
             return redirect(url_for("public_bookrooms_view")) # TODO 遷移先これでいいか確認
+        
+        # タグ関連
+        tag_ids = request.form.getlist("tag_ids")
+        # タグ数の上限チェック
+        if len(tag_ids) > MAX_TAGS:
+            flash(f"タグは最大{MAX_TAGS}個までです。","createbookroom_flash")
+            return redirect(url_for("public_bookrooms_view"))
+
         bookroom_id = Bookroom.create(
             user_id=user_id,
             name=bookroom_name,
             description=bookroom_description,
             is_public=True,
-        )
-
-        tag_ids = request.form.getlist("tag_ids")
+        )        
         BookroomTag.create(bookroom_id, tag_ids)
 
         return redirect(url_for("public_bookrooms_view"))
@@ -410,11 +420,17 @@ def update_public_bookroom(bookroom_id):
         flash("入力可能文字数をオーバーしました")
         flash("BOOKROOMの紹介文は256文字以内で入力してください","updatebookroom_flash")
         return redirect(url_for("public_bookrooms_view")) # TODO 遷移先これでいいか確認
-
+    
+    # タグ関連
+    tag_ids = request.form.getlist("tag_ids")
+    if len(tag_ids) > MAX_TAGS:
+        flash(f"タグは最大{MAX_TAGS}個までです。", "updatebookroom_flash")
+        if app.debug:
+            return redirect(url_for("edit_bookroom", bookroom_id=bookroom_id))
+        else:
+            return redirect(url_for("detail", bookroom_id=bookroom_id))
     
     Bookroom.update(bookroom_id=bookroom_id, name=bookroom_name, description=description)
-
-    tag_ids = request.form.getlist("tag_ids")
     BookroomTag.delete_bookroomtag_by_bookroomid(bookroom_id)
     BookroomTag.create(bookroom_id, tag_ids)
 
@@ -464,16 +480,12 @@ def private_bookrooms_view():
 
     # ページネーション分のbookroom_idを取得
     pagenated_bookroom_id = []
-    for bookroom in bookrooms:
+    for bookroom in paginated_bookrooms:
         pagenated_bookroom_id.append(bookroom["id"])
 
     # ページネーション分のbookroom_idに該当するtagデータを格納。タグがない場合は空データを入れる
-    pagenated_bookroom_tag = {}
-    for bookroom_id in pagenated_bookroom_id:
-        if bookroom_id in bookroom_group_tag:
-            pagenated_bookroom_tag[bookroom_id] = bookroom_group_tag[bookroom_id]
-        else:
-            pagenated_bookroom_tag[bookroom_id] = []
+    pagenated_bookroom_tag = get_pagenated_bookroom_tag(bookroom_group_tag, pagenated_bookroom_id)
+    print("private bookroom pagenated_bookroom_tag =", pagenated_bookroom_tag)
 
     pagination = Pagination(
         page=page,
@@ -548,6 +560,13 @@ def create_private_bookroom():
             flash("入力可能文字数をオーバーしました","createbookroom_flash")
             flash("BOOKROOMの紹介文は256文字以内で入力してください","createbookroom_flash")
             return redirect(url_for("private_bookrooms_view")) # TODO 遷移先これでいいか確認
+        
+        # タグ関連
+        tag_ids = request.form.getlist("tag_ids")
+        if len(tag_ids) > MAX_TAGS:
+            flash(f"タグは最大{MAX_TAGS}個までです。", "createbookroom_flash")
+            return redirect(url_for("private_bookrooms_view"))
+
         bookroom_id = Bookroom.create(
             user_id=user_id,
             name=bookroom_name,
@@ -555,8 +574,6 @@ def create_private_bookroom():
             is_public=False,
         )
 
-        # タグ取得
-        tag_ids = request.form.getlist("tag_ids")
         # タグデータをデータベースに登録
         BookroomTag.create(bookroom_id, tag_ids)
 
@@ -597,9 +614,13 @@ def update_private_bookroom(bookroom_id):
         flash("BOOKROOMの紹介文は256文字以内で入力してください","updatebookroom_flash")
         return redirect(url_for("private_detail", bookroom_id=bookroom_id)) # TODO 遷移先これでいいか確認
 
-    Bookroom.update(bookroom_id=bookroom_id, name=name, description=description)
-
+    # タグ関連
     tag_ids = request.form.getlist("tag_ids")
+    if len(tag_ids) > MAX_TAGS:
+        flash(f"タグは最大{MAX_TAGS}個までです。","updatebookroom_flash")
+        return redirect(url_for("private_detail", bookroom_id=bookroom_id))
+
+    Bookroom.update(bookroom_id=bookroom_id, name=name, description=description)  
     BookroomTag.delete_bookroomtag_by_bookroomid(bookroom_id)
     BookroomTag.create(bookroom_id, tag_ids)
 
@@ -676,15 +697,17 @@ def detail(bookroom_id):
     # 現在登録されているブックルーム名表示のため追記ここから
     all_tags = Tag.get_all_tags()
     selected_tags = BookroomTag.get_selected_tags_from_bookroomid(bookroom_id)
+    selected_tag_ids = get_tag_id_list_from_tag_talbe(selected_tags)
     # ブックルーム名編集のため追記ここまで
-
+   
     return render_template(
         "public_messages.html",
         messages=messages,
         bookroom=bookroom,
         uid=user_id,
         tags=all_tags,
-        selected_tags=selected_tags,
+        selected_tag_ids=selected_tag_ids,
+        selected_tags=selected_tags
     )
 
 
@@ -737,6 +760,7 @@ def private_detail(bookroom_id):
     # ブックルーム名編集のため追記ここから
     all_tags = Tag.get_all_tags()
     selected_tags = BookroomTag.get_selected_tags_from_bookroomid(bookroom_id)
+    selected_tag_ids = get_tag_id_list_from_tag_talbe(selected_tags)
     # ブックルーム名編集のため追記ここまで
 
     return render_template(
@@ -745,7 +769,8 @@ def private_detail(bookroom_id):
         bookroom=bookroom,
         uid=user_id,
         tags=all_tags,
-        selected_tags=selected_tags,
+        selected_tag_ids=selected_tag_ids,
+        selected_tags=selected_tags
     )
 
 
@@ -794,6 +819,7 @@ def profile_view():
     current_email = Profile.email_view(user_id)
     icon_view = Profile.icon_view(user_id)
     messages_count = Profile.get_messages_count(user_id)
+    icons = Icon.get_all()
     # TODO リアクション機能実装後、リアクションの数を取得する。
     # printはサーバーで出る値を確認。後日削除する。
     print(f"{icon_view}はiconidです")
@@ -812,6 +838,7 @@ def profile_view():
         name=current_name,
         email=current_email,
         messages_count=messages_count,
+        icons = icons,
     )
 
 
