@@ -299,6 +299,55 @@ class BookroomTag:
         finally:
             db_pool.release(conn)
 
+#############ヒストリー#############
+# bookroom_idだけの集合を作る。チャンネル名は重複しない設定。
+class History:
+    @classmethod
+    def history(cls, user_id):
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                # sqlの構成：SELECT 取得したいカラム FROM bookrooms INNER JOIN bookroom_idが入ったmessageとreaction_messageの投稿時間がわかる表（WHEREで特定のユーザーが投稿したものを指定）ON bookroom_idで紐付け ORDER BY 更新順
+                sql = """
+                SELECT 
+                    b.id,
+                    b.name,
+                    b.description,
+                    b.is_public,
+                    hist.last_updated_at -- ユーザーが最後にメッセージかリアクションを投稿した時間
+                FROM bookrooms AS b
+                -- ユーザーがこの bookroom で最後に行った操作の時間のsub_tableをINNER JOINする
+                INNER JOIN (
+                    SELECT 
+                        bookroom_id,
+                        MAX(updated_at) AS last_updated_at
+                    FROM (
+                        -- T_messagesから取得
+                        SELECT m.bookroom_id,m.updated_at
+                        FROM messages AS m
+                        WHERE m.user_id = %s
+                        UNION ALL
+                        -- T_message_reactionsから取得
+                        SELECT m2.bookroom_id,mr.created_at AS updated_at -- 別名を付けて、カラム名を合わせる
+                        FROM message_reaction AS mr
+                        JOIN messages AS m2 -- UNIONは同じカラム名だとエラーになるから、messageの別名はm2とする
+                        ON mr.message_id = m2.id
+                        WHERE mr.user_id = %s
+                    ) AS sub_table -- 別名つけないとエラーになるのでつける
+                    GROUP BY bookroom_id -- 複数回同じチャンネルに投稿していた場合、すべての場合が取得されているので、bookroom_idにグループ化する。
+                ) AS hist
+                ON b.id = hist.bookroom_id
+                WHERE b.is_public=1 -- publicのみ表示
+                ORDER BY hist.last_updated_at DESC; -- 最新投稿順に並び替え
+                """
+                cur.execute(sql, (user_id, user_id))
+                history = cur.fetchall()
+                return history
+        except pymysql.Error as e:
+            print(f"エラーが発生しています:) {e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
 
 ############################ブックルーム関係（ここまで）############################
 

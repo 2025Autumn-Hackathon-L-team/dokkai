@@ -15,29 +15,35 @@
     </label>
     <button type="button" aria-label="検索"></button>
 </div>
-  
 
-  <div id="bookroom-list"> 
-    {% for bookroom in paginated_bookrooms %}
-    <div class="room-item-card"> {# Card for each memo #}
-      <div class="room-content">
-        <a href="{{ url_for('detail', bookroom_id=bookroom.id) }}" class="bookroom-to-message">
-        <h3 class="room-title">{{ bookroom.name }}</h3>
-        <p class="room-description">{{ bookroom.description }}</p>
-      </a>
-      </div>
-      <div class="room-group">
-        <span class="room-date">{{ bookroom.updated_at.strftime('%Y/%m/%d %H:%M') }}</span>
-        <span class="room-category {{ bookroom.category_tag | default('uncategorized') }}">
-          {{ bookroom.category | default('未分類') }}
-        </span>
-      </div>
-      <div class="reaction-icon">
-      </div>
-    </div>
+  <div id="bookroom-list">
+  {% if groups|length == 0 %}
+    <p>参加履歴はありません。</p>
+  {% else %}
+    {% for date, rooms in groups.items() %}
+      <h3>{{ date }}</h3>
+      {% for bookroom in rooms %}
+        <div class="room-item-card"> {# Card for each memo #}
+          <div class="room-content">
+            <a href="{{ url_for('detail', bookroom_id=bookroom.id) }}" class="bookroom-to-message">
+              <h3 class="room-title">{{ bookroom.name }}</h3>
+              <p class="room-description">{{ bookroom.description }}</p>
+            </a>
+          </div>
+          <div class="room-group">
+            <span class="room-date">{{ bookroom.last_updated_at.strftime('%Y/%m/%d %H:%M') }}</span>
+            <span class="room-category {{ bookroom.category_tag | default('uncategorized') }}">
+              {{ bookroom.category | default('未分類') }}
+            </span>
+          </div>
+          <div class="reaction-icon">
+          </div>
+        </div>
+      {% endfor %}
     {% endfor %}
-    {% include 'modal/search_history.html'%}
-    
+  {% endif %}
+{% include 'modal/search_history.html'%} 
+
     <div class="pagination-container">
       {{ pagination.info }}
       {{ pagination.links }}
