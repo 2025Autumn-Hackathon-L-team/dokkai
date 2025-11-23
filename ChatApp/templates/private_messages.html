@@ -3,6 +3,16 @@
 {% endblock %} {% block body %}
 <div class="main-container_p">
 
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="flash-container">
+        {% for msg in messages %}
+          <div class="flash-message">{{ msg }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
     <div class="bookroom-header">
       <h1>PRIVATE</h1> 
       <div class="message-group">
@@ -67,7 +77,7 @@
     </div>
     <div class="typing-box-wrapper">
       <form class="typing-box" method="POST" name="newMessageForm">
-        <textarea name="message" id="message" maxlength="500" required></textarea>></textarea>
+        <textarea name="message" id="message" maxlength="500" required></textarea>>
         <input type="hidden" name="bookroom_id" value="{{bookroom.id}}" />
         <button type="submit" id="add-message-button">
           <img src="{{ url_for('static', filename='img/pen.png') }}" alt="アイコン" />
