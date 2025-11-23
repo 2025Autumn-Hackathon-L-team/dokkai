@@ -457,9 +457,6 @@ def private_bookrooms_view():
     #####検索機能#####
     keyword = request.args.get("keyword")
     search_tag_ids = request.args.getlist("search_tag_ids")
-    print(keyword)
-    for tag in search_tag_ids:
-        print(tag)
 
     # キーワード検索があった場合、該当するブックルームIDを抽出
     if keyword is not None:
@@ -478,11 +475,11 @@ def private_bookrooms_view():
     # それぞれの場合のブックルームを抽出
     if (keyword is not None) & (len(search_tag_ids) > 0):
         search_list = list(set(keyword_bookroom_ids_list) & set(search_bookroom_ids_single_list))
-        bookrooms = Bookroom.get_private_bookrooms_from_bookroomid(search_list)
+        bookrooms = Bookroom.get_private_bookrooms_from_bookroomid(search_list, user_id)
     elif (keyword is not None) & (len(search_tag_ids) == 0):
-        bookrooms = Bookroom.get_private_bookrooms_from_bookroomid(keyword_bookroom_ids_list)
+        bookrooms = Bookroom.get_private_bookrooms_from_bookroomid(keyword_bookroom_ids_list, user_id)
     elif (keyword is None) & (len(search_tag_ids) > 0):
-        bookrooms = Bookroom.get_private_bookrooms_from_bookroomid(search_bookroom_ids_single_list)
+        bookrooms = Bookroom.get_private_bookrooms_from_bookroomid(search_bookroom_ids_single_list, user_id)
     else:
         # 何も指定がない場合
         # privateブックルームを全て取得

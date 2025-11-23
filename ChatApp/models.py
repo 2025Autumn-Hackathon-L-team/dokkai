@@ -67,7 +67,7 @@ class Bookroom:
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = ("SELECT * FROM bookrooms WHERE name=%s AND is_public=TRUE")
+                sql = "SELECT * FROM bookrooms WHERE name=%s AND is_public=TRUE"
                 cur.execute(sql, (bookroom_name,))
                 bookroom = cur.fetchone()
                 return bookroom
@@ -83,7 +83,7 @@ class Bookroom:
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = ("SELECT * FROM bookrooms WHERE name=%s AND is_public=FALSE AND user_id=%s")
+                sql = "SELECT * FROM bookrooms WHERE name=%s AND is_public=FALSE AND user_id=%s"
                 cur.execute(sql, (bookroom_name, user_id))
                 bookroom = cur.fetchone()
                 return bookroom
@@ -98,7 +98,7 @@ class Bookroom:
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = ("SELECT * FROM bookrooms WHERE id=%s;")
+                sql = "SELECT * FROM bookrooms WHERE id=%s;"
                 cur.execute(sql, (bookroom_id,))
                 bookroom = cur.fetchone()
                 return bookroom
@@ -113,7 +113,7 @@ class Bookroom:
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = ("SELECT * FROM bookrooms WHERE is_public=TRUE ORDER BY updated_at DESC;")
+                sql = "SELECT * FROM bookrooms WHERE is_public=TRUE ORDER BY updated_at DESC;"
                 cur.execute(sql)
                 public_bookrooms = cur.fetchall()
                 return public_bookrooms
@@ -128,7 +128,7 @@ class Bookroom:
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = ("SELECT * FROM bookrooms WHERE user_id=%s AND is_public=FALSE ORDER BY updated_at DESC;")
+                sql = "SELECT * FROM bookrooms WHERE user_id=%s AND is_public=FALSE ORDER BY updated_at DESC;"
                 cur.execute(sql, (user_id,))
                 private_bookrooms = cur.fetchall()
                 return private_bookrooms
@@ -144,7 +144,7 @@ class Bookroom:
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = ("SELECT id FROM bookrooms WHERE is_public=TRUE " \
+                sql = ("SELECT id FROM bookrooms WHERE is_public=TRUE "
                       "AND (name LIKE %s OR description LIKE %s) ORDER BY updated_at DESC;")
                 cur.execute(sql, (keyword_wild,keyword_wild,))
                 private_bookrooms = cur.fetchall()
@@ -161,7 +161,7 @@ class Bookroom:
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = ("SELECT id FROM bookrooms WHERE is_public=FALSE AND user_id=%s " \
+                sql = ("SELECT id FROM bookrooms WHERE is_public=FALSE AND user_id=%s "
                       "AND (name LIKE %s OR description LIKE %s) ORDER BY updated_at DESC;")
                 cur.execute(sql, (user_id,keyword_wild,keyword_wild,))
                 private_bookrooms = cur.fetchall()
@@ -174,14 +174,13 @@ class Bookroom:
 
     @classmethod
     def get_public_bookrooms_from_bookroomid(cls, bookroom_ids):
+        if len(bookroom_ids) == 0:
+                    return []
         conn = db_pool.get_conn()
-        s_string="%s"
-        for i in range(len(bookroom_ids)-1):
-            s_string=f"{s_string},%s"
         try:
             with conn.cursor() as cur:
-                sql = ("SELECT * FROM bookrooms WHERE is_public=TRUE AND id IN ({s_string}) ORDER BY updated_at DESC;")
-                cur.execute(sql, (*bookroom_ids,))
+                sql = "SELECT * FROM bookrooms WHERE is_public=TRUE AND id IN %s ORDER BY updated_at DESC;"
+                cur.execute(sql, (tuple(bookroom_ids),))
                 public_bookrooms = cur.fetchall()
                 return public_bookrooms
         except pymysql.Error as e:
@@ -192,15 +191,13 @@ class Bookroom:
     
     @classmethod
     def get_private_bookrooms_from_bookroomid(cls, bookroom_ids, user_id):
+        if len(bookroom_ids) == 0:
+                    return []
         conn = db_pool.get_conn()
-        s_string="%s"
-        for i in range(len(bookroom_ids)-1):
-            s_string=f"{s_string},%s"
-
         try:
             with conn.cursor() as cur:
-                sql = (f"SELECT * FROM bookrooms WHERE is_public=FALSE AND user_id=%s AND id IN ({s_string}) ORDER BY updated_at DESC;")
-                cur.execute(sql, (user_id, *bookroom_ids,))
+                sql = "SELECT * FROM bookrooms WHERE is_public=FALSE AND user_id=%s AND id IN %s ORDER BY updated_at DESC;"
+                cur.execute(sql, (user_id, tuple(bookroom_ids),))
                 public_bookrooms = cur.fetchall()
                 return public_bookrooms
         except pymysql.Error as e:
@@ -295,9 +292,7 @@ class BookroomTag:
         try:
             with conn.cursor() as cur:
                 for tag_id in tag_ids:
-                    sql = (
-                        "INSERT INTO bookroom_tag(bookroom_id, tag_id) VALUES(%s, %s);"
-                    )
+                    sql = "INSERT INTO bookroom_tag(bookroom_id, tag_id) VALUES(%s, %s);"
                     cur.execute(
                         sql,
                         (
@@ -373,16 +368,15 @@ class BookroomTag:
     # 検索機能の使用　tagidからbookroomidを探す
     @classmethod
     def get_public_bookroomids_from_tagids(cls, tag_ids):
-        s_string="%s"
-        for i in range(len(tag_ids)-1):
-            s_string=f"{s_string},%s"
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
                 sql = ("SELECT bookroom_id FROM bookroom_tag "
-                f"WHERE tag_id IN ({s_string}) ORDER BY bookroom_id;")
-                cur.execute(sql, (*tag_ids,))
+                "WHERE tag_id IN %s ORDER BY bookroom_id;")
+                cur.execute(sql, (tuple(tag_ids),))
                 bookroom_ids = cur.fetchall()
+                if len(bookroom_ids) == 0:
+                    return []
                 return bookroom_ids
         except pymysql.Error as e:
             print(f"エラーが発生しています：{e}")
@@ -393,17 +387,16 @@ class BookroomTag:
     @classmethod
     def get_private_bookroomids_from_tagids(cls, tag_ids, user_id):
         conn = db_pool.get_conn()
-        s_string="%s"
-        for i in range(len(tag_ids)-1):
-            s_string=f"{s_string},%s"
         try:
             with conn.cursor() as cur:
                 sql = ("SELECT bt.bookroom_id "
                 "FROM bookroom_tag AS bt INNER JOIN bookrooms AS b ON bt.bookroom_id = b.id "
-                f"WHERE tag_id IN ({s_string}) AND b.is_public=FALSE AND b.user_id=%s "
+                "WHERE tag_id IN %s AND b.is_public=FALSE AND b.user_id=%s "
                 "ORDER BY bt.bookroom_id;")
-                cur.execute(sql, (*tag_ids,user_id,))
+                cur.execute(sql, (tuple(tag_ids),user_id,))
                 bookroom_ids = cur.fetchall()
+                if len(bookroom_ids) == 0:
+                    return []
                 return bookroom_ids
         except pymysql.Error as e:
             print(f"エラーが発生しています：{e}")
