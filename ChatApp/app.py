@@ -12,8 +12,8 @@ from models import User, Bookroom, Message, Profile, Tag, BookroomTag, Icon
 ############################認証関係(ここから)####################################
 EMAIL_PATTERN = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 SESSION_DAYS = 30
-MAX_LENGTH_BOOKROOM_NAME=100
-MAX_LENGTH_BOOKROOM_DESCRIPTION=250
+MAX_LENGTH_BOOKROOM_NAME = 100
+MAX_LENGTH_BOOKROOM_DESCRIPTION = 250
 MAX_TAGS = 5
 PER_PAGE = 5  # 1ページに表示するブックルームの数
 
@@ -174,9 +174,6 @@ def is_bookroom_owner(user_id, bookroom_id):
 
 # ログインしているuser_idを返す。テストの際は、TEST_USER_IDを格納する。
 def get_login_user_id():
-    if app.debug:
-        session["user_id"] = TEST_USER_ID
-
     user_id = session.get("user_id")
     return user_id
 
@@ -204,11 +201,13 @@ def get_bookroom_group_tags(bookroom_tag_tables):
     bookroom_group_tag[previous_bookroom_id] = tags
     return bookroom_group_tag
 
+
 def get_tag_id_list_from_tag_talbe(tag_table):
     tag_ids_list = []
     for tag_data in tag_table:
         tag_ids_list.append(tag_data["id"])
     return tag_ids_list
+
 
 # ページネーション分のbookroom_idに該当するtagデータを格納。タグがない場合は空データを入れる
 def get_pagenated_bookroom_tag(bookroom_group_tag, pagenated_bookroom_id):
@@ -257,7 +256,9 @@ def public_bookrooms_view():
         pagenated_bookroom_id.append(bookroom["id"])
 
     # ページネーション分のbookroom_idに該当するtagデータを格納。タグがない場合は空データを入れる
-    pagenated_bookroom_tag = get_pagenated_bookroom_tag(bookroom_group_tag, pagenated_bookroom_id)
+    pagenated_bookroom_tag = get_pagenated_bookroom_tag(
+        bookroom_group_tag, pagenated_bookroom_id
+    )
 
     pagination = Pagination(
         page=page,
@@ -275,26 +276,15 @@ def public_bookrooms_view():
         bookroom["created_at"] = change_jst(bookroom["created_at"])
         bookroom["updated_at"] = change_jst(bookroom["updated_at"])
 
-    if app.debug:
-        return render_template(
-            "test/public_bookroom.html",
-            is_public=True,
-            uid=user_id,
-            paginated_bookrooms=paginated_bookrooms,
-            pagenated_bookroom_tag=pagenated_bookroom_tag,
-            pagination=pagination,
-            tags=tags,
-        )
-    else:
-        return render_template(
-            "public_bookroom.html",
-            is_public=True,
-            uid=user_id,
-            paginated_bookrooms=paginated_bookrooms,
-            pagenated_bookroom_tag=pagenated_bookroom_tag,
-            pagination=pagination,
-            tags=tags,
-        )
+    return render_template(
+        "public_bookroom.html",
+        is_public=True,
+        uid=user_id,
+        paginated_bookrooms=paginated_bookrooms,
+        pagenated_bookroom_tag=pagenated_bookroom_tag,
+        pagination=pagination,
+        tags=tags,
+    )
 
 
 # パブリックブックルームの作成
@@ -307,37 +297,40 @@ def create_public_bookroom():
     bookroom_name = request.form.get("bookroom_name")
     # ブックルームの名前が入力されていない。またはスペースだけであれば、作成できないようにする
     if len(bookroom_name.strip()) == 0:
-        flash("ブックルーム名を入力してください","createbookroom_flash")
+        flash("ブックルーム名を入力してください", "createbookroom_flash")
         return redirect(url_for("create_public_bookroom"))
-    
-    # ブックルームの名前がMAX_LENGTH_BOOKROOM_NAMEの数（自由に設定可能）を超えていたらバリデーション
-    if len(bookroom_name)>MAX_LENGTH_BOOKROOM_NAME:
-            flash("入力可能文字数をオーバーしました","createbookroom_flash")
-            flash("BOOKROOMのテーマは100文字以内で入力してください","createbookroom_flash")
-            return redirect(url_for("public_bookrooms_view")) # TODO 遷移先これでいいか確認
 
-    bookroom = Bookroom.find_by_public_bookroom_name(
-        bookroom_name=bookroom_name
-    )
+    # ブックルームの名前がMAX_LENGTH_BOOKROOM_NAMEの数（自由に設定可能）を超えていたらバリデーション
+    if len(bookroom_name) > MAX_LENGTH_BOOKROOM_NAME:
+        flash("入力可能文字数をオーバーしました", "createbookroom_flash")
+        flash("BOOKROOMのテーマは100文字以内で入力してください", "createbookroom_flash")
+        return redirect(url_for("public_bookrooms_view"))  # TODO 遷移先これでいいか確認
+
+    bookroom = Bookroom.find_by_public_bookroom_name(bookroom_name=bookroom_name)
 
     # 他のユーザーが同じ名前を登録していないかチェック。
     if bookroom != None:
-        flash("入力されたBOOKROOMのテーマは使用されています。","createbookroom_flash")
-        return redirect(url_for("public_bookrooms_view")) # TODO 遷移先これでいいか確認
-    
+        flash("入力されたBOOKROOMのテーマは使用されています。", "createbookroom_flash")
+        return redirect(url_for("public_bookrooms_view"))  # TODO 遷移先これでいいか確認
+
     if bookroom is None:
         bookroom_description = request.form.get("bookroom_description")
         # ブックルームの説明欄がMAX_LENGTH_BOOKROOM_DESCRIPTIONの数（自由に設定可能）を超えていたらバリデーション
-        if len(bookroom_description)>MAX_LENGTH_BOOKROOM_DESCRIPTION:
-            flash("入力可能文字数をオーバーしました","createbookroom_flash")
-            flash("BOOKROOMの紹介文は256文字以内で入力してください","createbookroom_flash")
-            return redirect(url_for("public_bookrooms_view")) # TODO 遷移先これでいいか確認
-        
+        if len(bookroom_description) > MAX_LENGTH_BOOKROOM_DESCRIPTION:
+            flash("入力可能文字数をオーバーしました", "createbookroom_flash")
+            flash(
+                "BOOKROOMの紹介文は256文字以内で入力してください",
+                "createbookroom_flash",
+            )
+            return redirect(
+                url_for("public_bookrooms_view")
+            )  # TODO 遷移先これでいいか確認
+
         # タグ関連
         tag_ids = request.form.getlist("tag_ids")
         # タグ数の上限チェック
         if len(tag_ids) > MAX_TAGS:
-            flash(f"タグは最大{MAX_TAGS}個までです。","createbookroom_flash")
+            flash(f"タグは最大{MAX_TAGS}個までです。", "createbookroom_flash")
             return redirect(url_for("public_bookrooms_view"))
 
         bookroom_id = Bookroom.create(
@@ -345,50 +338,13 @@ def create_public_bookroom():
             name=bookroom_name,
             description=bookroom_description,
             is_public=True,
-        )        
+        )
         BookroomTag.create(bookroom_id, tag_ids)
 
         return redirect(url_for("public_bookrooms_view"))
     else:
         error = "既に同じ名前のブックルームが存在しています。"
         return render_template("error/404.html", error_message=error)
-
-
-###########################未使用ここから####################################
-# パブリックブックルーム編集ページ表示
-
-if app.debug:
-
-    @app.route("/public_bookrooms/update/<bookroom_id>", methods=["GET"])
-    def edit_bookroom(bookroom_id):
-        # ログイン確認
-        user_id = get_login_user_id()
-        if user_id is None:
-            return redirect(url_for("login_view"))
-
-        # 編集権限確認
-        if not is_bookroom_owner(user_id, bookroom_id):
-            return redirect(url_for("public_bookrooms_view"))
-
-        bookroom = Bookroom.find_by_bookroom_id(bookroom_id)
-        all_tags = Tag.get_all_tags()
-
-        selected_tags = BookroomTag.get_selected_tags_from_bookroomid(bookroom_id)
-        selected_tag_ids = get_tag_id_list_from_tag_talbe(selected_tags)
-
-        # 日本時間に変更(編集のページでは表示しないが念のため)
-        bookroom["created_at"] = change_jst(bookroom["created_at"])
-        bookroom["updated_at"] = change_jst(bookroom["updated_at"])
-
-        return render_template(
-            "test/update-bookroom.html",
-            bookroom=bookroom,
-            tags=all_tags,
-            selected_tag_ids=selected_tag_ids,
-        )
-
-
-###########################未使用ここまで####################################
 
 
 # パブリックブックルームの編集作業
@@ -406,38 +362,42 @@ def update_public_bookroom(bookroom_id):
     description = request.form.get("bookroom_description")
 
     # 他のユーザーが同じ名前を登録していないかチェック。ただし自分が登録したブックルーム名を編集せずにそのまま更新する場合はそのまま通る。
-    exiting_bookroom_name=Bookroom.find_by_public_bookroom_name(bookroom_name=bookroom_name)
-    if exiting_bookroom_name is not None and str(exiting_bookroom_name["id"]) != str(bookroom_id):
-        flash("入力されたBOOKROOMのテーマは使用されています。","updatebookroom_flash")
-        return redirect(url_for("detail", bookroom_id=bookroom_id)) # TODO 遷移先これでいいか確認
+    exiting_bookroom_name = Bookroom.find_by_public_bookroom_name(
+        bookroom_name=bookroom_name
+    )
+    if exiting_bookroom_name is not None and str(exiting_bookroom_name["id"]) != str(
+        bookroom_id
+    ):
+        flash("入力されたBOOKROOMのテーマは使用されています。", "updatebookroom_flash")
+        return redirect(
+            url_for("detail", bookroom_id=bookroom_id)
+        )  # TODO 遷移先これでいいか確認
     # ブックルームの名前がMAX_LENGTH_BOOKROOM_NAMEの数（自由に設定可能）を超えていたらバリデーション
-    if len(bookroom_name)>MAX_LENGTH_BOOKROOM_NAME:
+    if len(bookroom_name) > MAX_LENGTH_BOOKROOM_NAME:
         flash("入力可能文字数をオーバーしました")
-        flash("BOOKROOMのテーマは100文字以内で入力してください","updatebookroom_flash")
-        return redirect(url_for("detail", bookroom_id=bookroom_id)) # TODO 遷移先これでいいか確認
+        flash("BOOKROOMのテーマは100文字以内で入力してください", "updatebookroom_flash")
+        return redirect(
+            url_for("detail", bookroom_id=bookroom_id)
+        )  # TODO 遷移先これでいいか確認
     # ブックルームの説明欄がMAX_LENGTH_BOOKROOM_DESCRIPTIONの数（自由に設定可能）を超えていたらバリデーション
-    if len(description)>MAX_LENGTH_BOOKROOM_DESCRIPTION:
+    if len(description) > MAX_LENGTH_BOOKROOM_DESCRIPTION:
         flash("入力可能文字数をオーバーしました")
-        flash("BOOKROOMの紹介文は256文字以内で入力してください","updatebookroom_flash")
-        return redirect(url_for("public_bookrooms_view")) # TODO 遷移先これでいいか確認
-    
+        flash("BOOKROOMの紹介文は256文字以内で入力してください", "updatebookroom_flash")
+        return redirect(url_for("public_bookrooms_view"))  # TODO 遷移先これでいいか確認
+
     # タグ関連
     tag_ids = request.form.getlist("tag_ids")
     if len(tag_ids) > MAX_TAGS:
         flash(f"タグは最大{MAX_TAGS}個までです。", "updatebookroom_flash")
-        if app.debug:
-            return redirect(url_for("edit_bookroom", bookroom_id=bookroom_id))
-        else:
-            return redirect(url_for("detail", bookroom_id=bookroom_id))
-    
-    Bookroom.update(bookroom_id=bookroom_id, name=bookroom_name, description=description)
+        return redirect(url_for("detail", bookroom_id=bookroom_id))
+
+    Bookroom.update(
+        bookroom_id=bookroom_id, name=bookroom_name, description=description
+    )
     BookroomTag.delete_bookroomtag_by_bookroomid(bookroom_id)
     BookroomTag.create(bookroom_id, tag_ids)
 
-    if app.debug:
-        return redirect(url_for("public_bookrooms_view", bookroom_id=bookroom_id))
-    else:
-        return redirect(url_for("detail", bookroom_id=bookroom_id))
+    return redirect(url_for("detail", bookroom_id=bookroom_id))
 
 
 # パブリックブックルームの削除
@@ -484,7 +444,9 @@ def private_bookrooms_view():
         pagenated_bookroom_id.append(bookroom["id"])
 
     # ページネーション分のbookroom_idに該当するtagデータを格納。タグがない場合は空データを入れる
-    pagenated_bookroom_tag = get_pagenated_bookroom_tag(bookroom_group_tag, pagenated_bookroom_id)
+    pagenated_bookroom_tag = get_pagenated_bookroom_tag(
+        bookroom_group_tag, pagenated_bookroom_id
+    )
     print("private bookroom pagenated_bookroom_tag =", pagenated_bookroom_tag)
 
     pagination = Pagination(
@@ -502,26 +464,15 @@ def private_bookrooms_view():
     # タグテーブルに登録されているタグを取得
     tags = Tag.get_all_tags()
 
-    if app.debug:
-        return render_template(
-            "test/private_bookroom.html",
-            is_public=False,
-            uid=user_id,
-            paginated_bookrooms=paginated_bookrooms,
-            pagenated_bookroom_tag=pagenated_bookroom_tag,
-            pagination=pagination,
-            tags=tags,
-        )
-    else:
-        return render_template(
-            "private_bookroom.html",
-            is_public=False,
-            uid=user_id,
-            paginated_bookrooms=paginated_bookrooms,
-            pagenated_bookroom_tag=pagenated_bookroom_tag,
-            pagination=pagination,
-            tags=tags,
-        )
+    return render_template(
+        "private_bookroom.html",
+        is_public=False,
+        uid=user_id,
+        paginated_bookrooms=paginated_bookrooms,
+        pagenated_bookroom_tag=pagenated_bookroom_tag,
+        pagination=pagination,
+        tags=tags,
+    )
 
 
 # プライベートブックルームの作成
@@ -535,14 +486,16 @@ def create_private_bookroom():
     bookroom_name = request.form.get("bookroom_name")
     # ブックルームの名前が入力されていない。またはスペースだけであれば、作成できないようにする
     if len(bookroom_name.strip()) == 0:
-        flash("ブックルーム名を入力してください","createbookroom_flash")
-        return redirect(url_for("create_private_bookroom","createbookroom_flash"))
-    
+        flash("ブックルーム名を入力してください", "createbookroom_flash")
+        return redirect(url_for("create_private_bookroom", "createbookroom_flash"))
+
     # ブックルームの名前がMAX_LENGTH_BOOKROOM_NAMEの数（自由に設定可能）を超えていたらバリデーション
-    if len(bookroom_name)>MAX_LENGTH_BOOKROOM_NAME:
-            flash("入力可能文字数をオーバーしました","createbookroom_flash")
-            flash("BOOKROOMのテーマは100文字以内で入力してください","createbookroom_flash")
-            return redirect(url_for("private_bookrooms_view")) # TODO 遷移先これでいいか確認
+    if len(bookroom_name) > MAX_LENGTH_BOOKROOM_NAME:
+        flash("入力可能文字数をオーバーしました", "createbookroom_flash")
+        flash("BOOKROOMのテーマは100文字以内で入力してください", "createbookroom_flash")
+        return redirect(
+            url_for("private_bookrooms_view")
+        )  # TODO 遷移先これでいいか確認
 
     bookroom = Bookroom.find_by_private_bookroom_name(
         bookroom_name=bookroom_name, user_id=user_id
@@ -550,17 +503,24 @@ def create_private_bookroom():
 
     # プライベートブックルームの中で同じ名前を登録していないかチェック。
     if bookroom != None:
-        flash("入力されたBOOKROOMのテーマは使用されています。","createbookroom_flash")
-        return redirect(url_for("private_bookrooms_view")) # TODO 遷移先これでいいか確認
+        flash("入力されたBOOKROOMのテーマは使用されています。", "createbookroom_flash")
+        return redirect(
+            url_for("private_bookrooms_view")
+        )  # TODO 遷移先これでいいか確認
 
     if bookroom is None:
         bookroom_description = request.form.get("bookroom_description")
         # ブックルームの説明欄がMAX_LENGTH_BOOKROOM_DESCRIPTIONの数（自由に設定可能）を超えていたらバリデーション
-        if len(bookroom_description)>MAX_LENGTH_BOOKROOM_DESCRIPTION:
-            flash("入力可能文字数をオーバーしました","createbookroom_flash")
-            flash("BOOKROOMの紹介文は256文字以内で入力してください","createbookroom_flash")
-            return redirect(url_for("private_bookrooms_view")) # TODO 遷移先これでいいか確認
-        
+        if len(bookroom_description) > MAX_LENGTH_BOOKROOM_DESCRIPTION:
+            flash("入力可能文字数をオーバーしました", "createbookroom_flash")
+            flash(
+                "BOOKROOMの紹介文は256文字以内で入力してください",
+                "createbookroom_flash",
+            )
+            return redirect(
+                url_for("private_bookrooms_view")
+            )  # TODO 遷移先これでいいか確認
+
         # タグ関連
         tag_ids = request.form.getlist("tag_ids")
         if len(tag_ids) > MAX_TAGS:
@@ -598,36 +558,43 @@ def update_private_bookroom(bookroom_id):
     description = request.form.get("bookroom_description")
 
     # プライベートブックルームの中で同じ名前を登録していないかチェック。ただし自分が登録したブックルーム名を編集せずにそのまま更新する場合はそのまま通る。
-    exiting_bookroom_name=Bookroom.find_by_private_bookroom_name(bookroom_name=name, user_id=user_id)
-    if exiting_bookroom_name is not None and str(exiting_bookroom_name["id"]) != str(bookroom_id):
-        flash("入力されたBOOKROOMのテーマは使用されています。","updatebookroom_flash")
-        return redirect(url_for("private_detail", bookroom_id=bookroom_id)) # TODO 遷移先これでいいか確認
-    
+    exiting_bookroom_name = Bookroom.find_by_private_bookroom_name(
+        bookroom_name=name, user_id=user_id
+    )
+    if exiting_bookroom_name is not None and str(exiting_bookroom_name["id"]) != str(
+        bookroom_id
+    ):
+        flash("入力されたBOOKROOMのテーマは使用されています。", "updatebookroom_flash")
+        return redirect(
+            url_for("private_detail", bookroom_id=bookroom_id)
+        )  # TODO 遷移先これでいいか確認
+
     # ブックルームの名前がMAX_LENGTH_BOOKROOM_NAMEの数（自由に設定可能）を超えていたらバリデーション
-    if len(name)>MAX_LENGTH_BOOKROOM_NAME:
-        flash("入力可能文字数をオーバーしました","updatebookroom_flash")
-        flash("BOOKROOMのテーマは100文字以内で入力してください","updatebookroom_flash")
-        return redirect(url_for("private_detail", bookroom_id=bookroom_id)) # TODO 遷移先これでいいか確認
+    if len(name) > MAX_LENGTH_BOOKROOM_NAME:
+        flash("入力可能文字数をオーバーしました", "updatebookroom_flash")
+        flash("BOOKROOMのテーマは100文字以内で入力してください", "updatebookroom_flash")
+        return redirect(
+            url_for("private_detail", bookroom_id=bookroom_id)
+        )  # TODO 遷移先これでいいか確認
     # ブックルームの説明欄がMAX_LENGTH_BOOKROOM_DESCRIPTIONの数（自由に設定可能）を超えていたらバリデーション
-    if len(description)>MAX_LENGTH_BOOKROOM_DESCRIPTION:
-        flash("入力可能文字数をオーバーしました","updatebookroom_flash")
-        flash("BOOKROOMの紹介文は256文字以内で入力してください","updatebookroom_flash")
-        return redirect(url_for("private_detail", bookroom_id=bookroom_id)) # TODO 遷移先これでいいか確認
+    if len(description) > MAX_LENGTH_BOOKROOM_DESCRIPTION:
+        flash("入力可能文字数をオーバーしました", "updatebookroom_flash")
+        flash("BOOKROOMの紹介文は256文字以内で入力してください", "updatebookroom_flash")
+        return redirect(
+            url_for("private_detail", bookroom_id=bookroom_id)
+        )  # TODO 遷移先これでいいか確認
 
     # タグ関連
     tag_ids = request.form.getlist("tag_ids")
     if len(tag_ids) > MAX_TAGS:
-        flash(f"タグは最大{MAX_TAGS}個までです。","updatebookroom_flash")
+        flash(f"タグは最大{MAX_TAGS}個までです。", "updatebookroom_flash")
         return redirect(url_for("private_detail", bookroom_id=bookroom_id))
 
-    Bookroom.update(bookroom_id=bookroom_id, name=name, description=description)  
+    Bookroom.update(bookroom_id=bookroom_id, name=name, description=description)
     BookroomTag.delete_bookroomtag_by_bookroomid(bookroom_id)
     BookroomTag.create(bookroom_id, tag_ids)
 
-    if app.debug:
-        return redirect(url_for("private_bookrooms_view", bookroom_id=bookroom_id))
-    else:
-        return redirect(url_for("private_detail", bookroom_id=bookroom_id))
+    return redirect(url_for("private_detail", bookroom_id=bookroom_id))
 
 
 # プライベートブックルームの削除
@@ -699,7 +666,7 @@ def detail(bookroom_id):
     selected_tags = BookroomTag.get_selected_tags_from_bookroomid(bookroom_id)
     selected_tag_ids = get_tag_id_list_from_tag_talbe(selected_tags)
     # ブックルーム名編集のため追記ここまで
-   
+
     return render_template(
         "public_messages.html",
         messages=messages,
@@ -707,7 +674,7 @@ def detail(bookroom_id):
         uid=user_id,
         tags=all_tags,
         selected_tag_ids=selected_tag_ids,
-        selected_tags=selected_tags
+        selected_tags=selected_tags,
     )
 
 
@@ -770,7 +737,7 @@ def private_detail(bookroom_id):
         uid=user_id,
         tags=all_tags,
         selected_tag_ids=selected_tag_ids,
-        selected_tags=selected_tags
+        selected_tags=selected_tags,
     )
 
 
@@ -838,60 +805,61 @@ def profile_view():
         name=current_name,
         email=current_email,
         messages_count=messages_count,
-        icons = icons,
+        icons=icons,
     )
 
 
 # プロフィール画面の編集(name)
-@app.route("/name/update",methods=["POST"])
+@app.route("/name/update", methods=["POST"])
 def update_name():
-    user_id=session.get("user_id")
+    user_id = session.get("user_id")
 
     if user_id is None:
         return redirect(url_for("login_view"))
-    
-    name=request.form.get("profile_name")
+
+    name = request.form.get("profile_name")
     # 値確認用
-    print(f'{name}は入力されたname')
+    print(f"{name}は入力されたname")
     # 空欄チェック
     if name == "":
-            flash("すべての項目を入力してください。", "name_flash")
-            return redirect(url_for("profile_view"))
+        flash("すべての項目を入力してください。", "name_flash")
+        return redirect(url_for("profile_view"))
     # 他のユーザーが同じ名前を登録していないかチェック。ただし自分が登録した名前と一致している場合はそのまま通る。
-    registered_name_user=User.find_by_name(name)
+    registered_name_user = User.find_by_name(name)
     if registered_name_user is not None and registered_name_user["id"] != user_id:
         flash("入力された名前は使用されています。", "name_flash")
         flash("違う名前を入力してください。", "name_flash")
         return redirect(url_for("profile_view"))
     # 更新処理
     else:
-        Profile.name_update(name,user_id)
+        Profile.name_update(name, user_id)
         flash("プロフィールを更新しました。", "success_flash")
     return redirect(url_for("profile_view"))
 
+
 # プロフィール画面の編集(email)
-@app.route("/email/update",methods=["POST"])
+@app.route("/email/update", methods=["POST"])
 def update_email():
-    user_id=session.get("user_id")
-    current_email=Profile.email_view(user_id)
+    user_id = session.get("user_id")
+    current_email = Profile.email_view(user_id)
 
     if user_id is None:
         return redirect(url_for("login_view"))
-    
-    email=request.form.get("profile_email")
+
+    email = request.form.get("profile_email")
     password = request.form.get("password")
     # 値確認用
-    print(f'{email}は入力されたemail')
+    print(f"{email}は入力されたemail")
     # 空欄チェック
-    if email == "" or password == "" :
-            flash("すべての項目を入力してください。", "email_flash")
-            return redirect(url_for("profile_view"))
+    if email == "" or password == "":
+        flash("すべての項目を入力してください。", "email_flash")
+        return redirect(url_for("profile_view"))
     # メールアドレス形式チェック
     if re.fullmatch(EMAIL_PATTERN, email) is None:
         flash("有効なメールアドレスを入力してください。", "email_flash")
         return redirect(url_for("profile_view"))
     # 他のユーザーが同じメールアドレスを登録していないかチェック。ただし自分が登録したメールアドレスと一致している場合はそのまま通る。
-    registered_email_user= User.find_by_email(email) 
+    registered_email_user = User.find_by_email(email)
     if registered_email_user is not None and registered_email_user["id"] != user_id:
         flash("入力されたメールアドレスは使用されています。", "email_flash")
         flash("違うメールアドレスを入力してください。", "email_flash")
@@ -904,7 +872,7 @@ def update_email():
         return redirect(url_for("profile_view"))
     # 更新処理
     else:
-        Profile.email_update(email,user_id)
+        Profile.email_update(email, user_id)
         flash("プロフィールを更新しました。", "success_flash")
     return redirect(url_for("profile_view"))
 
