@@ -441,6 +441,7 @@ class Message:
                     u.id AS user_id,
                     u.name AS user_name,
                     m.content AS message,
+                    m.created_at,
                     COALESCE(i.icon_image, '/static/img/icons/icon_rabbit.png') AS icon_image
                     FROM messages AS m 
                     INNER JOIN users AS u ON m.user_id = u.id 
