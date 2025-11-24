@@ -7,7 +7,7 @@ import uuid
 import re
 import os
 
-from models import User, Bookroom, Message, Profile, Tag, BookroomTag, Icon
+from models import User, Bookroom, Message, Profile, Tag, BookroomTag, Icon, History
 
 ############################認証関係(ここから)####################################
 EMAIL_PATTERN = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
@@ -669,13 +669,19 @@ def delete_private_bookroom(bookroom_id):
     return redirect(url_for("private_bookrooms_view"))
 
 
-# ヒストリーブックルームの表示（仮設置）
+###########################
+# ヒストリーブックルーム  #
+###########################
+# ヒストリーブックルームの表示
 @app.route("/history", methods=["GET"])
 def history_view():
-    # publicなブックルームのみ取得
-    bookrooms = Bookroom.get_public_bookrooms()
-    # 表示チェックのためデフォルト値を設定
-    user_id = session.get("user_id")
+    user_id = get_login_user_id()
+    print(f'{user_id}はuser_id')    
+    if user_id is None:
+        return redirect(url_for("login_view"))
+    
+    bookrooms = History.history(user_id)
+    print(f'{bookrooms}はbookrooms')
 
     # ページネーション
     page = request.args.get(get_page_parameter(), type=int, default=1)
@@ -689,12 +695,19 @@ def history_view():
         record_name="ブックルーム",
     )
 
+    # 日付ごとにグループ化
+    groups = {}
+    for item in paginated_bookrooms:
+        date = item["last_updated_at"].date()
+        groups.setdefault(date,[]).append(item)
+
     return render_template(
         "history_bookroom.html",
         is_public=True,
         uid=user_id,
         paginated_bookrooms=paginated_bookrooms,
         pagination=pagination,
+        groups=groups
     )
 
 
