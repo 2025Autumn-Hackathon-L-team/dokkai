@@ -8,7 +8,7 @@
     <div class="keyword-search-private">
             <h3> キーワードで探す</h3>
             <div class="keyword-search">
-                <input type="text" class ="keyword-input-private" name="q" placeholder="タイトル、著者名などを入力してください">
+                <input type="text" name="keyword" class ="keyword-input-private" name="q" placeholder="タイトル、著者名などを入力してください">
             </div>
         </div>
         
@@ -16,22 +16,13 @@
             <h3> タグで絞り込む</h3>
             <div class="tag-container-wrapper"> 
                 <div class="tag-group">
-                    <label><input type="checkbox" name="tag_id[]" value=""> 文学・小説</label>
-                    <label><input type="checkbox" name="tag_id[]" value=""> ビジネス</label>
-                    <label><input type="checkbox" name="tag_id[]" value=""> 歴史</label>
-                    <label><input type="checkbox" name="tag_id[]" value=""> 科学</label>
-                    <label><input type="checkbox" name="tag_id[]" value=""> コミック</label>
-                    <label><input type="checkbox" name="tag_id[]" value=""> 暮らし</label>
-                    <label><input type="checkbox" name="tag_id[]" value=""> 料理</label>
-                    <label><input type="checkbox" name="tag_id[]" value=""> 単行本</label>
-                    <label><input type="checkbox" name="tag_id[]" value=""> 文庫本</label>
-                    <label><input type="checkbox" name="tag_id[]" value=""> 雑誌</label>
-                    <label><input type="checkbox" name="tag_id[]" value=""> 受賞作</label>
-                    <label><input type="checkbox" name="tag_id[]" value=""> 新刊</label>
-                    <label><input type="checkbox" name="tag_id[]" value=""> 翻訳</label>
-                    <label><input type="checkbox" name="tag_id[]" value=""> イラスト多め</label>
+                  {% for tag in tags %}
+                    <label>
+                      <input type="checkbox" name="search_tag_ids" value="{{ tag.id }}">
+                      {{ tag.name }}
+                    </label>
+                    {% endfor %}
                 </div>
-                
             </div>
         </div>
     <!--{% with messages = get_flashed_messages() %}
