@@ -24,19 +24,26 @@
         <h3 class="room-title">{{ bookroom.name }}</h3>
         <p class="room-description">{{ bookroom.description }}</p>
       </a>
+        <div class="tag-data mobileonly">
+          {% if pagenated_bookroom_tag.get(bookroom.id) %}
+            {% for tag in pagenated_bookroom_tag[bookroom.id][:4] %}
+              <span class="room-category"> {{ tag }} </span>
+            {% endfor %}
+          {% endif %}
+          </div>
       </div>
       <div class="room-group">
         <span class="room-date">{{ bookroom.updated_at.strftime('%Y/%m/%d %H:%M') }}</span>
         <!--<span class="room-category {{ bookroom.category_tag | default('uncategorized') }}">
           {{ bookroom.category | default('未分類') }}
         </span>-->
-        <div class="tag-data">
-        {% if pagenated_bookroom_tag.get(bookroom.id) %}
-          {% for tag in pagenated_bookroom_tag[bookroom.id] %}
-            <span class="room-category"> {{ tag }} </span>
-          {% endfor %}
-        {% endif %}
-        </div>
+         <div class="tag-data desktoponly">
+          {% if pagenated_bookroom_tag.get(bookroom.id) %}
+            {% for tag in pagenated_bookroom_tag[bookroom.id][:4] %}
+              <span class="room-category"> {{ tag }} </span>
+            {% endfor %}
+          {% endif %}
+          </div>
       </div>
       <div class="reaction-icon">
         {% if session.get('user_id') == bookroom.user_id %}

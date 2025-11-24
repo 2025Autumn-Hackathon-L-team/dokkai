@@ -16,14 +16,14 @@
         {% for tag in selected_tags %}
           <span class="tag-category-message"> {{ tag.name }} </span>
         {% endfor %}
-        </div>
       {% endif %}
-      </div>
     {% endif %}{% if bookroom.user_id == uid %}
       <button class="update-bookroom-button" id="update-bookroom-button">
         <img src="{{ url_for('static', filename='img/pen.png') }}" alt="アイコン" >
       </button>
      {% include 'modal/update-bookroom.html' %} {% endif %} 
+      </div>
+     </div>
     </div>  
     <div id="message-area">
       {% if messages|length > 0 %} {% for message in messages %} {% if
