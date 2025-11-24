@@ -31,7 +31,6 @@ app.jinja_env.cache = {}
 @app.route("/")
 def index():
     user_id = session.get("user_id")
-    print(f"sessionは{user_id}です")
     if user_id is None:
         return redirect(url_for("login_view"))
     return redirect(url_for("public_bookrooms_view"))
@@ -72,16 +71,11 @@ def signup_process():
             UserId = str(id)
             UserName = str(name)
             UserEmail = str(email)
-            print(f"{UserId}はUserIdです")  # 代入された値の確認用
-            print(f"{UserName}はUserNameです")  # 値確認用
-            print(f"{UserEmail}はUserEmailです")  # 値確認用
             session["user_id"] = UserId
             session["user_name"] = UserName
             session["user_email"] = UserEmail
             return redirect(url_for("public_bookrooms_view"))
     # バリデーションエラーでsignup_processに戻る時、フォームに入力した値をauth/signup.htmlに返す
-    print(f"{password}がpassword")
-    print(f"{passwordConfirmation}がpassword_confirmation")
     return render_template(
         "auth/signup.html",
         name=name,
@@ -129,9 +123,6 @@ def login_process():
                 session["user_id"] = user["id"]
                 session["user_name"] = user["name"]
                 session["user_email"] = user["email"]
-                print(
-                    f"{user}でログインできました"
-                )  # ログインできているかチェック、後ほど削除
                 return redirect(url_for("public_bookrooms_view"))
     # バリデーションエラーでauth/login.htmlnに戻る時、フォームに入力した値をauth/login.htmlに返す
     return render_template("auth/login.html", email=email, password=password)
@@ -685,13 +676,12 @@ def delete_private_bookroom(bookroom_id):
 @app.route("/history", methods=["GET"])
 def history_view():
     user_id = get_login_user_id()
-    # print(f'{user_id}はuser_id')    
+      
     if user_id is None:
         return redirect(url_for("login_view"))
     
     # ヒストリーブックルームを抽出
     history_bookrooms = History.history(user_id)
-    # print(f'{history_bookrooms}はbookrooms')
 
     # タグテーブルに登録されているタグを取得(検索用モーダルに表示するため)
     tags = Tag.get_all_tags()
@@ -921,17 +911,21 @@ def profile_view():
     icon_view = Profile.icon_view(user_id)
     messages_count = Profile.get_messages_count(user_id)
     icons = Icon.get_all()
+
+# ページネーション
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    paginated_icons = icons[(page - 1) * 12 : page * 12]
+    pagination = Pagination(
+        page=page,
+        total=len(icons),
+        per_page=12,
+        css_framework="bootstrap5",
+        display_pages=True,
+        record_name="アイコン",
+    )
+
+
     # TODO リアクション機能実装後、リアクションの数を取得する。
-    # printはサーバーで出る値を確認。後日削除する。
-    print(f"{icon_view}はiconidです")
-    print(f"{user_id}はprofile.htmlで現在セッションを持っているユーザーです")
-    print(
-        f"{current_name}はprofile.htmlで現在セッションを持っているユーザーのnameを表示しています"
-    )
-    print(
-        f"{current_email}はprofile.htmlで現在セッションを持っているユーザーのemailを表示しています"
-    )
-    print(f"{messages_count}は{current_name}が投稿したメッセージの数を表しています")
     return render_template(
         "profile.html",
         icon=icon_view,
@@ -939,7 +933,8 @@ def profile_view():
         name=current_name,
         email=current_email,
         messages_count=messages_count,
-        icons=icons,
+        icons=paginated_icons,
+        pagination=pagination,  
     )
 
 
@@ -952,8 +947,7 @@ def update_name():
         return redirect(url_for("login_view"))
 
     name = request.form.get("profile_name")
-    # 値確認用
-    print(f"{name}は入力されたname")
+
     # 空欄チェック
     if name == "":
         flash("すべての項目を入力してください。", "name_flash")
@@ -982,8 +976,6 @@ def update_email():
 
     email = request.form.get("profile_email")
     password = request.form.get("password")
-    # 値確認用
-    print(f"{email}は入力されたemail")
     # 空欄チェック
     if email == "" or password == "":
         flash("すべての項目を入力してください。", "email_flash")
@@ -1015,16 +1007,12 @@ def update_email():
 @app.route("/icons/update", methods=["POST"])
 def update_icon():
     user_id = session.get("user_id")
-    print("セッション内容:", dict(session))
-    print("取得したuser_id:", session.get("user_id"))
 
     if user_id is None:
         return redirect(url_for("login_view"))
     else:
         iconid = request.form.get("icon_name")
-        print(f"{iconid}は選択されたicon")
         Profile.icon_update(iconid, user_id)
-    # TODO M_iconsができたらreturn render_template("profile_view",filename=画像のパス)を渡す。
     return redirect(url_for("profile_view"))
 
 

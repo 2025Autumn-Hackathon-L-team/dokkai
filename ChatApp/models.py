@@ -491,7 +491,7 @@ class Message:
                     u.name AS user_name,
                     m.content AS message,
                     m.created_at,
-                    COALESCE(i.icon_image, '/static/img/icons/icon_rabbit.png') AS icon_image
+                    COALESCE(i.icon_image, '/static/img/icons/icon2_rabbit.png') AS icon_image
                     FROM messages AS m 
                     INNER JOIN users AS u ON m.user_id = u.id 
                     LEFT JOIN icons AS i ON u.iconid = i.id
@@ -544,8 +544,8 @@ class Profile:
                 result = cur.fetchone()
 
                 if result is None or result["icon_image"] is None:
-                    return "/static/img/icons/icon_rabbit.png"
-
+                    return "/static/img/icons/icon2_rabbit.png"
+                
                 return result["icon_image"]
 
         except pymysql.Error as e:

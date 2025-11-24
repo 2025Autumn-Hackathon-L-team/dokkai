@@ -337,11 +337,16 @@
 }
 
 #modal-selecticon-title{
-    text-align: center;
+  text-align: center;
 }
 
 #icon_select_description{
-    text-align: center;
+  text-align: center;
+}
+
+#pagination_icon ul{
+  padding: 0;
+  margin: 0;
 }
 
 /*アイコン更新モーダルここまで*/
