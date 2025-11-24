@@ -290,6 +290,25 @@ background-color: transparent;
   transform: translateY(-2px);
 }
 
+/* ページネーションのCSS*/
+.pagination {
+  list-style: none; 
+  padding: 20px 0;  
+  margin: 0;
+  display: flex;
+  flex-direction: row; 
+  justify-content: center; 
+  gap: 10px; 
+}
+
+.page-link{
+  color:var(--gray);
+}
+.page-item.active .page-link {
+  font-weight: bold;
+  color:var(--brown);
+}
+
 /* ========================================================== */
 /* レスポンシブ */
 @media screen and (max-width: 768px) {
@@ -347,18 +366,4 @@ background-color: transparent;
     padding-top: 170px;
     margin-top: 0px; 
 }
-}
-
-.pagination{
-  display:flex;
-  flex-direction: row;
-  justify-content: center;
-  gap:10px;
-}
-.page-link{
-  color:var(--brown);
-}
-.page-item.active .page-link {
-  font-weight: bold;
-  color: #6aa6ed; 
 }

@@ -54,12 +54,12 @@
     {% include 'modal/search_public.html'%}
 
     <div class="pagination-container">
-      {{ pagination.info }}
-      {{ pagination.links }}
+    
+     <div class="pagination-container">
+      {{ pagination.links | replace('(current)', '') | replace('Next', '') | replace('Previous', '') }}
+ </div>
     </div>
   </div>
-
-  {# Floating Action Button #}
   <button class="create-bookroom-button"id="create-bookroom-button"label="作成">
      MAKE
   </button>
