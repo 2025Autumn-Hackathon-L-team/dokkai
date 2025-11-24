@@ -38,7 +38,7 @@
         <img src="{{ url_for('static', filename='img/trash-can.png') }}" alt="アイコン" >
          </button>
       </form>  
-      <span class="timestamp timestamp-right">2025/10/28 16:54</span>
+      <span class="timestamp timestamp-right">{{ message.created_at.strftime("%Y/%m/%d %H:%M") }}</span>
       </div>
             <div class="reaction-zone reaction-zone-left">
             </div>   
@@ -49,9 +49,9 @@
         <p class="user-name">{{message.user_name | default("メッセージテーブルのユーザーネーム")}}</p>
          <div class="icon-and-message-left">
           <img class="user-icon" src="{{message.icon_image}}" alt="ユーザーアイコン">
-          <p class="box box-left">{{message.message| default("メッセージテーブルの内容")}}</p>
+          <p class="box box-left">{{message.message}}</p>
          </div> 
-          <span class="timestamp timestamp-left">2025/10/28 16:54</span>
+          <span class="timestamp timestamp-left">{{ message.created_at.strftime("%Y/%m/%d %H:%M") }}</span>
             <div class="reaction-zone reaction-zone-left">
               <button class="reaction-item">
                 👍 <span class="reaction-count">5</span></button>

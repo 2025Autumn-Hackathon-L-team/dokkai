@@ -16,6 +16,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
       - ./Docker/MySQL/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./Docker/MySQL/my.cnf:/etc/mysql/conf.d/my.cnf
     # コンテナ内の環境変数を設定
     environment:
       - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
