@@ -8,7 +8,7 @@
       <div class="message-group">
       <div class ="bookroom-contents">
       <p class="bookroom-name">{{ bookroom.name | default("ブックルームの名前") }}</p>
-        <p class="bookroom-description">{{bookroom.description | default("ブックルームの詳細") }}</p>
+      <p class="bookroom-description">{{bookroom.description | default("ブックルームの詳細") }}</p>
       </div>
       {% if bookroom.description is not none %}
         {% if selected_tags is not none %}

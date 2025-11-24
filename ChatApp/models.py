@@ -122,7 +122,7 @@ class Bookroom:
             abort(500)
         finally:
             db_pool.release(conn)
-
+    
     @classmethod  # <-- @classmethod を追加
     def get_private_bookrooms(cls, user_id):  # <-- user_idを引数に追加
         conn = db_pool.get_conn()
@@ -132,6 +132,74 @@ class Bookroom:
                 cur.execute(sql, (user_id,))
                 private_bookrooms = cur.fetchall()
                 return private_bookrooms
+        except pymysql.Error as e:
+            print(f"エラーが発生しています:{e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
+    
+    @classmethod
+    def get_public_bookrooms_include_keyword(cls, keyword):
+        keyword_wild = f"%{keyword}%"
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                sql = ("SELECT id FROM bookrooms WHERE is_public=TRUE "
+                      "AND (name LIKE %s OR description LIKE %s) ORDER BY updated_at DESC;")
+                cur.execute(sql, (keyword_wild,keyword_wild,))
+                private_bookrooms = cur.fetchall()
+                return private_bookrooms
+        except pymysql.Error as e:
+            print(f"エラーが発生しています:{e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
+    
+    @classmethod
+    def get_private_bookrooms_include_keyword(cls, keyword, user_id):
+        keyword_wild = f"%{keyword}%"
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                sql = ("SELECT id FROM bookrooms WHERE is_public=FALSE AND user_id=%s "
+                      "AND (name LIKE %s OR description LIKE %s) ORDER BY updated_at DESC;")
+                cur.execute(sql, (user_id,keyword_wild,keyword_wild,))
+                private_bookrooms = cur.fetchall()
+                return private_bookrooms
+        except pymysql.Error as e:
+            print(f"エラーが発生しています:{e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
+
+    @classmethod
+    def get_public_bookrooms_from_bookroomid(cls, bookroom_ids):
+        if len(bookroom_ids) == 0:
+                    return []
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                sql = "SELECT * FROM bookrooms WHERE is_public=TRUE AND id IN %s ORDER BY updated_at DESC;"
+                cur.execute(sql, (tuple(bookroom_ids),))
+                public_bookrooms = cur.fetchall()
+                return public_bookrooms
+        except pymysql.Error as e:
+            print(f"エラーが発生しています:{e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
+    
+    @classmethod
+    def get_private_bookrooms_from_bookroomid(cls, bookroom_ids, user_id):
+        if len(bookroom_ids) == 0:
+                    return []
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                sql = "SELECT * FROM bookrooms WHERE is_public=FALSE AND user_id=%s AND id IN %s ORDER BY updated_at DESC;"
+                cur.execute(sql, (user_id, tuple(bookroom_ids),))
+                public_bookrooms = cur.fetchall()
+                return public_bookrooms
         except pymysql.Error as e:
             print(f"エラーが発生しています:{e}")
             abort(500)
@@ -224,9 +292,7 @@ class BookroomTag:
         try:
             with conn.cursor() as cur:
                 for tag_id in tag_ids:
-                    sql = (
-                        "INSERT INTO bookroom_tag(bookroom_id, tag_id) VALUES(%s, %s);"
-                    )
+                    sql = "INSERT INTO bookroom_tag(bookroom_id, tag_id) VALUES(%s, %s);"
                     cur.execute(
                         sql,
                         (
@@ -284,15 +350,54 @@ class BookroomTag:
             abort(500)
         finally:
             db_pool.release(conn)
-    
+
     @classmethod
     def delete_bookroomtag_by_bookroomid(cls, bookroom_id):
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = "DELETE FROM bookroom_tag WHERE bookroom_id=%s;"
+                sql = ("DELETE FROM bookroom_tag WHERE bookroom_id=%s;")
                 cur.execute(sql, (bookroom_id,))
                 conn.commit()
+        except pymysql.Error as e:
+            print(f"エラーが発生しています：{e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
+
+    # 検索機能の使用　tagidからbookroomidを探す
+    @classmethod
+    def get_public_bookroomids_from_tagids(cls, tag_ids):
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                sql = ("SELECT bookroom_id FROM bookroom_tag "
+                "WHERE tag_id IN %s ORDER BY bookroom_id;")
+                cur.execute(sql, (tuple(tag_ids),))
+                bookroom_ids = cur.fetchall()
+                if len(bookroom_ids) == 0:
+                    return []
+                return bookroom_ids
+        except pymysql.Error as e:
+            print(f"エラーが発生しています：{e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
+
+    @classmethod
+    def get_private_bookroomids_from_tagids(cls, tag_ids, user_id):
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                sql = ("SELECT bt.bookroom_id "
+                "FROM bookroom_tag AS bt INNER JOIN bookrooms AS b ON bt.bookroom_id = b.id "
+                "WHERE tag_id IN %s AND b.is_public=FALSE AND b.user_id=%s "
+                "ORDER BY bt.bookroom_id;")
+                cur.execute(sql, (tuple(tag_ids),user_id,))
+                bookroom_ids = cur.fetchall()
+                if len(bookroom_ids) == 0:
+                    return []
+                return bookroom_ids
         except pymysql.Error as e:
             print(f"エラーが発生しています：{e}")
             abort(500)
@@ -440,13 +545,13 @@ class Profile:
 
                 if result is None or result["icon_image"] is None:
                     return "/static/img/icons/icon_rabbit.png"
-                
+
                 return result["icon_image"]
-            
+
         except pymysql.Error as e:
             print(f"エラーが発生しています : {e}")
             abort(500)
-        
+
         finally:
             db_pool.release(conn)
 
@@ -596,7 +701,7 @@ class Icon:
                 icons = cur.fetchall()
                 return icons
         except pymysql.Error as e:
-            print(f'エラーが発生しています:{e}')
+            print(f"エラーが発生しています:{e}")
             abort(500)
         finally:
             db_pool.release(conn)
@@ -608,14 +713,10 @@ class Icon:
             with conn.cursor(pymysql.cursors.DictCursor) as cur:
                 sql = "SELECT * FROM icons WHERE id=%s;"
                 cur.execute(sql, (icon_id,))
-                icon = cur.fetchone()   
+                icon = cur.fetchone()
                 return icon
         except pymysql.Error as e:
-            print(f'エラーが発生しています:{e}')
+            print(f"エラーが発生しています:{e}")
             abort(500)
         finally:
             db_pool.release(conn)
-
-
-        
-
