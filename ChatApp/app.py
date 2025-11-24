@@ -789,6 +789,20 @@ def profile_view():
     icon_view = Profile.icon_view(user_id)
     messages_count = Profile.get_messages_count(user_id)
     icons = Icon.get_all()
+
+# ページネーション
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    paginated_icons = icons[(page - 1) * 12 : page * 12]
+    pagination = Pagination(
+        page=page,
+        total=len(icons),
+        per_page=12,
+        css_framework="bootstrap5",
+        display_pages=True,
+        record_name="アイコン",
+    )
+
+
     # TODO リアクション機能実装後、リアクションの数を取得する。
     return render_template(
         "profile.html",
@@ -797,7 +811,8 @@ def profile_view():
         name=current_name,
         email=current_email,
         messages_count=messages_count,
-        icons=icons,
+        icons=paginated_icons,
+        pagination=pagination,  
     )
 
 

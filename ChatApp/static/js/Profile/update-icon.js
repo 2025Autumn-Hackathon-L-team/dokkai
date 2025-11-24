@@ -25,20 +25,3 @@ if (updateIconModal) {
     }
   });
 }
-
-  // アイコンが押されたときに
-  // document.getElementById('myButton').addEventListener('click', function() {
-  // ここでPythonにリクエストを送信する
-  // 例：Fetch APIを使用する
-  // fetch('/process', { method: 'POST', // またはGET
-  //  body: JSON.stringify({ message: 'ボタンが押されました' })
-
-// これはprofileにあった方がいいか？
-// update-channel-modalが表示されている時に Ctrl/Command + Enter で送信
-// function sendUpdateForm() {
-//  const newBookroomTitle = document.updateBookroomForm.BookroomTitle.value;
-
-//  if (newBookroomTitle !== "") {
-//    document.updateBookroomForm.submit();
-//  }
-//}

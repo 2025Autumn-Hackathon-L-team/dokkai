@@ -12,7 +12,6 @@ USE chatapp;
 
 GRANT ALL PRIVILEGES ON chatapp.* TO 'testuser';
 
--- TODO M_iconsテーブルができたら、外部キー制約を入れる
 CREATE TABLE users (
     id VARCHAR(255) NOT NULL PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE,
@@ -185,18 +184,42 @@ CREATE TABLE icons(
 );
 -- アイコンマスタ（ここまで）
 INSERT INTO icons (icon_name, icon_image) VALUES
-('book', '/static/img/icons/icon_book.png'),
-('rabbit', '/static/img/icons/icon_rabbit.png'),
-('coffee', '/static/img/icons/icon_withcoffe.png'),
-('animals', '/static/img/icons/icon_animals.png'),
-('readbookwomen', '/static/img/icons/icon_readbookwomen.png'),
-('human', '/static/img/icons/icon_human.png'),
-('dog', '/static/img/icons/icon_dog.png'),
-('cutegirl', '/static/img/icons/icon_cutegirl.png'),
-('readbook', '/static/img/icons/icon_readbook.png'),
-('cat', '/static/img/icons/icon_cat.png'),
-('ringo', '/static/img/icons/icon_ringo.png'),
-('simplegirl', '/static/img/icons/icon_simplegirl.png');
+('book', '/static/img/icons/icon1_book.png'),
+('rabbit', '/static/img/icons/icon2_rabbit.png'),
+('coffee', '/static/img/icons/icon3_withcoffe.png'),
+('animals', '/static/img/icons/icon4_animals.png'),
+('readbookwomen', '/static/img/icons/icon5_readbookwomen.png'),
+('human', '/static/img/icons/icon6_human.png'),
+('dog', '/static/img/icons/icon7_dog.png'),
+('cutegirl', '/static/img/icons/icon8_cutegirl.png'),
+('readbook', '/static/img/icons/icon9_readbook.png'),
+('cat', '/static/img/icons/icon10_cat.png'),
+('ringo', '/static/img/icons/icon11_ringo.png'),
+('simplegirl', '/static/img/icons/icon12_simplegirl.png'),
+('book&coffee', '/static/img/icons/icon13_book&coffee.png'),
+('lake', '/static/img/icons/icon14_lake.png'),
+('sky', '/static/img/icons/icon15_sky.png'),
+('sea', '/static/img/icons/icon16_sea.png'),
+('gentleman', '/static/img/icons/icon17_gentleman.png'),
+('mountain', '/static/img/icons/icon18_mountain.png'),
+('mummy', '/static/img/icons/icon19_mummy.png'),
+('bird', '/static/img/icons/icon20_bird.png'),
+('balloon', '/static/img/icons/icon21_balloon.png'),
+('constellation', '/static/img/icons/icon22_constellation.png'),
+('dog2', '/static/img/icons/icon23_dog2.png'),
+('blackcat', '/static/img/icons/icon24_blackcat.png'),
+('backviewgirl', '/static/img/icons/icon25_backviewgirl.png'),
+('flowers', '/static/img/icons/icon26_flowers.png'),
+('panda', '/static/img/icons/icon27_panda.png'),
+('sloth', '/static/img/icons/icon28_sloth.png'),
+('yellowbooks', '/static/img/icons/icon29_yellowbooks.png'),
+('crocodile', '/static/img/icons/icon30_crocodile.png'),
+('child', '/static/img/icons/icon31_child.png'),
+('flowers&book', '/static/img/icons/icon32_flowers&book.png'),
+('santa', '/static/img/icons/icon33_santa.png'),
+('firework', '/static/img/icons/icon34_firework.png'),
+('cherryblossoms', '/static/img/icons/icon35_cherryblossoms.png'),
+('cat2', '/static/img/icons/icon36_cat2.png');
 -- アイコンサンプル画像（ここまで）
 ALTER TABLE users
 ADD CONSTRAINT fk_users_iconid
