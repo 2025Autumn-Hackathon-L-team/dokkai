@@ -109,6 +109,7 @@
     border-radius: 25px;
     background-color: var(--wood);
     cursor: pointer;
+    z-index: 5;
 }
 
 .search-form-5 input {
@@ -134,7 +135,7 @@ background-color: transparent;
 
 /* リストのコンテナ */
 #bookroom-list { 
-  margin-top: 150px;
+  margin-top: 200px;
   padding-left:5px;
   padding-right: 5px; 
   display: flex;
@@ -291,7 +292,6 @@ background-color: transparent;
 
 /* ========================================================== */
 /* レスポンシブ */
-
 @media screen and (max-width: 768px) {
   .main-container,.main-container_p {
     padding-left: 0px;
