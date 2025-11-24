@@ -706,8 +706,6 @@ def history_view():
     
     keyword = request.args.get("keyword")
     search_tag_ids = request.args.getlist("search_tag_ids")
-    for tag_id in search_tag_ids:
-        print(f"検索タグ->{tag_id}")
 
     # キーワード検索があった場合、該当するパブリックブックルームIDを抽出
     if keyword is not None:
@@ -716,7 +714,6 @@ def history_view():
 
     # タグ指定があった場合、該当するブックルームIDを抽出
     if len(search_tag_ids) > 0:
-        print("タグ1")
         # タグを満たすブックルームを抽出（だぶりあり）
         include_tag_bookroom_ids_dict = BookroomTag.get_public_bookroomids_from_tagids(search_tag_ids)
         # dictionaryデータをリスト型に変更（だぶりあり）
@@ -726,17 +723,13 @@ def history_view():
 
     # それぞれの場合のブックルームを抽出
     if (keyword is not None) & (len(search_tag_ids) > 0):
-        print("タグ2")
         search_list = list(set(include_keyword_bookroom_ids_list) & set(include_tag_bookroom_ids_single_list))
         filtered_bookrooms = filtered_bookroom(history_bookrooms, search_list)
     elif (keyword is not None) & (len(search_tag_ids) == 0):
-        print("タグ3")
         filtered_bookrooms = filtered_bookroom(history_bookrooms, include_keyword_bookroom_ids_list)
     elif (keyword is None) & (len(search_tag_ids) > 0):
-        print("タグ4")
         filtered_bookrooms = filtered_bookroom(history_bookrooms, include_tag_bookroom_ids_single_list)
     else:
-        print("タグ5")
         # 何も指定がない場合
         # publicなブックルームを全て取得
         filtered_bookrooms = history_bookrooms
