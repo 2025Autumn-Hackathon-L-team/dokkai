@@ -221,10 +221,8 @@ def get_pagenated_bookroom_tag(bookroom_group_tag, pagenated_bookroom_id):
 def filtered_bookroom(bookrooms_list, filtered_bookroomid_list):
     filtered_bookrooms_list=[]
     for bookroom in bookrooms_list:
-        print(f'チェック前{bookroom["id"]}')
         if bookroom["id"] in filtered_bookroomid_list:
             filtered_bookrooms_list.append(bookroom)
-            print(f'チェック通過{bookroom["id"]}')
     return filtered_bookrooms_list
 
 
