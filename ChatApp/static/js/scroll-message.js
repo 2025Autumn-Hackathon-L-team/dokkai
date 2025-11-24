@@ -1,12 +1,18 @@
 /*
-各メッセージページ内、ページ読み込み時に自動で下までスクロールする
+各ブックルーム詳細ページ内、ページ読み込み時に自動で下までスクロールする
 */
 
-const element = document.getElementById("message-area");
-const offset = (16 * window.innerHeight) / 100; // 16vhを計算
-const elementBottom = element.getBoundingClientRect().bottom;
+function scrollToBottom() {
+  const messageArea = document.getElementById("message-area");
+  
+  if (messageArea) {
+    const offset = (16 * window.innerHeight) / 100; 
+    const targetScroll = messageArea.scrollHeight - offset;   
+    messageArea.scrollTo({
+      top: targetScroll,
+      behavior: "auto" 
+    });
+  }
+}
 
-window.scrollBy({
-  top: elementBottom - window.innerHeight + offset,
-  behavior: "auto",
-});
+window.addEventListener('load', scrollToBottom); 

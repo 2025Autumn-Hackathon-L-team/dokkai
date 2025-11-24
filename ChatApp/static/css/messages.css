@@ -16,7 +16,7 @@
   flex-direction: column;
   gap:0rem;
   padding-left: 20px;
-  z-index: 2;
+  z-index: 5;
 }
 .main-container_p .bookroom-header {/* プライベートメッセージ画面のヘッダー */
   background-color: var(--green);
@@ -124,8 +124,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
-  margin-bottom: 16vh;
-  scroll-margin-bottom: 16vh;
+  margin-bottom: 20vh;
+  scroll-margin-bottom: 20vh;
 }
 
 ::-webkit-scrollbar {
@@ -339,7 +339,7 @@
   position: fixed;
   bottom: 0;
   width: calc(100vw - 50px);
-  height: 10vh;
+  height: 16vh;
   background-color: var(--snow);
   background-size: contain;
   border-top: var(--wood)3px solid;
@@ -348,16 +348,15 @@
   justify-content: start;
 }
 
+
 .typing-box {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  height: 80%;
-  width: 80%;
+  height: 100%;
+  width: 95%;
   margin: auto;
   position: relative;
   background-color: var(--snow);
-  border-radius: 8px;
-  border: var(--wood)solid 1px;
   display: flex;
 }
 
@@ -367,10 +366,9 @@
   -webkit-backdrop-filter: blur(16px);
   width: 100%;
   padding: 0.5em;
-  border-radius: 16px;
+  border: solid 1px lightgrey;
   flex-grow: 1;
 }
-
 .typing-box textarea:focus {
   cursor: pointer;
 }
