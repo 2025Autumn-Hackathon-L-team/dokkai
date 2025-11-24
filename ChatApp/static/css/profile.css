@@ -41,27 +41,6 @@ body.profile-body {
   width: calc(100% - 50px);
 }
 
-/* ================== フローティングアクションボタン (FAB) ================== */
-.create-profile-button {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  width: 56px;
-  height: 56px;
-  border-radius: 75%;
-  background-color: var(--green); 
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.0rem; /* アイコンのサイズ */
-  box-shadow: 0 4px 10px var(--shadow-strong);
-  cursor: pointer;
-  z-index: 2;
-  border: none;
-  transition: background-color 0.2s, transform 0.2s;
-}
-
 /*================ボディの表示部分===============*/
 
 .profile-display-items{
@@ -78,7 +57,7 @@ body.profile-body {
   align-items: center;
 }
 
-.reactions-messages-bettween-position-adjustment{
+.reactions-messages-between-position-adjustment{
  width: 30px; 
 }
 
@@ -112,8 +91,14 @@ body.profile-body {
   margin:10px;
 }
 
-.profile-subtitle{
-  font-size: 24px;
+.subtitle,
+.little_title{
+  color:var(--gray);
+  border-bottom: dashed 1px var(--gray);
+}
+.subtitle,
+.bigger_font{
+  font-size:24px;
 }
 
 #current-profile-icon{
@@ -136,9 +121,10 @@ body.profile-body {
 .update-profile-button{
   padding: 0;
   background-color: var(--lightgreen);
-  border-radius: 0 8px 8px 0;
-  height: 20px;
-  width: 20px;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  flex-shrink: 0;
 }
 
 .button-image{
