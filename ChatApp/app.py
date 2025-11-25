@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, session, request, flash
 from flask_paginate import Pagination, get_page_parameter
 from datetime import timedelta
+from zoneinfo import ZoneInfo
 import hashlib
 import uuid
 import re
@@ -280,7 +281,7 @@ def public_bookrooms_view():
 
     # ページネーション分のbookroom_idを取得
     pagenated_bookroom_id = []
-    for bookroom in bookrooms:
+    for bookroom in paginated_bookrooms:
         pagenated_bookroom_id.append(bookroom["id"])
 
     # ページネーション分のbookroom_idに該当するtagデータを格納。タグがない場合は空データを入れる
@@ -386,8 +387,7 @@ def update_public_bookroom(bookroom_id):
     if not is_bookroom_owner(user_id, bookroom_id):
         return redirect(url_for("public_bookrooms_view"))
 
-    name = request.form.get("bookroom_name")
-    tag_ids = request.form.getlist("tag_ids")
+    bookroom_name = request.form.get("bookroom_name")
     description = request.form.get("bookroom_description")
 
     # 他のユーザーが同じ名前を登録していないかチェック。ただし自分が登録したブックルーム名を編集せずにそのまま更新する場合はそのまま通る。
@@ -497,7 +497,7 @@ def private_bookrooms_view():
 
     # ページネーション分のbookroom_idを取得
     pagenated_bookroom_id = []
-    for bookroom in bookrooms:
+    for bookroom in paginated_bookrooms:
         pagenated_bookroom_id.append(bookroom["id"])
 
     # ページネーション分のbookroom_idに該当するtagデータを格納。タグがない場合は空データを入れる
@@ -513,6 +513,10 @@ def private_bookrooms_view():
         display_pages=True,
         record_name="ブックルーム",
     )
+
+    for bookroom in paginated_bookrooms:
+        bookroom["created_at"] = change_jst(bookroom["created_at"])
+        bookroom["updated_at"] = change_jst(bookroom["updated_at"])
 
     # タグテーブルに登録されているタグを取得
     tags = Tag.get_all_tags()
@@ -587,8 +591,6 @@ def create_private_bookroom():
             is_public=False,
         )
 
-        # タグ取得
-        tag_ids = request.form.getlist("tag_ids")
         # タグデータをデータベースに登録
         BookroomTag.create(bookroom_id, tag_ids)
 
@@ -809,21 +811,13 @@ def create_message(bookroom_id):
 
     message = request.form.get("message")
 
-# 空文字チェック
-    if not message.strip():
-        flash("メッセージを入力してください")
-        return redirect(url_for("detail", bookroom_id=bookroom_id))
-        
-# 文字数チェック
-    if len(message) > 500:
-        flash("メッセージは500文字以内で入力してください")
-        return redirect(url_for("detail", bookroom_id=bookroom_id))
-
-    Message.create(user_id, bookroom_id, message)
+    if message:
+        Message.create(user_id, bookroom_id, message)
 
     return redirect(
-        url_for("detail", bookroom_id=bookroom_id)
-        )
+        "/public_bookrooms/{bookroom_id}/messages".format(bookroom_id=bookroom_id)
+    )
+
 
 # パブリックブックルームメッセージの削除
 @app.route("/public_bookrooms/<bookroom_id>/messages/<message_id>", methods=["POST"])
@@ -835,7 +829,7 @@ def delete_message(bookroom_id, message_id):
     if message_id:
         Message.delete(message_id)
     return redirect(
-        url_for("detail", bookroom_id=bookroom_id)
+        "/public_bookrooms/{bookroom_id}/messages".format(bookroom_id=bookroom_id)
     )
 
 
@@ -853,6 +847,12 @@ def private_detail(bookroom_id):
 
     bookroom = Bookroom.find_by_bookroom_id(bookroom_id)
     messages = Message.get_all(bookroom_id)
+
+    # ブックルーム名編集のため追記ここから
+    all_tags = Tag.get_all_tags()
+    selected_tags = BookroomTag.get_selected_tags_from_bookroomid(bookroom_id)
+    selected_tag_ids = get_tag_id_list_from_tag_talbe(selected_tags)
+    # ブックルーム名編集のため追記ここまで
 
     return render_template(
         "private_messages.html",
@@ -874,18 +874,11 @@ def private_create_message(bookroom_id):
 
     message = request.form.get("message")
 
-    if not message.strip():
-        flash("メッセージを入力してください") 
-        return redirect(url_for("private_detail", bookroom_id=bookroom_id))
+    if message:
+        Message.create(user_id, bookroom_id, message)
 
-    if len(message) > 500:
-        flash("メッセージは500文字以内で入力してください")
-        return redirect(url_for("private_detail", bookroom_id=bookroom_id))
-        
-    Message.create(user_id, bookroom_id, message)
-
-    return redirect(url_for
-        ("private_detail", bookroom_id=bookroom_id)
+    return redirect(
+        "/private_bookrooms/{bookroom_id}/messages".format(bookroom_id=bookroom_id)
     )
 
 
@@ -899,7 +892,7 @@ def private_delete_message(bookroom_id, message_id):
     if message_id:
         Message.delete(message_id)
     return redirect(
-        url_for("private_detail", bookroom_id=bookroom_id)
+        "/private_bookrooms/{bookroom_id}/messages".format(bookroom_id=bookroom_id)
     )
 
 
@@ -962,8 +955,8 @@ def update_name():
     # 他のユーザーが同じ名前を登録していないかチェック。ただし自分が登録した名前と一致している場合はそのまま通る。
     registered_name_user = User.find_by_name(name)
     if registered_name_user is not None and registered_name_user["id"] != user_id:
-        flash("入力された名前は使用されています。")
-        flash("違う名前を入力してください。")
+        flash("入力された名前は使用されています。", "name_flash")
+        flash("違う名前を入力してください。", "name_flash")
         return redirect(url_for("profile_view"))
     # 更新処理
     else:
@@ -989,19 +982,19 @@ def update_email():
         return redirect(url_for("profile_view"))
     # メールアドレス形式チェック
     if re.fullmatch(EMAIL_PATTERN, email) is None:
-        flash("有効なメールアドレスを入力してください。")
+        flash("有効なメールアドレスを入力してください。", "email_flash")
         return redirect(url_for("profile_view"))
     # 他のユーザーが同じメールアドレスを登録していないかチェック。ただし自分が登録したメールアドレスと一致している場合はそのまま通る。
     registered_email_user = User.find_by_email(email)
     if registered_email_user is not None and registered_email_user["id"] != user_id:
-        flash("入力されたメールアドレスは使用されています。")
-        flash("違うメールアドレスを入力してください。")
+        flash("入力されたメールアドレスは使用されています。", "email_flash")
+        flash("違うメールアドレスを入力してください。", "email_flash")
         return redirect(url_for("profile_view"))
     hashPassword = hashlib.sha256(password.encode("utf-8")).hexdigest()
     user = User.find_by_email(current_email)
     # ログインチェック
     if user["password"] != hashPassword:
-        flash("パスワードが正しくありません。")
+        flash("パスワードが正しくありません。", "email_flash")
         return redirect(url_for("profile_view"))
     # 更新処理
     else:
