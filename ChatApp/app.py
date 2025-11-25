@@ -14,7 +14,7 @@ EMAIL_PATTERN = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 SESSION_DAYS = 30
 MAX_LENGTH_BOOKROOM_NAME = 100
 MAX_LENGTH_BOOKROOM_DESCRIPTION = 250
-MAX_TAGS = 5
+MAX_TAGS = 4
 PER_PAGE = 5  # 1ページに表示するブックルームの数
 
 app = Flask(__name__)
