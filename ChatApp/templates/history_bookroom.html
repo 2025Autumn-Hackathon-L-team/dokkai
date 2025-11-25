@@ -49,9 +49,8 @@
 {% include 'modal/search_history.html'%} 
 
     <div class="pagination-container">
-      {{ pagination.info }}
-      {{ pagination.links }}
-    </div>
+      {{ pagination.links | replace('(current)', '') | replace('Next', '') | replace('Previous', '') }}
+ </div>
   </div>
 </div>
 {% endblock %} 

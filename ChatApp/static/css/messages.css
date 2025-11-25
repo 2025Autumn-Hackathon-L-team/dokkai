@@ -16,7 +16,7 @@
   flex-direction: column;
   gap:0rem;
   padding-left: 20px;
-  z-index: 2;
+  z-index: 5;
 }
 .main-container_p .bookroom-header {/* プライベートメッセージ画面のヘッダー */
   background-color: var(--green);
@@ -43,16 +43,16 @@
 
 .bookroom-contents{
   display: flex;
-  width:100%;
   flex-direction: column;
-  align-items: center;
-  justify-content: center; 
   gap: 0.8rem; 
-  margin-left: 20px; 
+  margin:0;
+  max-width: 200vh;
+  flex-wrap: wrap;
 }
 
 .bookroom-name {
   margin:0;
+  text-align: center;
   font-size: 1.2rem;
 }
 
@@ -61,28 +61,37 @@
   font-size: 12px;
   font-weight: 200;
   letter-spacing: 0.15em;
+  max-width:500px;
+  max-height: 40px; 
+  overflow-y: auto;
 }
 
 #update-bookroom-button {
     background-color: var(--wood);
+    box-shadow: 0 4px var(--lightgray);
     border-radius: 50%;
-    width: 10vh; 
-    height: 6vh;
+    width: 40px; 
+    height: 40px;
     padding: 0.2em 0.6em;
-    margin-left: auto
+    margin-left: 2em;
 }
 #update-bookroom-button:hover {
   background-color: var(--wood);
+  box-shadow: 0 2px var(--light-gray);
+  transform: translateY(2px); 
   cursor: pointer;
 }
+
 .message-group { 
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: center;
+    justify-content: center;
     gap: 5px;
+    width:100%;
 }
 
-.tag-category { 
+.tag-category-message { 
   font-size: 0.7rem;
   font-weight: 600;
   color: var(--brown);
@@ -91,14 +100,21 @@
   border-radius: 12px;
   white-space: nowrap;
   margin-top:10px;
-  margin-left: 20px;
-  margin-right:20px;
+  margin-left:10px;
 }
+
+.tag-list-container {
+  position: absolute;
+  right:10px;
+  bottom:10px;
+}
+
 
 /* ========================== メッセージ表示エリア ============================= */
 
 #message-area {
-  min-height: 77vh;
+  flex-grow: 1; 
+  flex-basis: 0;
   width: 100%;
   padding-top: 20vh;
   padding-left:5px;
@@ -108,8 +124,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
-  margin-bottom: 16vh;
-  scroll-margin-bottom: 16vh;
+  margin-bottom: 20vh;
+  scroll-margin-bottom: 20vh;
 }
 
 ::-webkit-scrollbar {
@@ -120,6 +136,7 @@
   display: flex;
   flex-direction: column;
   position: relative;
+  width:50%;
 }
 
 .user-name {
@@ -140,6 +157,8 @@
   display: flex;
   flex-direction: column; 
   position: relative;
+  width: 50%;
+  align-self: flex-end;
 }
 
 .my-messages form {
@@ -223,7 +242,7 @@
 }
 .timestamp-left {
   bottom: 0.1em;
-  right: 0.5em; 
+  right:0.5rem;
 }
 /* ゴミ箱アイコン */
 .my-messages .delete-form {
@@ -237,13 +256,13 @@
 .message-content-wrapper {
     display: flex;
     flex-direction: column;
+    width:100%;
 }
 /* 自分のメッセージとゴミ箱のコンテナ　*/
 .message-and-trash-right {
   display: flex;
   align-items: flex-end; 
   gap: 5px; 
-  width: 100%; 
 }
 /* 相手のアイコンとメッセージのコンテナ */
 .icon-and-message-left {
@@ -320,7 +339,7 @@
   position: fixed;
   bottom: 0;
   width: calc(100vw - 50px);
-  height: 10vh;
+  height: 16vh;
   background-color: var(--snow);
   background-size: contain;
   border-top: var(--wood)3px solid;
@@ -329,16 +348,15 @@
   justify-content: start;
 }
 
+
 .typing-box {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  height: 80%;
-  width: 80%;
+  height: 100%;
+  width: 95%;
   margin: auto;
   position: relative;
   background-color: var(--snow);
-  border-radius: 8px;
-  border: var(--wood)solid 1px;
   display: flex;
 }
 
@@ -348,10 +366,9 @@
   -webkit-backdrop-filter: blur(16px);
   width: 100%;
   padding: 0.5em;
-  border-radius: 16px;
+  border: solid 1px lightgrey;
   flex-grow: 1;
 }
-
 .typing-box textarea:focus {
   cursor: pointer;
 }
@@ -373,24 +390,57 @@
 
 
 /* ========================== レスポンシブ ============================= */
-
-@media screen and (max-width: 639px) {
+@media screen and (max-width: 1024px) {
+   #message-area {
+  padding-top: 25vh;
+}
   .typing-box-wrapper,
   .bookroom-header {
     width: 100%;
   }
-  #message-area {
-  padding-top: 20vh;
+  .message-group { 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
 }
   #update-bookroom-button {
-    width: 30%; 
-    height: 30%;
-    padding: 0.2em 0.6em;
-    margin: 40px 0 0 0 ;
+    right: 10px;     
+    bottom: 10px;
+} 
+  .my-messages{
+  width: 100%;
 }
+  .messages {
+  width: 100%;
+}
+  /* 自分のメッセージとゴミ箱のコンテナ　*/
+  .message-and-trash-right { 
+  width: 100%; 
+}
+/* 相手のアイコンとメッセージのコンテナ */
+  .icon-and-message-left {
+    width: 100%;
+}
+  .timestamp-left {
+  bottom: 0.1em;
+  right:0.5rem;
+}
+  .tag-list-container { 
+     display: flex; 
+     flex-direction: row;
+     position: static; 
+     margin-bottom: 10px;
+     right: auto; 
+     bottom: auto; 
+  }
 }
 @media only screen and (min-width: 640px) {
   .box {
     width: 100%;
   }
+  
+  
+  
+
 }

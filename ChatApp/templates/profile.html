@@ -17,7 +17,6 @@
         <img src="{{icon}}" alt="ユーザーアイコン" id="current-profile-icon" width="130" height="130">
         <div class="button-position-adjustment">
             <div class="button-position-adjustment-space"></div>
-            {# Floating Action Button #}
             <button class="update-profile-button" id="update-icon-button" label="iconの変更">
                 <img class="button-image" src="{{ url_for('static', filename='img/pen.png') }}">
             </button>
@@ -38,14 +37,14 @@
         <!--リアクション数とメッセージ投稿数の表示-->
         <div class="under-icon-position-adjustment">
           <div>
-            <p>Get Reactions</p>
-            <p class="profile-subtitle">330</p>
+            <p class="little_title">Get Reactions</p>
+            <p class="bigger_font">330</p>
           </div>
-          <div class="reactions-messages-bettween-position-adjustment">
+          <div class="reactions-messages-between-position-adjustment">
           </div>
           <div>
-            <p>talk in bookroom</p>
-            <p class="profile-subtitle">{{messages_count}}</p>
+            <p class="little_title">talk in bookroom</p>
+            <p class="bigger_font">{{messages_count}}</p>
           </div>
         </div>
         <!--your make bookroomsを表示して、そこからbookroomに行けるようにしたい
@@ -56,9 +55,8 @@
         <div class="name-position-adjustment">
           <!--値確認用<p>ユーザアイコンは{{icon}}</p>-->
           <div class="button-position">
-            <p  class="profile-subtitle">name</p>
+            <p  class="subtitle">name</p>
             <div class="button-position-adjustment"></div>
-              {# Floating Action Button #}
               <button class="update-profile-button" id="update-name-button" label="nameの変更">
                 <img class="button-image" src="{{ url_for('static', filename='img/pen.png') }}">
               </button>
@@ -71,9 +69,8 @@
         <!--emailの表示-->
         <div class="email-position-adjustment">
           <div class="button-position">
-            <p class="profile-subtitle">email</p>
+            <p class="subtitle">email</p>
             <div class="button-position-adjustment"></div>
-              {# Floating Action Button #}
               <button class="update-profile-button" id="update-email-button" label="emailの変更">
                 <img class="button-image" src="{{ url_for('static', filename='img/pen.png') }}">
               </button>
@@ -103,7 +100,7 @@
 ></script>
 <!--全てのBodyが読み込まれた後に成功flashメッセージを読み込む処理-->
 <script>
-    do  cument.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
         const successMessage = document.getElementById('success-flash-message');
         if (successMessage) {
             successMessage.style.display = 'block';
