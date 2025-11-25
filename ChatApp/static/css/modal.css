@@ -298,7 +298,6 @@
   box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
   animation-name: modalopen;
   animation-duration: 1s;
-  position: relative;
 }
 
 .icon_modal_body {
@@ -338,11 +337,16 @@
 }
 
 #modal-selecticon-title{
-    text-align: center;
+  text-align: center;
 }
 
 #icon_select_description{
-    text-align: center;
+  text-align: center;
+}
+
+#pagination_icon ul{
+  padding: 0;
+  margin: 0;
 }
 
 /*アイコン更新モーダルここまで*/

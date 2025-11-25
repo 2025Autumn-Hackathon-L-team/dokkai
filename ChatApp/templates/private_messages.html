@@ -18,7 +18,7 @@
       <div class="message-group">
       <div class ="bookroom-contents">
       <p class="bookroom-name">{{ bookroom.name | default("ブックルームの名前") }}</p>
-        <p class="bookroom-description">{{bookroom.description | default("ブックルームの詳細") }}</p>
+      <p class="bookroom-description">{{bookroom.description | default("ブックルームの詳細") }}</p>
       </div>
       {% if bookroom.description is not none %}
         {% if selected_tags is not none %}
@@ -26,7 +26,6 @@
             <span class="tag-category"> {{ tag.name }} </span>
           {% endfor %}
         {% endif %}
-      
      {% endif %}{% if bookroom.user_id == uid %}
       <button class="update-bookroom-button" id="update-bookroom-button">
         <img src="{{ url_for('static', filename='img/pen.png') }}" alt="アイコン" >

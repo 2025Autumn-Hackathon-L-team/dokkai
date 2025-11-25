@@ -6,7 +6,7 @@ import uuid
 import re
 import os
 
-from models import User, Bookroom, Message, Profile, Tag, BookroomTag
+from models import User, Bookroom, Message, Profile, Tag, BookroomTag, Icon, History
 
 ############################認証関係(ここから)####################################
 EMAIL_PATTERN = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
@@ -15,9 +15,6 @@ MAX_LENGTH_BOOKROOM_NAME = 100
 MAX_LENGTH_BOOKROOM_DESCRIPTION = 250
 MAX_TAGS = 5
 PER_PAGE = 5  # 1ページに表示するブックルームの数
-
-# ユーザーIDを仮で作成
-TEST_USER_ID = "970af84c-dd40-47ff-af23-282b72b7cca8"
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", uuid.uuid4().hex)
@@ -33,7 +30,6 @@ app.jinja_env.cache = {}
 @app.route("/")
 def index():
     user_id = session.get("user_id")
-    print(f"sessionは{user_id}です")
     if user_id is None:
         return redirect(url_for("login_view"))
     return redirect(url_for("public_bookrooms_view"))
@@ -74,16 +70,11 @@ def signup_process():
             UserId = str(id)
             UserName = str(name)
             UserEmail = str(email)
-            print(f"{UserId}はUserIdです")  # 代入された値の確認用
-            print(f"{UserName}はUserNameです")  # 値確認用
-            print(f"{UserEmail}はUserEmailです")  # 値確認用
             session["user_id"] = UserId
             session["user_name"] = UserName
             session["user_email"] = UserEmail
             return redirect(url_for("public_bookrooms_view"))
     # バリデーションエラーでsignup_processに戻る時、フォームに入力した値をauth/signup.htmlに返す
-    print(f"{password}がpassword")
-    print(f"{passwordConfirmation}がpassword_confirmation")
     return render_template(
         "auth/signup.html",
         name=name,
@@ -131,9 +122,6 @@ def login_process():
                 session["user_id"] = user["id"]
                 session["user_name"] = user["name"]
                 session["user_email"] = user["email"]
-                print(
-                    f"{user}でログインできました"
-                )  # ログインできているかチェック、後ほど削除
                 return redirect(url_for("public_bookrooms_view"))
     # バリデーションエラーでauth/login.htmlnに戻る時、フォームに入力した値をauth/login.htmlに返す
     return render_template("auth/login.html", email=email, password=password)
@@ -171,7 +159,7 @@ def is_bookroom_owner(user_id, bookroom_id):
     return True
 
 
-# ログインしているuser_idを返す。テストの際は、TEST_USER_IDを格納する。
+# ログインしているuser_idを返す。
 def get_login_user_id():
     user_id = session.get("user_id")
     return user_id
@@ -218,6 +206,15 @@ def get_pagenated_bookroom_tag(bookroom_group_tag, pagenated_bookroom_id):
             pagenated_bookroom_tag[bookroom_id] = []
     return pagenated_bookroom_tag
 
+# bookroomの中からタグやキーワードとbookroomIDが一致しているbookroomのみに絞る
+# history bookroomから検索結果を絞るのに使用
+def filtered_bookroom(bookrooms_list, filtered_bookroomid_list):
+    filtered_bookrooms_list=[]
+    for bookroom in bookrooms_list:
+        if bookroom["id"] in filtered_bookroomid_list:
+            filtered_bookrooms_list.append(bookroom)
+    return filtered_bookrooms_list
+
 
 # 日本時間に変更
 def change_jst(utc_time):
@@ -228,6 +225,11 @@ def change_jst(utc_time):
         utc_time = utc_time.replace(tzinfo=utc)
     return utc_time.astimezone(jst)
 
+def change_list_from_dict(dict_datas, key_name):
+    list = []
+    for data in dict_datas:
+        list.append(data[key_name])
+    return list
 
 # パブリックブックルームの一覧表示
 @app.route("/public_bookrooms", methods=["GET"])
@@ -236,8 +238,35 @@ def public_bookrooms_view():
     if user_id is None:
         return redirect(url_for("login_view"))
 
-    # publicなブックルームのみ取得
-    bookrooms = Bookroom.get_public_bookrooms()
+    keyword = request.args.get("keyword")
+    search_tag_ids = request.args.getlist("search_tag_ids")
+
+    # キーワード検索があった場合、該当するブックルームIDを抽出
+    if keyword is not None:
+        include_keyword_bookroom_ids_dict = Bookroom.get_public_bookrooms_include_keyword(keyword)
+        include_keyword_bookroom_ids_list = change_list_from_dict(include_keyword_bookroom_ids_dict, "id")
+
+    # タグ指定があった場合、該当するブックルームIDを抽出
+    if len(search_tag_ids) > 0:
+        # タグを満たすブックルームを抽出（だぶりあり）
+        include_tag_bookroom_ids_dict = BookroomTag.get_public_bookroomids_from_tagids(search_tag_ids)
+        # dictionaryデータをリスト型に変更（だぶりあり）
+        include_tag_bookroom_ids_list = change_list_from_dict(include_tag_bookroom_ids_dict, "bookroom_id")
+        #だぶりをなくす
+        include_tag_bookroom_ids_single_list = list(set(include_tag_bookroom_ids_list))
+
+    # それぞれの場合のブックルームを抽出
+    if (keyword is not None) & (len(search_tag_ids) > 0):
+        search_list = list(set(include_keyword_bookroom_ids_list) & set(include_tag_bookroom_ids_single_list))
+        bookrooms = Bookroom.get_public_bookrooms_from_bookroomid(search_list)
+    elif (keyword is not None) & (len(search_tag_ids) == 0):
+        bookrooms = Bookroom.get_public_bookrooms_from_bookroomid(include_keyword_bookroom_ids_list)
+    elif (keyword is None) & (len(search_tag_ids) > 0):
+        bookrooms = Bookroom.get_public_bookrooms_from_bookroomid(include_tag_bookroom_ids_single_list)
+    else:
+        # 何も指定がない場合
+        # publicなブックルームを全て取得
+        bookrooms = Bookroom.get_public_bookrooms()
 
     # tagデータを取得
     # データベースからすべてのbookroom_idとタグデータをセットで取得
@@ -424,9 +453,37 @@ def private_bookrooms_view():
     user_id = get_login_user_id()
     if user_id is None:
         return redirect(url_for("login_view"))
+    
+    #####検索機能#####
+    keyword = request.args.get("keyword")
+    search_tag_ids = request.args.getlist("search_tag_ids")
 
-    # privateなブックルームのみ取得
-    bookrooms = Bookroom.get_private_bookrooms(user_id)
+    # キーワード検索があった場合、該当するブックルームIDを抽出
+    if keyword is not None:
+        include_keyword_bookroom_ids_dict = Bookroom.get_private_bookrooms_include_keyword(keyword, user_id)
+        include_keyword_bookroom_ids_list = change_list_from_dict(include_keyword_bookroom_ids_dict, "id")
+
+    # タグ指定があった場合、該当するブックルームIDを抽出
+    if len(search_tag_ids) > 0:
+        # タグを満たすブックルームを抽出（だぶりあり）
+        include_tag_bookroom_ids_dict = BookroomTag.get_private_bookroomids_from_tagids(search_tag_ids, user_id)
+        # dictionaryデータをリスト型に変更（だぶりあり）
+        include_tag_bookroom_ids_list = change_list_from_dict(include_tag_bookroom_ids_dict, "bookroom_id")
+        #だぶりをなくす
+        include_tag_bookroom_ids_single_list = list(set(include_tag_bookroom_ids_list))
+
+    # それぞれの場合のブックルームを抽出
+    if (keyword is not None) & (len(search_tag_ids) > 0):
+        search_list = list(set(include_keyword_bookroom_ids_list) & set(include_tag_bookroom_ids_single_list))
+        bookrooms = Bookroom.get_private_bookrooms_from_bookroomid(search_list, user_id)
+    elif (keyword is not None) & (len(search_tag_ids) == 0):
+        bookrooms = Bookroom.get_private_bookrooms_from_bookroomid(include_keyword_bookroom_ids_list, user_id)
+    elif (keyword is None) & (len(search_tag_ids) > 0):
+        bookrooms = Bookroom.get_private_bookrooms_from_bookroomid(include_tag_bookroom_ids_single_list, user_id)
+    else:
+        # 何も指定がない場合
+        # privateブックルームを全て取得
+        bookrooms = Bookroom.get_private_bookrooms(user_id)
 
     # tagデータを取得
     # データベースからすべてのbookroom_idとタグデータをセットで取得
@@ -610,32 +667,99 @@ def delete_private_bookroom(bookroom_id):
     return redirect(url_for("private_bookrooms_view"))
 
 
-# ヒストリーブックルームの表示（仮設置）
+###########################
+# ヒストリーブックルーム  #
+###########################
+# ヒストリーブックルームの表示
 @app.route("/history", methods=["GET"])
 def history_view():
-    # publicなブックルームのみ取得
-    bookrooms = Bookroom.get_public_bookrooms()
-    # 表示チェックのためデフォルト値を設定
-    user_id = session.get("user_id")
+    user_id = get_login_user_id()
+      
+    if user_id is None:
+        return redirect(url_for("login_view"))
+    
+    # ヒストリーブックルームを抽出
+    history_bookrooms = History.history(user_id)
 
+    # タグテーブルに登録されているタグを取得(検索用モーダルに表示するため)
+    tags = Tag.get_all_tags()
+
+    # tagデータを取得
+    # データベースからすべてのbookroom_idとタグデータをセットで取得
+    bookroom_tag_tables = BookroomTag.get_bookroom_tag_tables()
+    # 同じブックルームIDのタグデータをまとめる様にデータを変更
+    bookroom_group_tag = get_bookroom_group_tags(bookroom_tag_tables)
+    
+    keyword = request.args.get("keyword")
+    search_tag_ids = request.args.getlist("search_tag_ids")
+
+    # キーワード検索があった場合、該当するパブリックブックルームIDを抽出
+    if keyword is not None:
+        include_keyword_bookroom_ids_dict = Bookroom.get_public_bookrooms_include_keyword(keyword)
+        include_keyword_bookroom_ids_list = change_list_from_dict(include_keyword_bookroom_ids_dict, "id")
+
+    # タグ指定があった場合、該当するブックルームIDを抽出
+    if len(search_tag_ids) > 0:
+        # タグを満たすブックルームを抽出（だぶりあり）
+        include_tag_bookroom_ids_dict = BookroomTag.get_public_bookroomids_from_tagids(search_tag_ids)
+        # dictionaryデータをリスト型に変更（だぶりあり）
+        include_tag_bookroom_ids_list = change_list_from_dict(include_tag_bookroom_ids_dict, "bookroom_id")
+        #だぶりをなくす
+        include_tag_bookroom_ids_single_list = list(set(include_tag_bookroom_ids_list))
+
+    # それぞれの場合のブックルームを抽出
+    if (keyword is not None) & (len(search_tag_ids) > 0):
+        search_list = list(set(include_keyword_bookroom_ids_list) & set(include_tag_bookroom_ids_single_list))
+        filtered_bookrooms = filtered_bookroom(history_bookrooms, search_list)
+    elif (keyword is not None) & (len(search_tag_ids) == 0):
+        filtered_bookrooms = filtered_bookroom(history_bookrooms, include_keyword_bookroom_ids_list)
+    elif (keyword is None) & (len(search_tag_ids) > 0):
+        filtered_bookrooms = filtered_bookroom(history_bookrooms, include_tag_bookroom_ids_single_list)
+    else:
+        # 何も指定がない場合
+        # publicなブックルームを全て取得
+        filtered_bookrooms = history_bookrooms
+
+    ############################
+    
     # ページネーション
     page = request.args.get(get_page_parameter(), type=int, default=1)
-    paginated_bookrooms = bookrooms[(page - 1) * PER_PAGE : page * PER_PAGE]
+    paginated_bookrooms = filtered_bookrooms[(page - 1) * PER_PAGE : page * PER_PAGE]
+
+    # ページネーション分のbookroom_idを取得
+    pagenated_bookroom_id = []
+    for bookroom in paginated_bookrooms:
+        pagenated_bookroom_id.append(bookroom["id"])
+    
+    # ページネーション分のbookroom_idに該当するtagデータを格納。タグがない場合は空データを入れる
+    pagenated_bookroom_tag = get_pagenated_bookroom_tag(
+        bookroom_group_tag, pagenated_bookroom_id
+    )
+
     pagination = Pagination(
         page=page,
-        total=len(bookrooms),
+        total=len(filtered_bookrooms),
         per_page=PER_PAGE,
         css_framework="bootstrap5",
         display_pages=True,
         record_name="ブックルーム",
     )
 
+    # 日付ごとにグループ化
+    groups = {}
+    for item in paginated_bookrooms:
+        date = item["last_updated_at"].date()
+        groups.setdefault(date,[]).append(item)
+
     return render_template(
         "history_bookroom.html",
         is_public=True,
         uid=user_id,
         paginated_bookrooms=paginated_bookrooms,
+        pagenated_bookroom_tag=pagenated_bookroom_tag,
         pagination=pagination,
+        groups=groups,
+        tags=tags
     )
 
 
@@ -793,17 +917,22 @@ def profile_view():
     current_email = Profile.email_view(user_id)
     icon_view = Profile.icon_view(user_id)
     messages_count = Profile.get_messages_count(user_id)
+    icons = Icon.get_all()
+
+# ページネーション
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    paginated_icons = icons[(page - 1) * 12 : page * 12]
+    pagination = Pagination(
+        page=page,
+        total=len(icons),
+        per_page=12,
+        css_framework="bootstrap5",
+        display_pages=True,
+        record_name="アイコン",
+    )
+
+
     # TODO リアクション機能実装後、リアクションの数を取得する。
-    # printはサーバーで出る値を確認。後日削除する。
-    print(f"{icon_view}はiconidです")
-    print(f"{user_id}はprofile.htmlで現在セッションを持っているユーザーです")
-    print(
-        f"{current_name}はprofile.htmlで現在セッションを持っているユーザーのnameを表示しています"
-    )
-    print(
-        f"{current_email}はprofile.htmlで現在セッションを持っているユーザーのemailを表示しています"
-    )
-    print(f"{messages_count}は{current_name}が投稿したメッセージの数を表しています")
     return render_template(
         "profile.html",
         icon=icon_view,
@@ -811,7 +940,8 @@ def profile_view():
         name=current_name,
         email=current_email,
         messages_count=messages_count,
-        icons=icons,
+        icons=paginated_icons,
+        pagination=pagination,  
     )
 
 
@@ -824,8 +954,7 @@ def update_name():
         return redirect(url_for("login_view"))
 
     name = request.form.get("profile_name")
-    # 値確認用
-    print(f"{name}は入力されたname")
+
     # 空欄チェック
     if name == "":
         flash("すべての項目を入力してください。", "name_flash")
@@ -854,8 +983,6 @@ def update_email():
 
     email = request.form.get("profile_email")
     password = request.form.get("password")
-    # 値確認用
-    print(f"{email}は入力されたemail")
     # 空欄チェック
     if email == "" or password == "":
         flash("すべての項目を入力してください。", "email_flash")
@@ -887,16 +1014,12 @@ def update_email():
 @app.route("/icons/update", methods=["POST"])
 def update_icon():
     user_id = session.get("user_id")
-    print("セッション内容:", dict(session))
-    print("取得したuser_id:", session.get("user_id"))
 
     if user_id is None:
         return redirect(url_for("login_view"))
     else:
         iconid = request.form.get("icon_name")
-        print(f"{iconid}は選択されたicon")
         Profile.icon_update(iconid, user_id)
-    # TODO M_iconsができたらreturn render_template("profile_view",filename=画像のパス)を渡す。
     return redirect(url_for("profile_view"))
 
 
