@@ -931,16 +931,11 @@ def profile_icons_js():
 
     page = request.args.get("page", type=int, default=1)
     icons = Icon.get_all()
-    print(f'{page}はpage')
-    print(f'{icons}はicons')
 
     per_page = 12
     total = len(icons)
-    print(f'{total}はtotal')
     paginated_icons = icons[(page - 1) * per_page : page * per_page]
-    print(f'{paginated_icons}はpaginated_icons')
     total_pages = (total + per_page - 1) // per_page
-    print(f'{total_pages}はtotal_pages')
 
     return jsonify({
         "page": page,
