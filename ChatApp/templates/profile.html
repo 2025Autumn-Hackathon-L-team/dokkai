@@ -20,7 +20,6 @@
             <button class="update-profile-button" id="update-icon-button" label="iconの変更">
                 <img class="button-image" src="{{ url_for('static', filename='img/pen.png') }}">
             </button>
-            {% include 'modal/update-icon.html' %} 
         </div>
       <!-- バリデーションチェック成功時のメッセージ表示-->
     {% with messages = get_flashed_messages(category_filter=["success_flash"]) %}
@@ -60,7 +59,6 @@
               <button class="update-profile-button" id="update-name-button" label="nameの変更">
                 <img class="button-image" src="{{ url_for('static', filename='img/pen.png') }}">
               </button>
-              {% include 'modal/update-profile-name.html' %} 
           </div>
           <div id="name-side-adjustment">
             <p>{{name}}</p>
@@ -74,7 +72,6 @@
               <button class="update-profile-button" id="update-email-button" label="emailの変更">
                 <img class="button-image" src="{{ url_for('static', filename='img/pen.png') }}">
               </button>
-              {% include 'modal/update-profile-email.html' %} 
           </div>
           <div id="email-side-adjustment">
             <p>{{email}}</p>
@@ -83,7 +80,9 @@
     </div>
 </div>
 </body>
-
+{% include 'modal/update-icon.html' %} 
+{% include 'modal/update-profile-name.html' %} 
+{% include 'modal/update-profile-email.html' %}
 {% endblock %}
 {% block script %}
 <script
