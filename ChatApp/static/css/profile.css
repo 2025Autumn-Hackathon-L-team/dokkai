@@ -73,6 +73,7 @@ body.profile-body {
   align-items: center;
   justify-content: space-between;
   width: 300px;
+  height: 45px;
 }
 
 .button-position-adjustment img{

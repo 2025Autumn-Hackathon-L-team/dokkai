@@ -304,7 +304,7 @@
   padding: 10px 0;
 }
 
-.modal-icons-body {
+#icon-area {
     padding: 0 10px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -347,6 +347,16 @@
 #pagination_icon ul{
   padding: 0;
   margin: 0;
+}
+
+.page-btn{
+  color: black;
+  background-color: #FFFACD;
+  padding: 8px;
+}
+
+.page-btn.active {
+  color: royalblue;
 }
 
 /*アイコン更新モーダルここまで*/
