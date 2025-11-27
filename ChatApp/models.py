@@ -528,7 +528,6 @@ class Message:
 ############################プロフィール画面関係（ここから)############################
 class Profile:
     # アイコンの表示
-    # TODO M_iconsテーブルができたら、iconidでなく画像のパスを返す形に変える
     @classmethod
     def icon_view(cls, user_id):
         conn = db_pool.get_conn()

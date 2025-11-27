@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, session, request, flash
+from flask import Flask, render_template, redirect, url_for, session, request, flash, jsonify
 from flask_paginate import Pagination, get_page_parameter
 from datetime import timedelta
 from zoneinfo import ZoneInfo
@@ -910,20 +910,6 @@ def profile_view():
     current_email = Profile.email_view(user_id)
     icon_view = Profile.icon_view(user_id)
     messages_count = Profile.get_messages_count(user_id)
-    icons = Icon.get_all()
-
-# ページネーション
-    page = request.args.get(get_page_parameter(), type=int, default=1)
-    paginated_icons = icons[(page - 1) * 12 : page * 12]
-    pagination = Pagination(
-        page=page,
-        total=len(icons),
-        per_page=12,
-        css_framework="bootstrap5",
-        display_pages=True,
-        record_name="アイコン",
-    )
-
 
     # TODO リアクション機能実装後、リアクションの数を取得する。
     return render_template(
@@ -933,9 +919,29 @@ def profile_view():
         name=current_name,
         email=current_email,
         messages_count=messages_count,
-        icons=paginated_icons,
-        pagination=pagination,  
     )
+
+# アイコンの編集モーダルで、JSでページネーションするのに、json形式でデータを返す必要がある
+@app.route("/profile/icons")
+def profile_icons_js():
+    user_id = session.get("user_id")
+
+    if user_id is None:
+        return redirect(url_for("login_view"))
+
+    page = request.args.get("page", type=int, default=1)
+    icons = Icon.get_all()
+
+    per_page = 12
+    total = len(icons)
+    paginated_icons = icons[(page - 1) * per_page : page * per_page]
+    total_pages = (total + per_page - 1) // per_page
+
+    return jsonify({
+        "page": page,
+        "total_pages": total_pages,
+        "icons": paginated_icons
+    })
 
 
 # プロフィール画面の編集(name)

@@ -9,16 +9,14 @@
             <p>変更したいアイコンをクリックしてください</p>
         </div>
         <form class="modal-icons-body" name="updateIcon" action="/icons/update" method="POST">
-        {% for icon in icons %}
-          <button class="icon_styled" type="submit" name="icon_name" value="{{ icon.id }}">
-            <img class="icon-image" src="{{ icon.icon_image }}" alt="{{ icon.icon_name }}">
-          </button>
-        {% endfor %}
+          <div id="icon-area"></div>
+            {% for icon in icons %}
+              <button class="icon_styled" type="submit" name="icon_name" value="{{ icon.id }}">
+                <img class="icon-image" src="{{ icon.icon_image }}" alt="{{ icon.icon_name }}">
+              </button>
+            {% endfor %}
         </form>
-      
-      <div class="pagination-container" id="pagination_icon">
-      {{ pagination.links }}
-      
+        <div class="pagination-container" id="pagination_icon"></div>
       </div>
     </div>
   </div>
