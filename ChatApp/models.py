@@ -484,7 +484,7 @@ class Message:
     def get_all(cls, bookroom_id):
         conn = db_pool.get_conn()
         try:
-            with conn.cursor() as cur:
+            with conn.cursor(pymysql.cursors.DictCursor) as cur:
                 sql = """
                     SELECT m.id, 
                     u.id AS user_id,
@@ -720,3 +720,122 @@ class Icon:
             abort(500)
         finally:
             db_pool.release(conn)
+
+############################リアクション関係（ここから）############################
+class Reaction:
+    @classmethod
+    def get_all(cls):
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor(pymysql.cursors.DictCursor) as cur:
+                sql = "SELECT id, reaction_type, reaction_name FROM reactions ORDER BY id;"
+                cur.execute(sql)
+                reactions = cur.fetchall()
+                return reactions
+        except pymysql.Error as e:
+            print(f"エラーが発生しています:{e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
+
+
+class MessageReaction:
+    @classmethod
+    def get_user_reaction(cls, message_id, user_id):
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor(pymysql.cursors.DictCursor) as cur:
+                sql = """
+                    SELECT id, message_id, user_id, reaction_id
+                    FROM message_reaction
+                    WHERE message_id = %s AND user_id = %s
+                """
+                cur.execute(sql, (message_id, user_id))
+                reaction = cur.fetchone()
+                return reaction
+        except pymysql.Error as e:
+            print(f"エラーが発生しています:{e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
+
+    @classmethod
+    def add(cls, message_id, user_id, reaction_id):
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                sql = """
+                    INSERT INTO message_reaction (message_id, user_id, reaction_id)
+                    VALUES (%s, %s, %s)
+                """
+                cur.execute(sql, (message_id, user_id, reaction_id))
+                conn.commit()
+        except pymysql.IntegrityError as e:
+            # UNIQUE (message_id, user_id) に引っかかった場合など
+            print(f"リアクション追加時にエラーが発生しています:{e}")
+            abort(500)
+        except pymysql.Error as e:
+            print(f"エラーが発生しています:{e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
+
+    @classmethod
+    def update(cls, message_id, user_id, reaction_id):
+
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                sql = """
+                    UPDATE message_reaction
+                    SET reaction_id = %s
+                    WHERE message_id = %s AND user_id = %s
+                """
+                cur.execute(sql, (reaction_id, message_id, user_id))
+                conn.commit()
+        except pymysql.Error as e:
+            print(f"エラーが発生しています:{e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
+
+    @classmethod
+    def remove(cls, message_id, user_id):
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                sql = """
+                    DELETE FROM message_reaction
+                    WHERE message_id = %s AND user_id = %s
+                """
+                cur.execute(sql, (message_id, user_id))
+                conn.commit()
+        except pymysql.Error as e:
+            print(f"エラーが発生しています:{e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
+
+    @classmethod
+    def count_by_message(cls, message_id):
+
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor(pymysql.cursors.DictCursor) as cur:
+                sql = """
+                    SELECT mr.reaction_id, COUNT(*) AS cnt
+                    FROM message_reaction AS mr
+                    WHERE mr.message_id = %s
+                    GROUP BY mr.reaction_id
+                """
+                cur.execute(sql, (message_id,))
+                rows = cur.fetchall()
+                # {reaction_id: count} に整形
+                return {row["reaction_id"]: row["cnt"] for row in rows}
+        except pymysql.Error as e:
+            print(f"エラーが発生しています:{e}")
+            abort(500)
+        finally:
+            db_pool.release(conn)
+
+############################リアクション関係（ここまで）############################

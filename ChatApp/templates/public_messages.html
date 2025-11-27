@@ -34,31 +34,57 @@
       </button>
      {% include 'modal/update-bookroom.html' %} {% endif %}
       </div>
+    </div>
+      <div class="typing-box-wrapper">
+      <form class="typing-box"
+      method="POST"
+      action="{{ url_for('create_message', bookroom_id=bookroom.id) }}"
+      name="newMessageForm">
+
+        <textarea name="message" id="message" maxlength="500" required></textarea>
+        <input type="hidden" name="bookroom_id" value="{{bookroom.id}}" />
+        <button type="submit" id="add-message-button">
+          <img src="{{ url_for('static', filename='img/pen.png') }}" alt="アイコン" />
+        </button>
+      </form>
     </div>  
-    <div id="message-area">
-      {% if messages|length > 0 %} {% for message in messages %} {% if
-      message.user_id == uid %}
+  <div id="message-area">
+      {% if messages|length > 0 %}
+        {% for message in messages %} 
+          {% if message.user_id == uid %}
     <div class="my-messages">
       <div class="message-and-trash-right">
         <p class="box box-right">{{ message.message }}</p>
-         <form class ="delete-form" action="/public_bookrooms/{{ bookroom.id }}/messages/{{ message.id }}" method="POST">
+      <form class ="delete-form" action="/public_bookrooms/{{ bookroom.id }}/messages/{{ message.id }}" method="POST">
         <input type="hidden" name="_method" value="DELETE"> 
       
-         <button type="submit" class="delete-message-button">
+        <button type="submit" class="delete-message-button">
         <img src="{{ url_for('static', filename='img/trash-can.png') }}" alt="アイコン" >
-         </button>
+        </button>
       </form>  
       <span class="timestamp timestamp-right">{{ message.created_at.strftime("%Y/%m/%d %H:%M") }}</span>
       </div>
             <div class="reaction-zone reaction-zone-left">
-              <button class="reaction-item">
-                👍 <span class="reaction-count">5</span></button>
-              <button class="reaction-item">
-                😂 <span class="reaction-count">2</span></button>
-              <button class="reaction-item">
-                😍 <span class="reaction-count">1</span></button>
+              {% set mid = message.id %}
+
+              {% for r in reactions %}
+                {% set count = message_reaction_counts.get(mid, {}).get(r.id, 0) %}
+                {% set active = (user_reactions[mid] == r.id) %}
+
+              <form method="POST"
+                    action="/public_bookrooms/{{ bookroom.id }}/messages/{{ message.id }}/reactions"
+                    class="reaction-form">
+                <input type="hidden" name="reaction_id" value="{{ r.id }}">
+                <button type="submit"
+                        class="reaction-item {% if active %}active{% endif %}">
+                  {{ r.reaction_type }}
+                  <span class="reaction-count">{{ count }}</span>
+                </button>
+              </form>
+            {% endfor %}
             </div>   
-      </div> 
+    </div> 
+
       {% else %}
     <div class="messages">
       <div class="message-content-wrapper">
@@ -69,29 +95,31 @@
         </div> 
           <span class="timestamp timestamp-left">{{ message.created_at.strftime("%Y/%m/%d %H:%M") }}</span>
             <div class="reaction-zone reaction-zone-left">
-              <button class="reaction-item">
-                👍 <span class="reaction-count">5</span></button>
-              <button class="reaction-item">
-                😂 <span class="reaction-count">2</span></button>
-              <button class="reaction-item">
-                😍 <span class="reaction-count">1</span></button>
+              {% set mid = message.id %}
+              {% for r in reactions %}
+                {% set count = message_reaction_counts.get(mid, {}).get(r.id, 0) %}
+                {% set active = (user_reactions[mid] == r.id) %}
+
+                <form method="POST"
+                      action="/public_bookrooms/{{ bookroom.id }}/messages/{{ message.id }}/reactions"
+                      class="reaction-form">
+                  <input type="hidden" name="reaction_id" value="{{ r.id }}">
+                  <button type="submit"
+                          class="reaction-item {% if active %}active{% endif %}">
+                    {{ r.reaction_type }}
+                    <span class="reaction-count">{{ count }}</span>
+                  </button>
+                </form>
+              {% endfor %}
+
             </div>
         </div>  
-     </div> 
-      {% endif %} {% endfor %} {% else %}
-      <p id="no-message">まだメッセージがありません</p>
+
       {% endif %}
-    </div>
-   </div> 
-    <div class="typing-box-wrapper">
-      <form class="typing-box" method="POST" name="newMessageForm">
-        <textarea name="message" id="message" maxlength="500" required></textarea>
-        <input type="hidden" name="bookroom_id" value="{{bookroom.id}}" />
-        <button type="submit" id="add-message-button">
-          <img src="{{ url_for('static', filename='img/pen.png') }}" alt="アイコン" />
-        </button>
-      </form>
-    </div>
+    {% endfor %}
+  {% else %}
+      <p id="no-message">まだメッセージがありません</p>
+  {% endif %} 
 </div>
 {% endblock %} {% block script %}
 <script type="text/javascript">

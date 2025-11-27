@@ -39,17 +39,16 @@
     <div class="my-messages">
       <div class="message-and-trash-right">
         <p class="box box-right">{{ message.message }}</p>
-         <form class ="delete-form" action="/private_bookrooms/{{ bookroom.id }}/messages/{{ message.id }}" method="POST">
+      <form class ="delete-form" action="/private_bookrooms/{{ bookroom.id }}/messages/{{ message.id }}" method="POST">
         <input type="hidden" name="_method" value="DELETE"> 
       
-         <button type="submit" class="delete-message-button">
+        <button type="submit" class="delete-message-button">
         <img src="{{ url_for('static', filename='img/trash-can.png') }}" alt="アイコン" >
-         </button>
+        </button>
       </form>  
       <span class="timestamp timestamp-right">{{ message.created_at.strftime("%Y/%m/%d %H:%M") }}</span>
-      </div>
-            <div class="reaction-zone reaction-zone-left">
-            </div>   
+    </div>
+  
       </div> 
       {% else %}
     <div class="messages">
@@ -60,14 +59,6 @@
           <p class="box box-left">{{message.message}}</p>
          </div> 
           <span class="timestamp timestamp-left">{{ message.created_at.strftime("%Y/%m/%d %H:%M") }}</span>
-            <div class="reaction-zone reaction-zone-left">
-              <button class="reaction-item">
-                👍 <span class="reaction-count">5</span></button>
-              <button class="reaction-item">
-                😂 <span class="reaction-count">2</span></button>
-              <button class="reaction-item">
-                😍 <span class="reaction-count">1</span></button>
-            </div>
         </div>  
      </div> 
       {% endif %} {% endfor %} {% else %}
@@ -75,7 +66,11 @@
       {% endif %}
     </div>
     <div class="typing-box-wrapper">
-      <form class="typing-box" method="POST" name="newMessageForm">
+      <form class="typing-box"
+      method="POST"
+      action="{{ url_for('private_create_message', bookroom_id=bookroom.id) }}"
+      name="newMessageForm">
+
         <textarea name="message" id="message" maxlength="500" required></textarea>
         <input type="hidden" name="bookroom_id" value="{{bookroom.id}}" />
         <button type="submit" id="add-message-button">

@@ -5,9 +5,8 @@ from zoneinfo import ZoneInfo
 import hashlib
 import uuid
 import re
-import os
-
-from models import User, Bookroom, Message, Profile, Tag, BookroomTag, Icon, History
+import os   
+from models import User, Bookroom, Message, Profile, Tag, BookroomTag, Icon, History, Reaction, MessageReaction
 
 ############################認証関係(ここから)####################################
 EMAIL_PATTERN = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
@@ -776,7 +775,6 @@ def history_view():
 # パブリックブックルーム詳細ページの表示
 @app.route("/public_bookrooms/<bookroom_id>/messages", methods=["GET"])
 def detail(bookroom_id):
-    # 表示チェックのためデフォルトユーザを設定
     user_id = session.get("user_id")
 
     if user_id is None:
@@ -785,11 +783,19 @@ def detail(bookroom_id):
     bookroom = Bookroom.find_by_bookroom_id(bookroom_id)
     messages = Message.get_all(bookroom_id)
 
-    # 現在登録されているブックルーム名表示のため追記ここから
     all_tags = Tag.get_all_tags()
     selected_tags = BookroomTag.get_selected_tags_from_bookroomid(bookroom_id)
     selected_tag_ids = get_tag_id_list_from_tag_talbe(selected_tags)
-    # ブックルーム名編集のため追記ここまで
+
+    reactions = Reaction.get_all()  
+    message_reaction_counts = {}  
+    user_reactions = {}           
+
+    for msg in messages:
+        mid = msg["id"]
+        message_reaction_counts[mid] = MessageReaction.count_by_message(mid)
+        user_reaction = MessageReaction.get_user_reaction(mid, user_id)
+        user_reactions[mid] = user_reaction["reaction_id"] if user_reaction else None
 
     return render_template(
         "public_messages.html",
@@ -799,9 +805,13 @@ def detail(bookroom_id):
         tags=all_tags,
         selected_tag_ids=selected_tag_ids,
         selected_tags=selected_tags,
+
+        reactions=reactions,
+        message_reaction_counts=message_reaction_counts,
+        user_reactions=user_reactions,
     )
 
-
+MAX_LENGTH_MESSAGE = 500
 # パブリックブックルームメッセージの投稿
 @app.route("/public_bookrooms/<bookroom_id>/messages", methods=["POST"])
 def create_message(bookroom_id):
@@ -811,12 +821,24 @@ def create_message(bookroom_id):
 
     message = request.form.get("message")
 
-    if message:
-        Message.create(user_id, bookroom_id, message)
+    if message is None:
+        flash("メッセージを入力してください(空チェック)")
+        return redirect(url_for("detail", bookroom_id=bookroom_id))
+    
+    if not message.strip():
+        flash("メッセージを入力してください")
+        return redirect(url_for("detail", bookroom_id=bookroom_id))
+    
+    if len(message) > MAX_LENGTH_MESSAGE:
+        flash("入力可能文字数をオーバーしました")
+        flash(f"メッセージは {MAX_LENGTH_MESSAGE} 文字以内で入力してください")
+        return redirect(url_for("detail", bookroom_id=bookroom_id))
 
-    return redirect(
-        "/public_bookrooms/{bookroom_id}/messages".format(bookroom_id=bookroom_id)
-    )
+    Message.create(user_id, bookroom_id, message)
+
+    return redirect(url_for("detail", bookroom_id=bookroom_id))
+
+
 
 
 # パブリックブックルームメッセージの削除
@@ -839,7 +861,6 @@ def delete_message(bookroom_id, message_id):
 # プライベートブックルーム詳細ページの表示
 @app.route("/private_bookrooms/<bookroom_id>/messages", methods=["GET"])
 def private_detail(bookroom_id):
-    # 表示チェックのためデフォルトユーザを設定
     user_id = session.get("user_id")
 
     if user_id is None:
@@ -848,11 +869,10 @@ def private_detail(bookroom_id):
     bookroom = Bookroom.find_by_bookroom_id(bookroom_id)
     messages = Message.get_all(bookroom_id)
 
-    # ブックルーム名編集のため追記ここから
     all_tags = Tag.get_all_tags()
     selected_tags = BookroomTag.get_selected_tags_from_bookroomid(bookroom_id)
     selected_tag_ids = get_tag_id_list_from_tag_talbe(selected_tags)
-    # ブックルーム名編集のため追記ここまで
+
 
     return render_template(
         "private_messages.html",
@@ -874,12 +894,23 @@ def private_create_message(bookroom_id):
 
     message = request.form.get("message")
 
-    if message:
-        Message.create(user_id, bookroom_id, message)
+    if message is None:
+        flash("メッセージを入力してください")
+        return redirect(url_for("private_detail", bookroom_id=bookroom_id))
 
-    return redirect(
-        "/private_bookrooms/{bookroom_id}/messages".format(bookroom_id=bookroom_id)
-    )
+    if not message.strip():
+        flash("メッセージを入力してください")
+        return redirect(url_for("private_detail", bookroom_id=bookroom_id))
+
+    if len(message) > MAX_LENGTH_MESSAGE:
+        flash("入力可能文字数をオーバーしました")
+        flash(f"メッセージは {MAX_LENGTH_MESSAGE} 文字以内で入力してください")
+        return redirect(url_for("private_detail", bookroom_id=bookroom_id))
+
+    Message.create(user_id, bookroom_id, message)
+
+    return redirect(url_for("private_detail", bookroom_id=bookroom_id))
+
 
 
 # プライベートブックルームのメッセージの削除
@@ -894,6 +925,32 @@ def private_delete_message(bookroom_id, message_id):
     return redirect(
         "/private_bookrooms/{bookroom_id}/messages".format(bookroom_id=bookroom_id)
     )
+# # パブリックメッセージのリアクション切り替え
+@app.route("/public_bookrooms/<bookroom_id>/messages/<message_id>/reactions", methods=["POST"])
+def toggle_reaction(bookroom_id, message_id):
+    user_id = session.get("user_id")
+    if user_id is None:
+        return redirect(url_for("login_view"))
+
+    reaction_id = request.form.get("reaction_id")
+    if reaction_id is None:
+        flash("リアクションIDが不正です")
+        return redirect(url_for("detail", bookroom_id=bookroom_id))
+
+    # 
+    current = MessageReaction.get_user_reaction(message_id, user_id)
+
+    
+    if current and str(current["reaction_id"]) == str(reaction_id):
+        MessageReaction.remove(message_id, user_id)
+        return redirect(url_for("detail", bookroom_id=bookroom_id))
+
+    if current:
+        MessageReaction.update(message_id, user_id, reaction_id)
+    else:
+        MessageReaction.add(message_id, user_id, reaction_id)
+
+    return redirect(url_for("detail", bookroom_id=bookroom_id))
 
 
 ############################メッセージ関係（ここまで）############################
