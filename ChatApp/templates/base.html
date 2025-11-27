@@ -14,7 +14,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/search.css') }}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/error.css') }}" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -28,10 +27,12 @@
   <body>
   
 </body>
+    {% include 'util/mobile-header.html'%} 
+    {% include 'util/sidebar.html'%}
+
     {% block content %}{% endblock %}
 
-    {% include 'util/sidebar.html'%} {% include 'util/mobile-header.html'%} {%
-    block body %}{% endblock %} {% block script %}{% endblock %}
+    {%block body %}{% endblock %} {% block script %}{% endblock %}
   <script
       src="{{url_for('static',filename='js/sidebar.js')}}"type="text/javascript"></script> 
   </body>
