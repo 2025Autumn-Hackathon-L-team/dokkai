@@ -332,7 +332,11 @@
     color: var(--brown);
     margin-left: 4px;
 }
-
+.reaction-zone .reaction-form {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
 /* ========================== メッセージ入力部分 ============================= */
 
 .typing-box-wrapper {
