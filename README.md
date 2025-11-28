@@ -11,22 +11,17 @@ DOKKAIの画像配置。
 Aさんは、本を読んだ後の余韻が消える前に、この本のどこが好きだったか、どんな言葉が自分の中に残ったのか、誰かとこの本について話したいな、と思っていました。
 そんなAさんにDOKKAIを使ってもらい、さらに充実した日々を過ごしてほしいです、
 
-# 主なページと機能
+# DOKKAIについて
+<img width="873" height="488" alt="DOKKAI-persona" src="https://github.com/user-attachments/assets/495484f1-ced7-4c4a-9bdd-421383117152" />
 
-ページ画像できたら配置
+<img width="870" height="484" alt="DOKKAI-description" src="https://github.com/user-attachments/assets/ce7bae87-2218-4661-b643-d32a9cbd8500" />
+
+<img width="866" height="483" alt="DOKKAI-description2" src="https://github.com/user-attachments/assets/46cc9158-7416-45cf-becc-b74dcd9b45a7" />
+
+<img width="863" height="486" alt="DOKKAI-how-to-use" src="https://github.com/user-attachments/assets/3c2e0cc0-c58d-4a08-9b80-a61b1dcbded5" />
 
 # 使用技術
-
-| 言語・フレームワーク | バージョン |
-| -------------------- | ---------- |
-| Flask                | 2.2.2      |
-| jinja                | 3.1.2      |
-| MySQL                | 2.2.2     |
-| HTML                 | latest     |
-| CSS                  | latest     |
-| JavaScript           | latest     |
-| Docker               | latest    |
-
+<img width="867" height="483" alt="Technology-used" src="https://github.com/user-attachments/assets/7f0d520b-c0e1-44f0-81bd-a1a9d7b01012" />
 # ER図
 
 最終発表で使用するものを配置
