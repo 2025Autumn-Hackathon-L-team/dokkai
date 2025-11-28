@@ -653,17 +653,23 @@ class Profile:
         finally:
             db_pool.release(conn)
 
-    # TODO リアクションの実装が完了したら
-    # リアクションの数を取得(T_reactuin_messagesのuser_idはリアクションをしたuser_id)
+    # 自分が投稿したメッセージにもらったリアクションの数を取得
     @classmethod
     def get_reactions_count(cls, id):
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
-                sql = "SELECT COUNT(SUB.id) FROM (SELECT r.id,r.messages_id,m.user_id FROM reaction_messages AS r LEFT JOIN messages AS m ON r.messages_id = m.id WHERE m.user_id=%s)AS SUB"
+                sql = """
+                SELECT COUNT(SUB.id) FROM 
+                (SELECT r.id,r.message_id,m.user_id
+                FROM message_reaction AS r
+                LEFT JOIN messages AS m 
+                ON r.message_id = m.id
+                WHERE m.user_id=%s)AS SUB;
+                """
                 cur.execute(sql, (id,))
                 reactions_count = cur.fetchone()
-                return reactions_count
+                return reactions_count["COUNT(SUB.id)"]
         except pymysql.Error as e:
             print(f"エラーが発生しています：{e}")
             abort(500)

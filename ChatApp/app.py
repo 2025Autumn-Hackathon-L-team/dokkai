@@ -967,6 +967,7 @@ def profile_view():
     current_email = Profile.email_view(user_id)
     icon_view = Profile.icon_view(user_id)
     messages_count = Profile.get_messages_count(user_id)
+    reactions_count = Profile.get_reactions_count(user_id)
 
     # TODO リアクション機能実装後、リアクションの数を取得する。
     return render_template(
@@ -976,6 +977,7 @@ def profile_view():
         name=current_name,
         email=current_email,
         messages_count=messages_count,
+        reactions_count=reactions_count,
     )
 
 # アイコンの編集モーダルで、JSでページネーションするのに、json形式でデータを返す必要がある
