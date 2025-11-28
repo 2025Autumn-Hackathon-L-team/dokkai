@@ -176,7 +176,7 @@ background-color: transparent;
   min-height: 70px;
 
 }
-/* 軽く浮き上がるエフェクト */
+/* 浮き上がるエフェクト */
 .room-item-card:hover {
   transform: translateY(-3px); 
 }
