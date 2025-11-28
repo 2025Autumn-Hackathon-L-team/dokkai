@@ -240,10 +240,6 @@ background-color: transparent;
   display:none;
 }
 
-/* カテゴリごとの色があれば追加 */
-.room-category.fantasy { background-color: var(--brown); }
-.room-category.magazine { background-color: var(--brown); }
-.room-category.romance { background-color: var(--brown); }
 
 .reaction-icon {
     position: absolute; 
