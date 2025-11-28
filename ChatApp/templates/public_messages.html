@@ -53,16 +53,28 @@
               {% for r in reactions %}
                 {% set count = message_reaction_counts.get(mid, {}).get(r.id, 0) %}
                 {% set active = (user_reactions[mid] == r.id) %}
-              <form method="POST" action="/public_bookrooms/{{ bookroom.id }}/messages/{{ message.id }}/reactions"
-                    class="reaction-form">
-                <input type="hidden" name="reaction_id" value="{{ r.id }}">
-              <button class="reaction-item {% if active %}active{% endif %}" type="submit">
-                {{ r.reaction_type }}
-                <span class="reaction-count">{{ count }}</span></button>
-              </form>
-              {% endfor %}
-            </div>
-      </div> 
+              
+              {% if message.user_id != session.user_id %}
+                <form method="POST"
+                      action="/public_bookrooms/{{ bookroom.id }}/messages/{{ message.id }}/reactions"
+                      class="reaction-form">
+                  <input type="hidden" name="reaction_id" value="{{ r.id }}">
+                  <button type="submit"
+                          class="reaction-item {% if active %}active{% endif %}">
+                    {{ r.reaction_type }}
+                    <span class="reaction-count">{{ count }}</span>
+                  </button>
+                </form>
+              {% else %}
+                <div class="reaction-form">
+                  {{ r.reaction_type }}
+                  <span class="reaction-count">{{ count }}</span>
+                </div>
+              {% endif %}
+            {% endfor %}
+            </div>   
+    </div> 
+
       {% else %}
     <div class="messages">
       <div class="message-content-wrapper">
