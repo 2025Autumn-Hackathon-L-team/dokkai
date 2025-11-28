@@ -394,9 +394,10 @@
 
 
 /* ========================== レスポンシブ ============================= */
+
 @media screen and (max-width: 1024px) {
    #message-area {
-  padding-top: 25vh;
+  padding-top: 30vh;
 }
   .typing-box-wrapper,
   .bookroom-header {
