@@ -327,6 +327,10 @@
     background-color: var(--lightgreen);
 }
 
+.reaction-item.active{
+  background-color: var(--lightgreen);
+}
+
 /* リアクション件数 */
 .reaction-count { 
     color: var(--brown);
