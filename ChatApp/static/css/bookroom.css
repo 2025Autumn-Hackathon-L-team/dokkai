@@ -202,7 +202,7 @@ background-color: transparent;
   font-size: 0.8rem;
   color: var(--brown);
   margin: 0;
-  max-height: 40px; 
+  max-height: 60px; 
   overflow-y: auto;
 }
 
