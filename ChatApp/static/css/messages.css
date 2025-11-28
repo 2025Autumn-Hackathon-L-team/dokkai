@@ -299,7 +299,7 @@
 .reaction-zone {
     display: flex;
     margin-top: 10px; 
-    margin-left: 5vh;
+    margin-left: 2vh;
     gap: 5px; 
 }
 
@@ -404,9 +404,10 @@
 
 
 /* ========================== レスポンシブ ============================= */
+
 @media screen and (max-width: 1024px) {
    #message-area {
-  padding-top: 25vh;
+  padding-top: 30vh;
 }
   .typing-box-wrapper,
   .bookroom-header {

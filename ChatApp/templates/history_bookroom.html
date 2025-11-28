@@ -29,16 +29,23 @@
               <h3 class="room-title">{{ bookroom.name }}</h3>
               <p class="room-description">{{ bookroom.description }}</p>
             </a>
+            <div class="tag-data mobileonly">
+          {% if pagenated_bookroom_tag.get(bookroom.id) %}
+            {% for tag in pagenated_bookroom_tag[bookroom.id][:4] %}
+              <span class="room-category"> {{ tag }} </span>
+            {% endfor %}
+          {% endif %}
+            </div>
           </div>
           <div class="room-group">
             <span class="room-date">{{ bookroom.last_updated_at.strftime('%Y/%m/%d %H:%M') }}</span>
-              <div class="tag-data">
-            {% if pagenated_bookroom_tag.get(bookroom.id) %}
-              {% for tag in pagenated_bookroom_tag[bookroom.id] %}
-                <span class="room-category"> {{ tag }} </span>
-              {% endfor %}
-            {% endif %}
-            </div>
+              <div class="tag-data desktoponly">
+          {% if pagenated_bookroom_tag.get(bookroom.id) %}
+            {% for tag in pagenated_bookroom_tag[bookroom.id][:4] %}
+              <span class="room-category"> {{ tag }} </span>
+            {% endfor %}
+          {% endif %}
+           </div>
           </div>
           <div class="reaction-icon">
           </div>

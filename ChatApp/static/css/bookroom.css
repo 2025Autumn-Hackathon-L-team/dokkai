@@ -176,7 +176,7 @@ background-color: transparent;
   min-height: 70px;
 
 }
-/* 軽く浮き上がるエフェクト */
+/* 浮き上がるエフェクト */
 .room-item-card:hover {
   transform: translateY(-3px); 
 }
@@ -202,7 +202,7 @@ background-color: transparent;
   font-size: 0.8rem;
   color: var(--brown);
   margin: 0;
-  max-height: 40px; 
+  max-height: 60px; 
   overflow-y: auto;
 }
 
@@ -240,10 +240,6 @@ background-color: transparent;
   display:none;
 }
 
-/* カテゴリごとの色があれば追加 */
-.room-category.fantasy { background-color: var(--brown); }
-.room-category.magazine { background-color: var(--brown); }
-.room-category.romance { background-color: var(--brown); }
 
 .reaction-icon {
     position: absolute; 
