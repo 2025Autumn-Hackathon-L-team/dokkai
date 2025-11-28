@@ -1,0 +1,23 @@
+<div id="delete-bookroom-modal" class="modal">
+  <div class="modal-content-private">
+    <div class="modal-header-private">
+      <h5>Delete Bookroom -PRIVATE-</h5>
+      <span class="modalClose" id="delete-page-close-button">×</span>
+    </div>
+    <form name="deleteBookroomForm" id="deleteBookroomForm" class="modal-body-private" action="" method="POST">
+      <p>DELETEボタンを押すとブックルームが消えます</p>
+      <p>本当によろしいですか？</p>
+    <!--{% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div id="modal-flash-content">
+          <ul class="flashes">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      </div>
+    {% endif %}{% endwith %}-->
+      <button id="delete-bookroom-confirmation-button"class="button">DELETE</button>
+    </form>
+  </div>
+</div>

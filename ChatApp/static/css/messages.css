@@ -1,0 +1,461 @@
+/* 各ブックルーム詳細ページ(メッセージ画面)のCSS */
+
+/* ========================== ヘッダー部分 ============================= */
+
+.bookroom-header {/* パブリックメッセージ画面のヘッダー */
+  background-color: var(--brown);
+  color: var(--snow);
+  height: auto;
+  width: calc(100vw - 50px);
+  position: fixed;
+  top: 0;
+  right: 0;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap:0rem;
+  padding-left: 20px;
+  z-index: 5;
+}
+.main-container_p .bookroom-header {/* プライベートメッセージ画面のヘッダー */
+  background-color: var(--green);
+  color: var(--snow);
+  height: auto;
+  width: calc(100vw);
+  position: fixed;
+  top: 0;
+  right: 0;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap:0rem;
+  padding-left: 20px;
+  z-index: 2;
+}
+.bookroom-header > h1 { 
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: normal;
+  text-align: center;
+}
+
+.bookroom-contents{
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem; 
+  margin:0;
+  max-width: 200vh;
+  flex-wrap: wrap;
+}
+
+.bookroom-name {
+  margin:0;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.bookroom-description {
+  margin:0 5 0 0;
+  font-size: 12px;
+  font-weight: 200;
+  letter-spacing: 0.15em;
+  max-width:500px;
+  max-height: 40px; 
+  overflow-y: auto;
+}
+
+#update-bookroom-button {
+    background-color: var(--wood);
+    box-shadow: 0 4px var(--lightgray);
+    border-radius: 50%;
+    width: 40px; 
+    height: 40px;
+    padding: 0.2em 0.6em;
+    margin-left: 2em;
+}
+#update-bookroom-button:hover {
+  background-color: var(--wood);
+  box-shadow: 0 2px var(--light-gray);
+  transform: translateY(2px); 
+  cursor: pointer;
+}
+
+.message-group { 
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width:100%;
+}
+
+.tag-category-message { 
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--brown);
+  background-color: var(--lightgreen); 
+  padding: 4px 8px;
+  border-radius: 12px;
+  white-space: nowrap;
+  margin-top:10px;
+  margin-left:10px;
+}
+
+.tag-list-container {
+  position: absolute;
+  right:10px;
+  bottom:10px;
+}
+
+
+/* ========================== メッセージ表示エリア ============================= */
+
+#message-area {
+  flex-grow: 1; 
+  flex-basis: 0;
+  width: 100%;
+  padding-top: 20vh;
+  padding-left:5px;
+  padding-right: 10px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 20vh;
+  scroll-margin-bottom: 20vh;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width:50%;
+}
+
+.user-name {
+  font-size: 8px;
+  color: var(--brown);
+  margin: 0 0px 3px 0;
+}
+.user-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #ccc;
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+.my-messages {
+  display: flex;
+  flex-direction: column; 
+  position: relative;
+  width: 50%;
+  align-self: flex-end;
+}
+
+.my-messages form {
+    display: flex; 
+    align-items: flex-start;
+}
+.delete-message-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    line-height: 0;
+}
+
+.delete-message-button img {
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.box {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 0.7em 0 0.4em 1em;
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: 0.1em;
+  white-space: pre-wrap;
+  border-radius:10px;
+}
+
+.box-left {
+  background-color: var(--lightgray);
+  color: var(--brown);
+}
+
+.box-right {
+  background-color: var(--lightgreen);
+  color: var(--brown);
+}
+
+.box-left:before {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 100%;
+  height: 100%;
+  border: var(--brown) 1px solid;
+  border-radius: 10px;
+  content: "";
+}
+
+.box-right:before {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 100%;
+  height: 100%;
+  border: var(--brown) 1px solid;
+  border-radius: 10px;
+  content: "";
+}
+
+#no-message {
+  margin: auto;
+}
+.timestamp {
+  position: absolute;
+  font-size: 0.7em;
+  color: var(--brown); 
+  opacity: 0.7; 
+  white-space: nowrap;
+}
+
+/* タイムスタンプ位置 */
+.timestamp-right {
+  bottom: 0.1em;
+  right: 0.5em; 
+}
+.timestamp-left {
+  bottom: 0.1em;
+  right:0.5rem;
+}
+/* ゴミ箱アイコン */
+.my-messages .delete-form {
+    position: absolute;
+    right: -20px; /* 吹き出しの内側に配置 */
+    bottom: -5px;
+    line-height: 0;
+    z-index: 2;
+}
+/* 相手のユーザー名と吹き出し、アクションのコンテナ */
+.message-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    width:100%;
+}
+/* 自分のメッセージとゴミ箱のコンテナ　*/
+.message-and-trash-right {
+  display: flex;
+  align-items: flex-end; 
+  gap: 5px; 
+}
+/* 相手のアイコンとメッセージのコンテナ */
+.icon-and-message-left {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: flex-start;
+}
+/* 吹き出しの共通スタイル */
+.message-content-box, .box-left, .box-right {
+    padding: 8px 12px;
+    border-radius: 18px;
+    line-height: 1.2;
+    word-wrap: break-word;
+    position: relative;
+    width: 100%;
+}
+/* 自分のメッセージのアイコン */
+.reaction-icon-left {
+  left: 0; 
+}
+/* 相手のメッセージのアイコン */
+.reaction-icon-right {
+  right: 0; 
+}
+
+/* リアクションアイコン自体のサイズ調整 */
+.reaction-icon {
+  width: 18px; 
+  height: 18px;
+  cursor: pointer;
+}
+.reaction-zone {
+    display: flex;
+    margin-top: 10px; 
+    margin-left: 2vh;
+    gap: 5px; 
+}
+
+/* リアクションゾーンを左に寄せる */
+.reaction-zone-right, .reaction-zone-left{
+    justify-content: flex-start;
+    width: 100%;
+}
+
+/* 個々のリアクションボタン */
+.reaction-item {
+    display: flex;
+    align-items: center;
+    background-color: var(--snow);
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 3px 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    line-height: 1;
+}
+
+.reaction-item:hover {
+    background-color: var(--lightgreen);
+}
+
+.reaction-item.active{
+  background-color: var(--lightgreen);
+}
+
+/* リアクション件数 */
+.reaction-count { 
+    color: var(--brown);
+    margin-left: 4px;
+}
+.reaction-zone .reaction-form {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+
+#myreaction-nonecolor{
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ========================== メッセージ入力部分 ============================= */
+
+.typing-box-wrapper {
+  position: fixed;
+  bottom: 0;
+  width: calc(100vw - 50px);
+  height: 16vh;
+  background-color: var(--snow);
+  background-size: contain;
+  border-top: var(--wood)3px solid;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+}
+
+
+.typing-box {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  height: 100%;
+  width: 95%;
+  margin: auto;
+  position: relative;
+  background-color: var(--snow);
+  display: flex;
+}
+
+.typing-box textarea {
+  background-color: transparent;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  width: 100%;
+  padding: 0.5em;
+  border: solid 1px lightgrey;
+  flex-grow: 1;
+}
+.typing-box textarea:focus {
+  cursor: pointer;
+}
+
+#add-message-button {
+  background-color: var(--lightgreen);
+  border-radius: 0 8px 8px 0;
+  height: 100%;
+  width: 40px;
+  padding: 0;
+  margin: 0;
+}
+
+#add-message-button img{
+  font-size: 0.5rem;
+  width: 20px;
+  height: 20px;
+}
+
+
+/* ========================== レスポンシブ ============================= */
+
+@media screen and (max-width: 1024px) {
+   #message-area {
+  padding-top: 30vh;
+}
+  .typing-box-wrapper,
+  .bookroom-header {
+    width: 100%;
+  }
+  .message-group { 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+}
+  #update-bookroom-button {
+    right: 10px;     
+    bottom: 10px;
+} 
+  .my-messages{
+  width: 100%;
+}
+  .messages {
+  width: 100%;
+}
+  /* 自分のメッセージとゴミ箱のコンテナ　*/
+  .message-and-trash-right { 
+  width: 100%; 
+}
+/* 相手のアイコンとメッセージのコンテナ */
+  .icon-and-message-left {
+    width: 100%;
+}
+  .timestamp-left {
+  bottom: 0.1em;
+  right:0.5rem;
+}
+  .tag-list-container { 
+     display: flex; 
+     flex-direction: row;
+     position: static; 
+     margin-bottom: 10px;
+     right: auto; 
+     bottom: auto; 
+  }
+}
+@media only screen and (min-width: 640px) {
+  .box {
+    width: 100%;
+  }
+  
+  
+  
+
+}

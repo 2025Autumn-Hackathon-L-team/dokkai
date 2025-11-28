@@ -1,0 +1,53 @@
+<div class="navigation">
+  <div id="navigation-logo-container">
+    <div id="navigation-logo">
+      <img
+        src="{{ url_for('static',filename='img/icon.png') }}"
+        alt="logo"
+        loading="lazy"
+      /><!---ロゴの追加が必要-->
+    </div>
+  </div>
+  <ul>
+    <li class="list{% if request.endpoint == 'public_bookrooms_view' or request.endpoint == 'detail'%} active{% endif %}">
+      <a href="{{ url_for('public_bookrooms_view') }}">
+        <span class="icon">
+            <img src="{{ url_for('static', filename='img/public.png')}}" alt="public_icon" width="24" height="24">
+        </span>
+        <span class="title">PUBLIC</span>
+      </a>
+    </li>
+    <li class="list{% if request.endpoint == 'private_bookrooms_view' or request.endpoint == 'private_detail'%} active{% endif %}">
+      <a href="{{ url_for('private_bookrooms_view') }}">
+        <span class="icon">
+           <img src="{{ url_for('static',filename='img/private.png')}}" alt="private_icon" width="24" height="24">
+        </span>
+        <span class="title">PRIVATE</span>
+      </a>
+    </li>
+    <li class="list{% if request.endpoint == 'history_view'%} active{% endif %}">
+      <a href="{{ url_for('history_view') }}">
+        <span class="icon">
+             <img src="{{ url_for('static',filename='img/history.png')}}" alt="history_icon" width="24" height="24">
+        </span>
+        <span class="title">HISTORY</span>
+      </a>
+    </li>
+    <li class="list{% if request.endpoint == 'profile_view' %} active{% endif %}">
+      <a href="{{url_for('profile_view')}}">
+        <span class="icon">
+             <img src="{{ url_for('static',filename='img/profile.png')}}"alt="profile_icon" width="24" height="24">
+        </span>
+        <span class="title">PROFILE</span>
+      </a>
+    </li>
+    <li class="list">
+      <a href="{{ url_for('logout') }}">
+        <span class="icon">
+            <img src="{{ url_for('static', filename='img/signout.png')}}" alt="signout_icon" width="24" height="24">
+        </span>
+        <span class="title">SIGNOUT</span>
+      </a>
+    </li>
+  </ul>
+</div>

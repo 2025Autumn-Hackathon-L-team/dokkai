@@ -1,0 +1,183 @@
+/* searchモーダルのCSS */
+body {
+    padding: 20px;
+}
+form {
+    padding: 20px;
+}
+
+.keyword-search {
+  width: 100%;
+  border-radius: 8px; 
+  padding: 0;
+  margin-top: 8px;
+  margin-bottom: 20px;
+}
+
+.keyword-input {
+  width: 100%;
+  border: 2px var(--wood) solid; 
+  outline: none;
+  padding: 0.75rem 1rem; 
+  font-size: 1rem;
+  color: var(--brown);
+  border-radius: 6px; 
+  box-sizing: border-box;
+}
+.keyword-search {
+  border: none;
+}
+
+.keyword-input:hover {
+  border-color: var(--brown);
+  box-shadow: 0 0 5px rgba(139, 69, 19, 0.5);
+}
+
+
+.keyword-input:focus {
+  outline: none; 
+  background-color: var(--brown); 
+  color: var(--snow); 
+}
+
+
+.keyword-input:hover {
+  background-color: var(--brown);
+  color: var(--snow); 
+}
+
+
+.keyword-input::placeholder {
+  color: #ccc; 
+}
+
+.keyword-input:hover::placeholder,
+.keyword-input:focus::placeholder {
+  color: var(--snow); 
+}
+
+.tag-search{
+  color:var(--brown);
+}
+.tag-search h5 {
+  margin-top: 10px; 
+  margin-bottom: 5px; 
+}
+.tag-container-wrapper {
+  max-height: 250px; 
+  overflow-y: auto; 
+  border: 1px solid #ddd; 
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 10px;
+  background-color: var(--light-grey);
+}
+
+.tag-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 15px; 
+  padding-top: 5px;
+}
+
+.tag-group label {
+  display: flex;
+  color:var(--brown);
+  align-items: center;
+  font-size: 1rem;
+  white-space: nowrap; 
+  cursor: pointer;
+}
+
+.tag-group input[type="checkbox"] {
+  margin-right: 5px;
+  accent-color: var(--brown); 
+}
+
+/*public_history用検索ボタン*/
+.search-button{
+  width: 70%;
+  background-color: var(--wood);
+  color: var(--snow);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 50px; 
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: block; 
+  margin: 30px auto 10px auto;
+  box-shadow: 0 4px var(--brown); 
+}
+.search-button:hover {
+  background-color: var(--brown); 
+  box-shadow: 0 2px var(--brown); 
+  transform: translateY(2px);
+}
+
+/*private用検索ボックス */
+.keyword-search-private {
+  width: 100%;
+  border-radius: 8px; 
+  padding: 0;
+  margin-top: 8px;
+  margin-bottom: 20px;
+}
+
+.keyword-input-private {
+  width: 100%;
+  border: 2px var(--green) solid; 
+  outline: none;
+  padding: 0.75rem 1rem; 
+  font-size: 1rem;
+  color: var(--green);
+  border-radius: 6px; 
+  box-sizing: border-box;
+}
+
+.keyword-search-private:hover {
+  border-color: var(--none);
+}
+
+.keyword-input-private:focus {
+  outline: none; 
+  background-color: var(--green); 
+  color: var(--snow); 
+}
+
+
+.keyword-input-private:hover {
+  background-color: var(--green);
+  color: var(--snow); 
+  box-shadow: 0 0 5px rgba(19, 139, 67, 0.5);
+}
+
+.keyword-input-private::placeholder {
+  color: #ccc; 
+}
+
+.keyword-input-private:hover::placeholder,
+.keyword-input-private:focus::placeholder {
+  color: var(--snow); 
+}
+
+/*private用検索モーダルのボタン*/
+.search-button-private{
+  width: 70%;
+  background-color: var(--green);
+  color: var(--snow);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 50px; 
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  display: block; 
+  margin: 30px auto 10px auto;
+  box-shadow: 0 4px var(--deep_green); 
+}
+.search-button-private:hover {
+  background-color: var(--green); 
+  box-shadow: 0 2px var(--deep_green); 
+  transform: translateY(2px);
+}

@@ -1,0 +1,43 @@
+<div id="update-profile-email-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5>EDIT EMAIL</h5>
+      <span class="modalClose" id="update-email-close-button">×</span>
+    </div>
+    <form
+      name="updateProfileEmail"
+      class="modal-body"
+      action="/email/update"
+      method="POST"
+    >
+      <input
+        type="text"
+        placeholder="変更後のemailを入力してください"
+        pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+        class="bookroom-form-input"
+        name="profile_email"
+        value="{{ email }}"
+        required
+      />
+      <input
+        type="password"
+        placeholder="passwordを入力してください"
+        class="bookroom-form-input"
+        name="password"
+        value=""
+        required
+      />
+     {% with messages = get_flashed_messages(category_filter=["email_flash"]) %}
+    {% if messages %}
+      <div id="email-modal-flash-content">
+          <ul class="flashes">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      </div>
+    {% endif %}{% endwith %}
+      <button>EDIT</button>
+    </form>
+  </div>
+</div>

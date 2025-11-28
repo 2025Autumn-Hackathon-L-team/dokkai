@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}
+<title>profile</title>
+{% endblock %} 
+
+{% block body %}
+<body class="profile-body">
+<div class="profile-main-container">
+    <div class="profile-title">
+      <h1>PROFILE</h1> 
+      <div id ="profile-contents">
+      </div>
+    </div>
+    <div class="profile-display-items">
+        <!--アイコンの表示-->
+        <img src="{{icon}}" alt="ユーザーアイコン" id="current-profile-icon" width="130" height="130">
+        <div class="button-position-adjustment">
+            <div class="button-position-adjustment-space"></div>
+            <button class="update-profile-button" id="update-icon-button" label="iconの変更">
+                <img class="button-image" src="{{ url_for('static', filename='img/pen.png') }}">
+            </button>
+        </div>
+      <!-- バリデーションチェック成功時のメッセージ表示-->
+    {% with messages = get_flashed_messages(category_filter=["success_flash"]) %}
+    {% if messages %}
+      <div id="success-flash-message" class="flash-success">
+          <ul class="flashes">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+    {% endwith %}
+        <!--リアクション数とメッセージ投稿数の表示-->
+        <div class="under-icon-position-adjustment">
+          <div>
+            <p class="little_title">Get Reactions</p>
+            <p class="bigger_font">{{reactions_count}}</p>
+          </div>
+          <div class="reactions-messages-between-position-adjustment">
+          </div>
+          <div>
+            <p class="little_title">Talk in bookroom</p>
+            <p class="bigger_font">{{messages_count}}</p>
+          </div>
+        </div>
+        <!--nameの表示-->
+        <div class="name-position-adjustment">
+          <!--値確認用<p>ユーザアイコンは{{icon}}</p>-->
+          <div class="button-position">
+            <p  class="subtitle">name</p>
+            <div class="button-position-adjustment"></div>
+              <button class="update-profile-button" id="update-name-button" label="nameの変更">
+                <img class="button-image" src="{{ url_for('static', filename='img/pen.png') }}">
+              </button>
+          </div>
+          <div id="name-side-adjustment">
+            <p>{{name}}</p>
+          </div>
+        </div>
+        <!--emailの表示-->
+        <div class="email-position-adjustment">
+          <div class="button-position">
+            <p class="subtitle">email</p>
+            <div class="button-position-adjustment"></div>
+              <button class="update-profile-button" id="update-email-button" label="emailの変更">
+                <img class="button-image" src="{{ url_for('static', filename='img/pen.png') }}">
+              </button>
+          </div>
+          <div id="email-side-adjustment">
+            <p>{{email}}</p>
+          </div>
+        </div>
+    </div>
+</div>
+</body>
+{% include 'modal/update-icon.html' %} 
+{% include 'modal/update-profile-name.html' %} 
+{% include 'modal/update-profile-email.html' %}
+{% endblock %}
+{% block script %}
+<script
+  src="{{url_for('static',filename='js/profile/update-icon.js')}}"
+  type="module"
+></script>
+<script
+  src="{{url_for('static',filename='js/profile/update-profile-name.js')}}"
+  type="module"
+></script>
+<script
+  src="{{url_for('static',filename='js/profile/update-profile-email.js')}}"
+  type="module"
+></script>
+<!--全てのBodyが読み込まれた後に成功flashメッセージを読み込む処理-->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const successMessage = document.getElementById('success-flash-message');
+        if (successMessage) {
+            successMessage.style.display = 'block';
+            successMessage.classList.remove('hidden-flash');
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+                successMessage.classList.add('hidden-flash');
+            }, 4000);
+        }
+    });
+</script>
+{% endblock %}

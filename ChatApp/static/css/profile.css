@@ -1,0 +1,204 @@
+/*=========全体設定==========*/
+
+body.profile-body {
+  padding: 0;
+}
+
+.profile-main-container{
+  display: flex;
+  /*padding-top: 130px;*/
+  /*padding-left: 50px;*/
+  flex-direction:column;
+  align-items: center;
+  background-color: white;
+  margin: 0;
+  color: var(--brown);
+  min-height: 100svh;
+}
+
+/* ================== ヘッダー部分 ================== */
+.profile-title { /* ヘッダー */
+  position: relative; 
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100px; 
+  background-color: var(--brown);
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 0 50px;
+  z-index: 2; /* 他の要素より手前に */
+}
+
+.profile-title h1 { /* タイトル */
+  font-size: 1.5rem;
+  margin: 0;
+  font-weight: 500;
+  letter-spacing: normal;
+  text-align: center;
+  width: calc(100% - 50px);
+}
+
+/*================ボディの表示部分===============*/
+
+.profile-display-items{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: 110px;
+}
+
+.under-icon-position-adjustment{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.reactions-messages-between-position-adjustment{
+ width: 30px; 
+}
+
+.name-position-adjustment{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.button-position{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 300px;
+  height: 45px;
+}
+
+.button-position-adjustment img{
+  max-width: none;
+}
+
+.name-position-adjustment img{
+  max-width: none;
+}
+
+.email-position-adjustment img{
+  max-width: none;
+}
+
+.profile-display-items p{
+  margin:10px;
+}
+
+.subtitle,
+.little_title{
+  color:var(--gray);
+  border-bottom: dashed 1px var(--gray);
+}
+.subtitle,
+.bigger_font{
+  font-size:24px;
+  text-align: center;
+}
+
+#current-profile-icon{
+  border-radius: 50%;
+}
+
+.button-position-adjustment{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 300px;
+}
+
+.button-position-adjustment-space{
+  width: 50px;
+  height: 40px;
+  align-items: end;
+}
+
+.update-profile-button{
+  padding: 0;
+  background-color: var(--lightgreen);
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  flex-shrink: 0;
+}
+
+.button-image{
+  width: 20px;
+  height: 20px;
+}
+
+#name-side-adjustment{
+  width: 300px;
+  text-align: left;
+}
+
+#email-side-adjustment{
+  width: 50px;
+  height: 40px;
+  align-items: end;
+}
+.hidden-flash {
+    display: none;
+}
+/* ========================================================== */
+/* レスポンシブ */
+/* スマホ用 */
+@media screen and (max-height: 768px){
+    .profile-display-items { 
+    padding-top: 130px;
+    margin-top: 0px;
+}
+}
+
+@media screen and (max-height: 768px){
+  .profile-main-container {
+    padding-left: 0;
+  }
+}
+
+/*Samsong Galaxyだと表示位置がズレるの設定*/
+@media screen and (max-height: 740px){
+    .profile-display-items { 
+    padding-top: 60px;
+}
+}
+
+/*IPhoneSEだと表示位置がズレるの設定*/
+@media screen and (max-height: 667px){
+    .profile-display-items { 
+    padding-top: 30px;
+}
+}
+
+/* PC用(画面幅に応じて表示位置を設定） */
+@media screen and (min-width: 769px){
+    .profile-display-items { 
+    padding-top: 140px;
+}
+}
+
+@media screen and (min-width: 915px){
+    .profile-display-items { 
+    padding-top: 60px;
+}
+}
+
+@media screen and (min-width: 1024px){
+    .profile-display-items { 
+    padding-top: 20px;
+}
+}
+
+@media screen and (min-width: 1280px){
+    .profile-display-items { 
+    padding-top: 100px;
+}
+}
+

@@ -1,0 +1,56 @@
+<div id="search-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5>SEARCH IN PUBLIC</h5>
+      <span class="modalClose" id="search-page-close-button">×</span>
+    </div>
+    <form action="#" method="get">
+    <div class="keyword-search">
+            <h3> キーワードで探す</h3>
+            <div class="keyword-search">
+                <input type="text" name="keyword" class ="keyword-input" placeholder="タイトル、著者名などを入力してください">
+            </div>
+        </div>
+        
+        <div class="tag-search">
+            <h3> タグで絞り込む</h3>
+            <div class="tag-container-wrapper"> 
+                <div class="tag-group">
+                    {% for tag in tags %}
+                    <label>
+                      <input type="checkbox" name="search_tag_ids" value="{{ tag.id }}">
+                      {{ tag.name }}
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    <!--{% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div id="modal-flash-content">
+          <ul class="flashes">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      </div>
+    {% endif %}{% endwith %}-->
+         <button class = search-button type="submit">SEARCH</button>
+      </form>
+    </div>
+  </div>     
+
+<!--変数で持ってくる場合のタグ検索コード-->  
+<!---<div class="tag-search">
+  <h2>タグで絞り込む</h2>
+    <div class="tag-container-wrapper"> 
+      <div class="tag-group">
+        {% for tag in tag_list %}
+          <label>
+            <input type="checkbox" name="tag_ids[]" value="{{ tag.id }}"> 
+              {{ tag.name }}
+          </label>
+        {% endfor %}
+      </div>
+    </div>
+  </div>-->

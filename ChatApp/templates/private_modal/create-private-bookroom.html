@@ -1,0 +1,53 @@
+
+<div id="create-bookroom-modal" class="modal">
+  <div class="modal-content-private">
+    <div class="modal-header-private">
+      <h5>MAKE BOOKROOM -PRIVATE-</h5>
+      <span class="modalClose" id="add-page-close-button">×</span>
+    </div>
+    <form
+      name="createBookroomForm"
+      class="modal-body-private"
+      action="/private_bookrooms"
+      method="POST"
+    >
+      <input
+        type="text"
+        placeholder=" 今読んでいる本のタイトルなどのテーマを入力"
+        class="bookroom-form-input-private"
+        name="bookroom_name"
+        required
+      />
+      <textarea class="bookroom-form-input-wide-private"
+        placeholder="BOOKROOMの詳細文を入力
+(例: 今月の課題図書！など)"
+        class="bookroom-form-input-wide-private"
+        name="bookroom_description"></textarea>
+        
+      <div class="tag-search">
+            <h5> タグを設定する</h5>
+            <div class="tag-container-wrapper"> 
+                <div class="tag-group">
+                    {% for tag in tags %}
+                    <label>
+                      <input type="checkbox" name="tag_ids" value="{{ tag.id }}">
+                      {{ tag.name }}
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% with messages = get_flashed_messages(category_filter=["createbookroom_flash"]) %}
+    {% if messages %}
+      <div id="modal-flash-content">
+          <ul class="flashes">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      </div>
+    {% endif %}{% endwith %}
+      <button>MAKE</button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<div id="update-icon-modal" class="modal">
+  <div class="modal-icons-content">
+    <div class="modal-header">
+      <h5 id="modal-selecticon-title">SELECT ICON</h5>
+      <span class="modalClose" id="update-icon-close-button">×</span>
+    </div>
+    <div class="icon_modal_body">
+        <div id="icon_select_description">
+            <p>変更したいアイコンをクリックしてください</p>
+        </div>
+        <form class="modal-icons-body" name="updateIcon" action="/icons/update" method="POST">
+          <div id="icon-area"></div>
+            {% for icon in icons %}
+              <button class="icon_styled" type="submit" name="icon_name" value="{{ icon.id }}">
+                <img class="icon-image" src="{{ icon.icon_image }}" alt="{{ icon.icon_name }}">
+              </button>
+            {% endfor %}
+        </form>
+        <div class="pagination-container" id="pagination_icon"></div>
+      </div>
+    </div>
+  </div>
+</div>
