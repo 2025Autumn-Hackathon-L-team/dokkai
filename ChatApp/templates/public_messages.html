@@ -36,7 +36,7 @@
     <div id="message-area">
       {% if messages|length > 0 %} {% for message in messages %} {% if
       message.user_id == uid %}
-    <div class="my-messages">
+   <div class="my-messages">
       <div class="message-and-trash-right">
         <p class="box box-right">{{ message.message }}</p>
          <form class ="delete-form" action="/public_bookrooms/{{ bookroom.id }}/messages/{{ message.id }}" method="POST">
@@ -53,7 +53,6 @@
               {% for r in reactions %}
                 {% set count = message_reaction_counts.get(mid, {}).get(r.id, 0) %}
                 {% set active = (user_reactions[mid] == r.id) %}
-              
               {% if message.user_id != session.user_id %}
                 <form method="POST"
                       action="/public_bookrooms/{{ bookroom.id }}/messages/{{ message.id }}/reactions"
@@ -67,14 +66,15 @@
                 </form>
               {% else %}
                 <div class="reaction-form">
-                  {{ r.reaction_type }}
-                  <span class="reaction-count">{{ count }}</span>
+                  <div class="reaction-item {% if active %}active{% endif %}">
+                    {{ r.reaction_type }}
+                    <span class="reaction-count">{{ count }}</span>
+                  </div>
                 </div>
               {% endif %}
             {% endfor %}
             </div>   
-    </div> 
-
+    </div>
       {% else %}
     <div class="messages">
       <div class="message-content-wrapper">

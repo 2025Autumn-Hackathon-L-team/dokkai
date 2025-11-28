@@ -1,1 +1,25 @@
+{% extends 'error/base.html' %} {% block title %} error {% endblock %} {% block
+body %}
+<body class="error">
+  <div class="error-wrapper">
+    <div class="error-content">
+      <div>
+        <p class="error-num">4 0 4</p>
+      </div>
+      <div class="error-description error404or500">
+        <p>ページが見つかりません</p>
+        <a class="error-button pink" href="{{ url_for('pubric_bookrooms_view') }}">戻る</a>
+      </div>
+    </div>
+  </div>
+  <video
+    src="{{ url_for('static',filename='img/door.mp4') }}"
+    class="error-gif"
+    autoplay
+    loop
+    muted>
+    動画を再生できません。
+  </video>
+</body>
+{% endblock %} {% block script %} {% endblock %}
 
