@@ -2,7 +2,7 @@
 <title>private-messages</title>
 {% endblock %} {% block body %}
 <div class="main-container_p">
-
+  <!--フラッシュメッセージの取得(メッセージが規定の文字数を超えた場合)-->
   {% with flash_messages = get_flashed_messages() %}
     {% if flash_messages %}
       <div class="flash-container">

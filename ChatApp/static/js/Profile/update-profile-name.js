@@ -1,12 +1,11 @@
-/*
-プロフィールを更新するモーダルの制御
-*/
+/*プロフィールを更新するモーダルの制御*/
 
 const updateButton = document.getElementById("update-name-button");
 const updateProfileNameModal = document.getElementById("update-profile-name-modal");
 const updateProfileNameButtonClose = document.getElementById("update-name-close-button");
 const flashContentName = document.getElementById('name-modal-flash-content');
 
+// 4秒後にフラッシュメッセージを消去
 if (flashContentName && updateProfileNameModal) {
     updateProfileNameModal.style.display = "flex";   
     window.setTimeout(function(){
@@ -14,7 +13,7 @@ if (flashContentName && updateProfileNameModal) {
   }, 4000);
 }  
 
-// モーダルが存在するページのみ（uidとチャンネルidが同じ時のみ）
+// モーダルが存在するページのみ
 if (updateProfileNameModal) {
   // モーダル表示ボタンが押された時にモーダルを表示する
   updateButton.addEventListener("click", () => {

@@ -4,7 +4,7 @@
   const addPageButtonClose = document.getElementById("add-page-close-button");
   const createBookroomButton = document.getElementById("create-bookroom-button");
   const flashContent = document.getElementById('modal-flash-content');
-
+// 4秒後にフラッシュメッセージを消去
   if (flashContent) {
     createBookroomModal.style.display = "flex"; 
     window.setTimeout(function(){
@@ -12,7 +12,6 @@
   }, 4000);
 }
   // モーダル表示ボタンが押された時にモーダルを表示する
-
   createBookroomButton.addEventListener("click", () => {
     createBookroomModal.style.display = "flex";
   }

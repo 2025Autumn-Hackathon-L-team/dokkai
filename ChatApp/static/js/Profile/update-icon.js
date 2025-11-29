@@ -1,6 +1,4 @@
-/*
-アイコンを更新するモーダルの制御
-*/
+/*　アイコンを更新するモーダルの制御　*/
 
 const updateIconButton = document.getElementById("update-icon-button");
 const updateIconModal = document.getElementById("update-icon-modal");
@@ -8,7 +6,7 @@ const updateIconButtonClose = document.getElementById("update-icon-close-button"
 const iconArea = document.getElementById("icon-area");
 const paginationContainer = document.getElementById("pagination_icon");
 
-// モーダルが存在するページのみ（uidとチャンネルidが同じ時のみ）
+// モーダルが存在するページのみ
 if (updateIconModal) {
   // モーダル表示ボタンが押された時にモーダルを表示する
   updateIconButton.addEventListener("click", () => {

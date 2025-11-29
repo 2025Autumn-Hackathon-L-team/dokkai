@@ -47,7 +47,7 @@
 .list:hover {
   background-color: #20272c5e;
 }
-
+/* active要素に背景色、文字色を適用 */
 .list.active {
   background-color: var(--brown);
 }
@@ -55,6 +55,7 @@
   color: var(--snow);
 }
 
+/* active要素でなければ文字色は茶色 */
 .list a {
   display: block;
   text-decoration: none;
@@ -64,6 +65,7 @@
   display: flex;
 }
 
+/* active要素選択時のデザイン調整(角が丸くなる処理)*/
 .navigation ul li.active a::before {
   content: "";
   position: absolute;

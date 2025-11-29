@@ -18,6 +18,7 @@
         value="{{ name }}"
         required
       />
+    <!--フラッシュメッセージの取得-->   
      {% with messages = get_flashed_messages(category_filter=["name_flash"]) %}
      {% if messages %}
       <div id="name-modal-flash-content">
