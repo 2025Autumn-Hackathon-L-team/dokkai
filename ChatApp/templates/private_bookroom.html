@@ -18,7 +18,7 @@
 </div>
   <div id="bookroom-list"> 
     {% for bookroom in paginated_bookrooms %}
-    <div class="room-item-card_private"> {# Card for each memo #}
+    <div class="room-item-card_private"> 
       <div class="room-content">
         <a href="{{ url_for('private_detail', bookroom_id=bookroom.id) }}" class="bookroom-to-message">
         <h3 class="room-title">{{ bookroom.name }}</h3>
@@ -34,9 +34,6 @@
       </div>
       <div class="room-group">
         <span class="room-date">{{ bookroom.updated_at.strftime('%Y/%m/%d %H:%M') }}</span>
-        <!--<span class="room-category {{ bookroom.category_tag | default('uncategorized') }}">
-          {{ bookroom.category | default('未分類') }}
-        </span>-->
          <div class="tag-data desktoponly">
           {% if pagenated_bookroom_tag.get(bookroom.id) %}
             {% for tag in pagenated_bookroom_tag[bookroom.id][:4] %}
@@ -45,7 +42,7 @@
           {% endif %}
           </div>
       </div>
-      <div class="reaction-icon">
+      <div class="delete-icon">
         {% if session.get('user_id') == bookroom.user_id %}
          <button class="delete-bookroom-trigger" data-bookroom-id="{{ bookroom.id }}">
         <img src="{{ url_for('static', filename='img/trash-can.png') }}" alt="アイコン" >

@@ -1,8 +1,8 @@
 /* 各ブックルーム詳細ページ(メッセージ画面)のCSS */
 
 /* ========================== ヘッダー部分 ============================= */
-
-.bookroom-header {/* パブリックメッセージ画面のヘッダー */
+/* パブリックメッセージ画面のヘッダー */
+.bookroom-header {
   background-color: var(--brown);
   color: var(--snow);
   height: auto;
@@ -18,7 +18,8 @@
   padding-left: 20px;
   z-index: 5;
 }
-.main-container_p .bookroom-header {/* プライベートメッセージ画面のヘッダー */
+/* プライベートメッセージ画面のヘッダー */
+.main-container_p .bookroom-header {
   background-color: var(--green);
   color: var(--snow);
   height: auto;
@@ -34,6 +35,7 @@
   padding-left: 20px;
   z-index: 5;
 }
+/* メッセージ画面のヘッダー文字の設定 */
 .bookroom-header > h1 { 
   font-size: 1.5rem;
   font-weight: 500;
@@ -41,6 +43,16 @@
   text-align: center;
 }
 
+/* bookroom-contentsを囲む要素 */
+.message-group { 
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width:100%;
+}
+/* メッセージ画面のヘッダー要素全体の設定 */
 .bookroom-contents{
   display: flex;
   flex-direction: column;
@@ -49,15 +61,16 @@
   max-width: 200vh;
   flex-wrap: wrap;
 }
-
+/* メッセージ画面に表示されるブックルーム名 */
 .bookroom-name {
   margin:0;
   text-align: center;
   font-size: 1.2rem;
   max-height: 60px; 
-  overflow-y: auto;
+  overflow-y: auto;/* 規定縦幅を超えるとスクロールで隠れる */
 }
 
+/* メッセージ画面に表示されるブックルーム名 */
 .bookroom-description {
   margin:0 5 0 0;
   font-size: 12px;
@@ -65,9 +78,10 @@
   letter-spacing: 0.15em;
   max-width:500px;
   max-height: 40px; 
-  overflow-y: auto;
+  overflow-y: auto;/* 規定縦幅を超えるとスクロールで隠れる */
 }
 
+/* ブックルーム更新ボタン */
 #update-bookroom-button {
     background-color: var(--wood);
     box-shadow: 0 4px var(--lightgray);
@@ -84,15 +98,7 @@
   cursor: pointer;
 }
 
-.message-group { 
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    width:100%;
-}
-
+/* タグの設定 */
 .tag-category-message { 
   font-size: 0.7rem;
   font-weight: 600;
@@ -104,7 +110,7 @@
   margin-top:10px;
   margin-left:10px;
 }
-
+/* タグと更新ボタンのグループ */
 .tag-list-container {
   position: absolute;
   right:10px;
@@ -113,7 +119,7 @@
 
 
 /* ========================== メッセージ表示エリア ============================= */
-
+/* メッセージエリア全体の設定 */
 #message-area {
   flex-grow: 1; 
   flex-basis: 0;
@@ -133,19 +139,20 @@
 ::-webkit-scrollbar {
   width: 0px;
 }
-
+/* 相手のメッセージ全体を囲む要素 */
 .messages {
   display: flex;
   flex-direction: column;
   position: relative;
   width:50%;
 }
-
+/* 相手のユーザーネーム */
 .user-name {
   font-size: 8px;
   color: var(--brown);
   margin: 0 0px 3px 0;
 }
+/* ユーザーアイコン */
 .user-icon {
     width: 30px;
     height: 30px;
@@ -154,7 +161,7 @@
     margin-right: 8px;
     flex-shrink: 0;
 }
-
+/* 自分のメッセージ全体を囲む要素 */
 .my-messages {
   display: flex;
   flex-direction: column; 
@@ -167,6 +174,7 @@
     display: flex; 
     align-items: flex-start;
 }
+/* メッセージ削除ボタンの設定 */
 .delete-message-button {
     background: none;
     border: none;
@@ -182,6 +190,7 @@
     transition: opacity 0.2s;
 }
 
+/* 吹き出し全体の設定 */
 .box {
   position: relative;
   width: 100%;
@@ -194,16 +203,17 @@
   border-radius:10px;
 }
 
+/* 左吹き出し */
 .box-left {
-  background-color: var(--lightgray);
+  background-color: var(--ash_grey);
   color: var(--brown);
 }
-
+/* 右吹き出し */
 .box-right {
   background-color: var(--lightgreen);
   color: var(--brown);
 }
-
+/* 左吹き出しとずらしてボーダーを設定 */
 .box-left:before {
   position: absolute;
   top: 3px;
@@ -214,7 +224,7 @@
   border-radius: 10px;
   content: "";
 }
-
+/* 右吹き出しとずらしてボーダーを設定 */
 .box-right:before {
   position: absolute;
   top: 3px;
@@ -229,6 +239,7 @@
 #no-message {
   margin: auto;
 }
+/* タイムスタンプ*/
 .timestamp {
   position: absolute;
   font-size: 0.7em;
@@ -248,85 +259,80 @@
 }
 /* ゴミ箱アイコン */
 .my-messages .delete-form {
-    position: absolute;
-    right: -20px; /* 吹き出しの内側に配置 */
-    bottom: -5px;
-    line-height: 0;
-    z-index: 2;
+  position: absolute;
+  right: -20px; /* 吹き出しの内側に配置 */
+  bottom: -5px;
+  line-height: 0;
+  z-index: 2;
 }
-/* 相手のユーザー名と吹き出し、アクションのコンテナ */
+/* 相手のユーザー名と吹き出し、りアクションを縦並びにする */
 .message-content-wrapper {
-    display: flex;
-    flex-direction: column;
-    width:100%;
+  display: flex;
+  flex-direction: column;
+  width:100%;
 }
-/* 自分のメッセージとゴミ箱のコンテナ　*/
+/* メッセージとゴミ箱の位置調整　*/
 .message-and-trash-right {
   display: flex;
   align-items: flex-end; 
   gap: 5px; 
 }
-/* 相手のアイコンとメッセージのコンテナ */
+/* 相手のアイコンとメッセージを横並びに配置する */
 .icon-and-message-left {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    align-items: flex-start;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: flex-start;
 }
 /* 吹き出しの共通スタイル */
 .message-content-box, .box-left, .box-right {
-    padding: 8px 12px;
-    border-radius: 18px;
-    line-height: 1.2;
-    word-wrap: break-word;
-    position: relative;
-    width: 100%;
+  padding: 8px 12px;
+  border-radius: 18px;
+  line-height: 1.2;
+  word-wrap: break-word;
+  position: relative;
+  width: 100%;
 }
-/* 自分のメッセージのアイコン */
+/* 自分のメッセージのリアクション */
 .reaction-icon-left {
   left: 0; 
 }
-/* 相手のメッセージのアイコン */
+/* 相手のメッセージのリアクション */
 .reaction-icon-right {
   right: 0; 
 }
 
-/* リアクションアイコン自体のサイズ調整 */
-.reaction-icon {
-  width: 18px; 
-  height: 18px;
-  cursor: pointer;
-}
+/* リアクションアイコン全体の設定 */
 .reaction-zone {
-    display: flex;
-    margin-top: 10px; 
-    margin-left: 2vh;
-    gap: 5px; 
+  display: flex;
+  margin-top: 10px; 
+  margin-left: 2vh;
+  gap: 5px; 
 }
 
 /* リアクションゾーンを左に寄せる */
 .reaction-zone-right, .reaction-zone-left{
-    justify-content: flex-start;
-    width: 100%;
+  justify-content: flex-start;
+  width: 100%;
 }
-
 /* 個々のリアクションボタン */
 .reaction-item {
-    display: flex;
-    align-items: center;
-    background-color: var(--snow);
-    border: 1px solid #ccc;
-    border-radius: 12px;
-    padding: 3px 8px;
-    font-size: 0.8rem;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    line-height: 1;
+  display: flex;
+  align-items: center;
+  background-color: var(--snow);
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 3px 8px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  line-height: 1;
 }
 
+
 .reaction-item:hover {
-    background-color: var(--lightgreen);
+  background-color: var(--lightgreen);
 }
 
 .reaction-item.active{
@@ -335,15 +341,16 @@
 
 /* リアクション件数 */
 .reaction-count { 
-    color: var(--brown);
-    margin-left: 4px;
+  color: var(--brown);
+  margin-left: 4px;
 }
+/* リアクションフォームのデフォルト余白のリセット */
 .reaction-zone .reaction-form {
-    display: inline-block;
-    margin: 0;
-    padding: 0;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
 }
-
+/* 自分のリアクションから色を外す設定 */
 #myreaction-nonecolor{
   cursor: not-allowed;
   pointer-events: none;

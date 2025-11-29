@@ -1,6 +1,4 @@
-/*
-各ブックルーム詳細ページ内、ページ読み込み時に自動で下までスクロールする
-*/
+/*各メッセージ画面読み込み時に自動で最新メッセージまでスクロールする処理*/
 
 function scrollToBottom() {
   const messageArea = document.getElementById("message-area");
