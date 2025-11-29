@@ -4,6 +4,8 @@ const updateButton = document.getElementById("update-bookroom-button");
 const updateBookroomModal = document.getElementById("update-bookroom-modal");
 const updatePageButtonClose = document.getElementById("update-page-close-button");
 const flashContent = document.getElementById('modal-flash-content');
+
+// 4秒後にフラッシュメッセージを消去
 if (flashContent) {
     updateBookroomModal.style.display = "flex";
     window.setTimeout(function(){

@@ -27,6 +27,7 @@
         value=""
         required
       />
+      <!--フラッシュメッセージの取得--> 
      {% with messages = get_flashed_messages(category_filter=["email_flash"]) %}
     {% if messages %}
       <div id="email-modal-flash-content">
